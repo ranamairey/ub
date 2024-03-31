@@ -9,5 +9,13 @@ class Access extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
+
+    public function employeeChoises()
+    {
+        return $this->hasMany(EmployeeChoise::class , 'access_id');
+    }
     
 }

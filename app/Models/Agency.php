@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Agency extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+    ];
+
+    public function employeeChoises()
+    {
+        return $this->hasMany(EmployeeChoise::class , 'agency_id');
+    }
 }

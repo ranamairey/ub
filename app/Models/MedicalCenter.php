@@ -33,5 +33,9 @@ class MedicalCenter extends Model
     {
         return $this->hasMany(MedicalCenterMedicine::class , 'medical_center_id');
     }
+    public function employeeChoises()
+    {
+        return $this->hasMany(EmployeeChoise::class , 'medical_center_id');
+    }
 
 }

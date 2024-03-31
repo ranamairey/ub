@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
+            $table->string('category');
+            $table->string('name');
+            $table->string('mother_name');
+            $table->string('father_name');
+            $table->string('gender');
+            $table->string('phone_number');
+            $table->string('status');
+            $table->boolean('special_meeds');
             $table->timestamps();
         });
     }

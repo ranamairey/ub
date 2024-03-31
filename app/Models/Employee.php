@@ -31,4 +31,9 @@ class Employee extends Model
     {
         return $this->hasMany(HealthEducationLecture::class , 'employee_id');
     }
+
+    public function employeeChoises()
+    {
+        return $this->hasMany(EmployeeChoise::class , 'employee_id');
+    }
 }
