@@ -15,14 +15,20 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('account_id');
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             $table->string('category');
             $table->string('name');
             $table->string('mother_name');
             $table->string('father_name');
-            $table->string('gender');
+            $table->enum('gender', ['Male', 'Female']);
             $table->string('phone_number');
-            $table->string('status');
-            $table->boolean('special_meeds');
+            $table->enum('residence_status' , ['Resident' , 'Immigrant' , 'Returnee']);
+            $table->boolean('special_needs');
+            $table->string('related_person');
+            $table->string('related_person_phone_number');
             $table->timestamps();
         });
     }

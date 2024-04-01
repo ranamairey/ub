@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Address;
+use App\Models\Contract;
+use App\Models\MedicalRecord;
+use App\Models\EmployeeChoise;
+use App\Models\HealthEducationLecture;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
 {
@@ -36,4 +41,14 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeChoise::class , 'employee_id');
     }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(MedicalRecord::class , 'employee_id');
+    }
+
+    // public function appointments()
+    // {
+    //     return $this->hasMany(Appointment::class , 'employee_id');
+    // }
 }
