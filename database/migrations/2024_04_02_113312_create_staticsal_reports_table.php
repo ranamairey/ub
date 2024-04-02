@@ -13,13 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('staticsal_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone_number');
-            $table->string('user_name');
-            $table->string('password');
-            $table->timestamps('activity');
+
+
+            $table->unsignedBigInteger('statistician_id');
+            $table->foreign('statistician_id')->references('id')->on('employees')->onDelete('cascade');
+
+            $table->string('file_path');
+
+            $table->string('file_type');
+
+            $table->timestamps();
         });
     }
 
@@ -30,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('staticsal_reports');
     }
 };
