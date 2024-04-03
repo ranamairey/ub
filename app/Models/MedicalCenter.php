@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Models\Address;
 use App\Models\Contract;
+use App\Models\EmployeeChoise;
 use App\Models\OuterMedicineOrder;
+use App\Models\MedicineWeeklyReport;
 use App\Models\MedicalCenterMedicine;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,5 +39,14 @@ class MedicalCenter extends Model
     {
         return $this->hasMany(EmployeeChoise::class , 'medical_center_id');
     }
+    public function medicineWeeklyReports()
+    {
+        return $this->hasMany(MedicineWeeklyReport::class , 'medical_center_id');
+    }
+    public function staticsalReports()
+    {
+        return $this->hasMany(StaticsalReport::class , 'medical_center_id');
+    }
+
 
 }

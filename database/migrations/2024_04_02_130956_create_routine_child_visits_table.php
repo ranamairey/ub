@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
 
 
-            $table->unsignedBigInteger('nutritionist_id');
-            $table->foreign('nutritionist_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
-            $table->unsignedBigInteger('employee_info_id');
-            $table->foreign('employee_info_id')->references('id')->on('employee_choises')->onDelete('cascade');
+            $table->unsignedBigInteger('employee_choise_id');
+            $table->foreign('employee_choise_id')->references('id')->on('employee_choises')->onDelete('cascade');
 
             $table->unsignedBigInteger('medical_record_id');
             $table->foreign('medical_record_id')->references('id')->on('medical_records')->onDelete('cascade');

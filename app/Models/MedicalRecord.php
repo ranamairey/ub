@@ -43,4 +43,25 @@ class MedicalRecord extends Model
     {
         return $this->hasMany(Appointment::class , 'medical_record_id');
     }
+
+    public function doctorVisits()
+    {
+        return $this->hasMany(DoctorVisit::class , 'medical_record_id');
+    }
+    public function routineWomenVisits()
+    {
+        return $this->hasMany(RoutineWomenVisit::class , 'medical_record_id');
+    }
+    public function routineChildVisits()
+    {
+        return $this->hasMany(RoutineChildVisit::class , 'medical_record_id');
+    }
+    public function womenTreatmentPrograms()
+    {
+        return $this->hasMany(WomenTreatmentPrograms::class , 'medical_record_id');
+    }
+    public function childTreatmentPrograms()
+    {
+        return $this->hasMany(ChildTreatmentProgram::class , 'medical_record_id');
+    }
 }

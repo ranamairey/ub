@@ -17,8 +17,12 @@ return new class extends Migration
             $table->id();
 
 
-            $table->unsignedBigInteger('statistician_id');
-            $table->foreign('statistician_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+
+            $table->unsignedBigInteger('medical_center_id');
+            $table->foreign('medical_center_id')->references('id')->on('medical_centers')->onDelete('cascade');
+
 
             $table->string('file_path');
 

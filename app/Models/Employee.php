@@ -47,8 +47,58 @@ class Employee extends Model
         return $this->hasMany(MedicalRecord::class , 'employee_id');
     }
 
-    // public function appointments()
-    // {
-    //     return $this->hasMany(Appointment::class , 'employee_id');
-    // }
+    public function receptionistAppointments()
+    {
+        return $this->hasMany(Appointment::class , 'receptionist_id');
+    }
+
+    public function employeeAppointments()
+    {
+        // الطبيب او الاخصائي
+        return $this->hasMany(Appointment::class , 'employee_id');
+    }
+    public function advices()
+    {
+        return $this->hasMany(Advice::class , 'employee_id');
+    }
+
+    public function medicineWeeklyReports()
+    {
+        return $this->hasMany(MedicineWeeklyReport::class , 'employee_id');
+    }
+
+    public function staticsalReports()
+    {
+        return $this->hasMany(StaticsalReport::class , 'employee_id');
+    }
+    public function doctorVisits()
+    {
+        return $this->hasMany(DoctorVisit::class , 'employee_id');
+    }
+    public function routineWomenVisits()
+    {
+        return $this->hasMany(RoutineWomenVisit::class , 'employee_id');
+    }
+    public function routineChildVisits()
+    {
+        return $this->hasMany(RoutineChildVisit::class , 'employee_id');
+    }
+    public function womenTreatmentPrograms()
+    {
+        return $this->hasMany(WomenTreatmentPrograms::class , 'employee_id');
+    }
+    public function childTreatmentPrograms()
+    {
+        return $this->hasMany(ChildTreatmentProgram::class , 'employee_id');
+    }
+    public function malnutritionWomenVisits()
+    {
+        return $this->hasMany(MalnutritionWomenVisit::class , 'employee_id');
+    }
+    public function malnutritionChildVisits()
+    {
+        return $this->hasMany(MalnutritionChildVisit::class , 'employee_id');
+    }
+
+
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MedicinOrde;
+use App\Models\MedicineOrder;
 use Illuminate\Http\Request;
 
-class MedicinOrdeController extends Controller
+class MedicineOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class MedicinOrdeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MedicinOrde  $medicinOrde
+     * @param  \App\Models\MedicineOrder  $medicineOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(MedicinOrde $medicinOrde)
+    public function show(MedicineOrder $medicineOrder)
     {
         //
     }
@@ -52,10 +52,10 @@ class MedicinOrdeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\MedicinOrde  $medicinOrde
+     * @param  \App\Models\MedicineOrder  $medicineOrder
      * @return \Illuminate\Http\Response
      */
-    public function edit(MedicinOrde $medicinOrde)
+    public function edit(MedicineOrder $medicineOrder)
     {
         //
     }
@@ -64,10 +64,10 @@ class MedicinOrdeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MedicinOrde  $medicinOrde
+     * @param  \App\Models\MedicineOrder  $medicineOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MedicinOrde $medicinOrde)
+    public function update(Request $request, MedicineOrder $medicineOrder)
     {
         //
     }
@@ -75,10 +75,10 @@ class MedicinOrdeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\MedicinOrde  $medicinOrde
+     * @param  \App\Models\MedicineOrder  $medicineOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MedicinOrde $medicinOrde)
+    public function destroy(MedicineOrder $medicineOrder)
     {
         //
     }

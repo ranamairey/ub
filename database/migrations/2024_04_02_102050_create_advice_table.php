@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('advice', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nutritionist_id');
-            $table->foreign('nutritionist_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->string('supject');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->string('subject');
             $table->string('relative_activity');
             $table->string('target_group');
             $table->timestamps();

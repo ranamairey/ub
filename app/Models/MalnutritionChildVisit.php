@@ -2,10 +2,45 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Employee;
+use App\Models\EmployeeChoise;
+use App\Models\ChildTreatmentProgram;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MalnutritionChildVisit extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'employee_id',
+        'programs_id',
+        'employee_choise_id',
+        'edema',
+        'weight',
+        'height',
+        'muac',
+        'z_score',
+        'note',
+        'current_date',
+        'next_visit_date'
+    ];
+
+    public function program()
+    {
+        return $this->belongsTo(ChildTreatmentProgram::class , 'programs_id');
+    }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class , 'employee_id');
+    }
+    public function employeeChoise()
+    {
+        return $this->belongsTo(EmployeeChoise::class , 'employee_choise_id');
+    }
+    public function medicineOrders()
+    {
+        return $this->morphMany(MedicineOrder::class, 'medicine_orderable');
+    }
+    
+
 }

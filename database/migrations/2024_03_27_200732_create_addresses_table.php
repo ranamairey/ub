@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('subdistrict_id');
+            $table->foreign('subdistrict_id')->references('id')->on('subdistricts')->onDelete('cascade');
             $table->unsignedBigInteger('addressable_id');
             $table->string('addressable_type');
-            $table->unsignedBigInteger('subdistrict_id');
-            $table->foreign('subdistrict_id')->references('id')->on('subdistrict')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('medical_record_id');
             $table->foreign('medical_record_id')->references('id')->on('medical_records')->onDelete('cascade');
 
-            $table->unsignedBigInteger('nutritionist_id');
-            $table->foreign('nutritionist_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
 
             $table->enum('acceptance_type', ['new', 'old']);
