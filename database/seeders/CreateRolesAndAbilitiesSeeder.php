@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Bouncer;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CreateRolesAndAbilitiesSeeder extends Seeder
@@ -28,5 +29,12 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
 
         // Assign Login Ability to Admin Role
         Bouncer::allow($admin)->to($loginAbility);
+
+        User::create(['name' => 'malak' ,'email' => 'malak@gmail.com' , 'password' => '123456' ]);
+
+        $user = User::where('name', 'malak')->first();
+
+        $user->assign($admin);
+       
     }
 }

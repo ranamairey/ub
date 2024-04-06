@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User;
+use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\test;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +28,13 @@ Route::post('/login', [test::class, 'login']);
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/logout', [test::class, 'logout']);
   });
+
+Route::get('/test' , function(Request $request){
+    $user = User::where('name', 'malak')->first();
+    if($user->isAn('admin')) return "true";
+    else return "false";
+ ;
+});
 
 
 
