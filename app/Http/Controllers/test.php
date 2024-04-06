@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\Sanctum;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Bouncer;
 
 class test extends Controller
 {
@@ -30,6 +31,9 @@ class test extends Controller
 
         // Send verification email (optional)
 
+        /////////////////////////////////////اعطاء صلاحية
+
+        Bouncer::assign('admin')->to($user);
         return response()->json([
             'message' => 'User created successfully!',
             'user' => $user
@@ -48,23 +52,35 @@ class test extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        // Check login credentials and handle success
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('my-app')->plainTextToken;
 
-            return response()->json([
-                'message' => 'Login successful!',
-                'user' => $user,
-                'token' => $token
-            ], 200);
-        }
+            if (Bouncer::is($user)->an('admin')) {
+            // تحقق من صلاحية
+
+                $token = $user->createToken('my-app')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'Login successful!',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            } else {
+                // Handle unauthorized access if user doesn't have the 'admin' role
+                return response()->json(['message' => 'Unauthorized: You don\'t have the required permissions to log in'], 403);
+            }
+
 
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
+}
+
     public function logout(Request $request)
 {
   $user = Auth::user();
-  $user->tokens()->delete(); 
+  $user->tokens()->delete();
   return response()->json(['message' => 'Successfully logged out!']);
 }
 }
+
