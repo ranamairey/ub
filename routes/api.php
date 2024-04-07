@@ -1,9 +1,14 @@
 <?php
 
+use App\Models\User;
+use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\test;
+<<<<<<< HEAD
 use App\Http\Controllers\EmployeeController;
+=======
+use Illuminate\Support\Facades\Route;
+>>>>>>> 0fb44f846a8929803d3e44bed42e493518c37906
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +40,13 @@ Route::post('/store', [EmployeeController::class, 'store']);
 Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
 
 
+
+Route::get('/test' , function(Request $request){
+    $user = User::where('name', 'malak')->first();
+    if($user->isAn('admin')) return "true";
+    else return "false";
+ ;
+});
 
 
 

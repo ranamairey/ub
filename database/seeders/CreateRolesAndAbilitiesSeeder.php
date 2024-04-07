@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Bouncer;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CreateRolesAndAbilitiesSeeder extends Seeder
@@ -13,7 +14,7 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
      * @return void
      */
     public function run()
-    
+
         {
             // Create Doctor Role
             $doctor = Bouncer::role()->firstOrCreate([
