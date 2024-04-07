@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone_number');
             $table->string('user_name');
-            $table->boolean('active')->default(false);
+            $table->boolean('active');
             $table->string('password');
-            
+
             $table->timestamps();
         });
     }

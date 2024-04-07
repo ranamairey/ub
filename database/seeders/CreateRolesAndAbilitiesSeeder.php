@@ -13,20 +13,36 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // Create Admin Role
-        $admin = Bouncer::role()->firstOrCreate([
-            'name' => 'admin',
-            'title' => 'Administrator',
-        ]);
+    
+        {
+            // Create Doctor Role
+            $doctor = Bouncer::role()->firstOrCreate([
+                'name' => 'doctor',
+                'title' => 'Doctor',
+            ]);
 
-        // Create Login Ability
-        $loginAbility = Bouncer::ability()->firstOrCreate([
-            'name' => 'login',
-            'title' => 'Login',
-        ]);
+            // Create Nutritionist Role
+            $nutritionist = Bouncer::role()->firstOrCreate([
+                'name' => 'nutritionist',
+                'title' => 'Nutritionist',
+            ]);
 
-        // Assign Login Ability to Admin Role
-        Bouncer::allow($admin)->to($loginAbility);
-    }
+            // Create Receptionist Role
+            $receptionist = Bouncer::role()->firstOrCreate([
+                'name' => 'receptionist',
+                'title' => 'Receptionist',
+            ]);
+
+            // Create Statistics Employee Role
+            $statisticsEmployee = Bouncer::role()->firstOrCreate([
+                'name' => 'statistics-employee',
+                'title' => 'Statistics Employee',
+            ]);
+
+            // Create Pharmacist Role
+            $pharmacist = Bouncer::role()->firstOrCreate([
+                'name' => 'pharmacist',
+                'title' => 'Pharmacist',
+            ]);
 }
+    }

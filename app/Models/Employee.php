@@ -9,17 +9,20 @@ use App\Models\EmployeeChoise;
 use App\Models\HealthEducationLecture;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use  HasApiTokens, HasFactory,HasRolesAndAbilities;
 
     protected $fillable = [
         'name',
         'phone_number',
         'user_name',
         'password',
-        'activity'
+        'active'
     ];
 
     public function addresses()

@@ -14,7 +14,7 @@ class Address extends Model
         'name',
         'addressable_id',
         'addressable_type',
-        'subdistrict_id'
+        'subdistrict_id',
     ];
 
     public function addressable()
@@ -22,10 +22,20 @@ class Address extends Model
         return $this->morphTo();
     }
 
+
     public function subdistrict()
     {
-        return $this->belongsTo(Subdistrict::class , 'subdistrict_id');
+        return $this->belongsTo(Subdistrict::class, 'subdistrict_id');
     }
 
 
+    public function district()
+    {
+        return $this->subdistrict->district();
+    }
+
+    public function governorate()
+    {
+        return $this->district->governorate();
+    }
 }

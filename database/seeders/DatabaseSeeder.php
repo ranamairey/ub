@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call(CreateRolesAndAbilitiesSeeder::class);
+        $this->call(MedicalCentersTableSeeder::class);
+        $this->call(AdressesSeeder::class);
 }
 }
