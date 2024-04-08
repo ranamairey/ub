@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
-            $table->string('user_name');
+            $table->string('user_name')->unique();
             $table->boolean('active');
             $table->string('password');
 

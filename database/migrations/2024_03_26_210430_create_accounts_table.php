@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['Patient', 'Related']);
-            $table->string('user_name');
+            $table->string('user_name')->unique();
             $table->string('password');
             $table->timestamps();
         });

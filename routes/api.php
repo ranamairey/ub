@@ -4,11 +4,8 @@ use App\Models\User;
 use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\test;
-<<<<<<< HEAD
 use App\Http\Controllers\EmployeeController;
-=======
 use Illuminate\Support\Facades\Route;
->>>>>>> 0fb44f846a8929803d3e44bed42e493518c37906
 
 /*
 |--------------------------------------------------------------------------

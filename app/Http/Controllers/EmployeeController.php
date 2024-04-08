@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Bouncer;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Models\EmployeeChoise;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Bouncer;
 
 class EmployeeController extends Controller
 {
@@ -91,5 +92,48 @@ class EmployeeController extends Controller
         }
     }
 
+    public function login(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_name' => ['required', 'string', 'max:255','unique:employees,user_name'],
+            'password' => ['required', 'string', 'min:8'],
+            'employee_choise.medical_center_id' => ['required', 'exists:medical_centers,id'],
+            'employee_choise.coverage_id' => ['required', 'exists:coverages,id'],
+            'employee_choise.office_id' => ['required', 'exists:offices,id'],
+            'employee_choise.activity_id' => ['required', 'exists:activities,id'],
+            'employee_choise.agency_id' => ['required', 'exists:agencies,id'],
+            'employee_choise.access_id' => ['required', 'exists:accesses,id'],
+            'employee_choise.partner_id' => ['required', 'exists:partners,id'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $employee = Employee::where('user_name' , $request->input('user_name'))->first();
+
+        
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        if (!Hash::check($request->input('password'), $employee->password)) {
+            return response()->json(['message' => 'Invalid password'], 401);
+        }
+
+        $employeeChoise = EmployeeChoise::create([
+            'medical_center_id' => $request['employee_choise']['medical_center_id'],
+            'coverage_id' => $request['employee_choise']['coverage_id'],
+            'office_id' => $request['employee_choise']['office_id'],
+            'activity_id' => $request['employee_choise']['activity_id'],
+            'agency_id' => $request['employee_choise']['agency_id'],
+            'access_id' => $request['employee_choise']['access_id'],
+            'partner_id' => $request['employee_choise']['partner_id'],
+        ]);
+        // Role name in the token
+        $token = $employee()->createToken('employee_token');
+        
+        return response()->json(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise] , 200);
+
+    }
 
 }
