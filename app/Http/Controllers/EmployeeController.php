@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Bouncer;
+use App\Models\Contract;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\EmployeeChoise;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -94,7 +96,7 @@ class EmployeeController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'user_name' => ['required', 'string', 'max:255','unique:employees,user_name'],
+            'user_name' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
             'employee_choise.medical_center_id' => ['required', 'exists:medical_centers,id'],
             'employee_choise.coverage_id' => ['required', 'exists:coverages,id'],
@@ -120,7 +122,7 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Invalid password'], 401);
         }
 
-        $employeeChoise = EmployeeChoise::create([
+        $employeeChoise = $employee->employeeChoises()->create([
             'medical_center_id' => $request['employee_choise']['medical_center_id'],
             'coverage_id' => $request['employee_choise']['coverage_id'],
             'office_id' => $request['employee_choise']['office_id'],
@@ -129,10 +131,54 @@ class EmployeeController extends Controller
             'access_id' => $request['employee_choise']['access_id'],
             'partner_id' => $request['employee_choise']['partner_id'],
         ]);
-        // Role name in the token
-        $token = $employee()->createToken('employee_token');
-        
-        return response()->json(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise] , 200);
+        $role = $employee->getRoles();
+        $token = $employee->createToken($role[0]);
+        return response()->json(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise , 'role' => $role] , 200);
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function renewalEmployeeContract(Request $request){
+        $validator = Validator::make($request->all(), [
+            'employee_id' => ['required', 'integer', 'exists:employees,id'],
+            'expiration_date' => ['required', 'date'],
+            'contract_value' => ['required', 'integer'],
+            'certificate' => ['required', 'string'],
+            'medical_center_id' => ['required', 'integer', 'exists:medical_centers,id'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $employeeId = $request->input('employee_id');
+        $employee = Employee::find($employeeId);
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        $contract = $employee->contracts()->first();
+
+        if (!$contract) {
+            return response()->json(['message' => 'Employee do not have a contract'], 404);
+        }
+        $expirationDate = Carbon::parse($contract->expiration_date);
+
+        if( ! $expirationDate->isPast() ){
+            return response()->json(['message' => 'The contract did not expired yet'], 400);
+        }
+
+        $contract->delete();
+
+        $newContract= $employee->contracts()->create([
+            'expiration_date' => $request->input('expiration_date'),
+            'contract_value' => $request->input('contract_value'),
+            'certificate' => $request->input('certificate'),
+            'medical_center_id' => $request->input('medical_center_id'),
+        ]);
+
+        return response()->json(['contract' => $contract], 201);
 
     }
 

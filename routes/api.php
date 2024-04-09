@@ -33,17 +33,13 @@ Route::post('/login', [test::class, 'login']);
 */
 Route::post('/store', [EmployeeController::class, 'store']);
 
-
 Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
 
+Route::post('/login', [EmployeeController::class, 'login']);
 
 
-Route::get('/test' , function(Request $request){
-    $user = User::where('name', 'malak')->first();
-    if($user->isAn('admin')) return "true";
-    else return "false";
- ;
+Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
+  Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
 });
-
 
 

@@ -21,7 +21,6 @@ class EmployeeChoise extends Model
     use HasFactory;
     
     protected $fillable = [
-        'employee_id',
         'medical_center_id',
         'coverage_id',
         'office_id',
