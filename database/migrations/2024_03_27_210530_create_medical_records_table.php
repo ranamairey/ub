@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->unsignedBigInteger('account_id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts');
-            $table->string('category');
+            $table->enum('category', ['child', 'pregnant']);
             $table->string('name');
             $table->string('mother_name');
             $table->string('father_name');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->enum('residence_status' , ['Resident' , 'Immigrant' , 'Returnee']);
             $table->boolean('special_needs');
-            $table->string('related_person');
+            $table->string('related_person')->default(false);
             $table->string('related_person_phone_number');
             $table->timestamps();
         });

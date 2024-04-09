@@ -29,11 +29,16 @@ class MedicalRecordController extends Controller
             'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'nullable|string|min:10|max:20',
             'employee_id' => 'required|integer|exists:employees,id',
+            'address.governorate_id' => ['required', 'exists:governorates,id'],
+            'address.district_id' => ['required', 'exists:districts,id'],
+            'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
+            'address.name' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+
 
         $validatedData = $validator->validated();
 
@@ -41,8 +46,17 @@ class MedicalRecordController extends Controller
 
         $medicalRecord = new MedicalRecord($validatedData);
         $medicalRecord->employee()->associate($employee);
-
         $medicalRecord->save();
+
+        $recordId = $medicalRecord->id;
+
+        $addressData = $request->get('address');
+
+        $address = $medicalRecord->addresses()->create([
+            'name' => $addressData['name'],
+            'subdistrict_id' => $addressData['subdistrict_id'],
+        ]);
+
 
         $recordId = $medicalRecord->id;
 
