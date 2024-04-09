@@ -4,6 +4,7 @@ use App\Models\User;
 use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\test;
+use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
 
 Route::post('/login', [EmployeeController::class, 'login']);
 
+Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
