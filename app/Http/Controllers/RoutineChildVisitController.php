@@ -7,9 +7,11 @@ use App\Models\MedicalRecord;
 use Illuminate\Validation\Rule;
 use App\Models\RoutineChildVisit;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiResponseTrait;
 
 class RoutineChildVisitController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      *
@@ -101,12 +103,12 @@ class RoutineChildVisitController extends Controller
             ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
 
         
         if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
-            return response()->json(['error' => 'The specified medical record does not exist.'], 422);
+            return $this->unprocessable($routineChildVisit , 'The specified medical record does not exist.');
         }
 
         $employee = auth('sanctum')->user();
@@ -121,7 +123,7 @@ class RoutineChildVisitController extends Controller
             'date' =>   $request->input('date'),
         ]);
 
-        return response()->json(['visit' => $routineChildVisit], 201);
+        return $this->created($routineChildVisit);
 
     }
 }

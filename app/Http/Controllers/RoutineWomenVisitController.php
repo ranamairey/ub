@@ -8,9 +8,11 @@ use Illuminate\Validation\Rule;
 use App\Models\RoutineWomenVisit;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiResponseTrait;
 
 class RoutineWomenVisitController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      *
@@ -39,17 +41,18 @@ class RoutineWomenVisitController extends Controller
             ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
 
         
         if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
-            return response()->json(['error' => 'The specified medical record does not exist.'], 422);
+            return $this->unprocessable($routineWomenVisit , 'The specified medical record does not exist.');
         }
+    
 
         $employee = auth('sanctum')->user();
 
-        $routineChildVisit = RoutineWomenVisit::create([
+        $routineWomenVisit = RoutineWomenVisit::create([
             'employee_id' => $employee->id,
             'employee_choise_id' => $employee->employeeChoises()->first()->id,
             'medical_record_id' => $request->input('medical_record_id'),
@@ -58,8 +61,9 @@ class RoutineWomenVisitController extends Controller
             'z_score' =>  $request->input('z_score'),
             'date' =>   $request->input('date'),
         ]);
+        return $this->created($routineWomenVisit);
 
-        return response()->json(['visit' => $routineChildVisit], 201);
+
 
     }
 
