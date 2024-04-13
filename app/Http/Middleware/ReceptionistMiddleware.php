@@ -16,6 +16,7 @@ class ReceptionistMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        
         $employee = auth('sanctum')->user();
         if(!$employee &&   ! $employee->isA('receptionist')){
             return response()->json(['message' => 'Unauthorized'], 403);

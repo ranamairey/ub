@@ -31,8 +31,9 @@ class EmployeeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
+
         $employee = Employee::create([
             'name' => $request->name,
             'phone_number' => $request->phone_number,
@@ -62,11 +63,13 @@ class EmployeeController extends Controller
             if ($role) {
                 $employee->assign($role);
             } else {
+                
             return response()->json('Bad Request', 400);
             }
         }
 
-        return response()->json($employee, 201);
+        return $this->created($employee);
+
     }
 
     public function freezeEmployee(Request $request)
@@ -108,12 +111,12 @@ class EmployeeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
 
         $employee = Employee::where('user_name' , $request->input('user_name'))->first();
 
-        
+
         if (!$employee) {
             return response()->json(['message' => 'Employee not found'], 404);
         }
@@ -135,7 +138,7 @@ class EmployeeController extends Controller
         $token = $employee->createToken($role[0]);
         return response()->json(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise , 'role' => $role] , 200);
     }
-    
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function renewalEmployeeContract(Request $request){
@@ -179,6 +182,7 @@ class EmployeeController extends Controller
         ]);
 
         return response()->json(['contract' => $contract], 201);
+
 
     }
 

@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Bouncer;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\Employee;
+use Illuminate\Support\Facades\Hash;
 
 class CreateRolesAndAbilitiesSeeder extends Seeder
 {
@@ -45,5 +47,20 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
                 'name' => 'pharmacist',
                 'title' => 'Pharmacist',
             ]);
+
+            $adminData = [
+                'name' => 'Admin',
+                'phone_number' => '1234567890',
+                'user_name' => 'admin',
+                'password' => Hash::make('secret123'),
+                'active' => true,
+            ];
+
+            $admin = Employee::create($adminData);
+
+
+                $admin->assign($statisticsEmployee);
+
+
 }
     }

@@ -106,11 +106,12 @@ class RoutineChildVisitController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-        
+
         if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
             return $this->unprocessable($routineChildVisit , 'The specified medical record does not exist.');
         }
 
+        
         $employee = auth('sanctum')->user();
 
         $routineChildVisit = RoutineChildVisit::create([

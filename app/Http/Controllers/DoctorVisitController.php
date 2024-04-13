@@ -82,4 +82,37 @@ class DoctorVisitController extends Controller
     {
         //
     }
+
+    public function createDoctorVisit(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
+            'result' => ['required', 'string'],
+            'date' => ['required', 'date'],
+
+            ]);
+
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+
+        if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+            return $this->unprocessable($DoctorVisit , 'The specified medical record does not exist.');
+        }
+
+        $employee = auth('sanctum')->user();
+
+        $DoctorVisit = DoctorVisit::create([
+            'employee_id' => $employee->id,
+            'employee_choise_id' => $employee->employeeChoises()->first()->id,
+            'medical_record_id' => $request->input('medical_record_id'),
+            'medical_record_id' => $request->input('medical_record_id'),
+            'result' => $request->input('result'),
+            'date' => $request->input('date'),
+        ]);
+
+        return $this->created($DoctorVisit);
+
+    }
 }
