@@ -6,9 +6,14 @@ use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiResponseTrait;
+
 
 class MedicalRecordController extends Controller
 {
+    use ApiResponseTrait;
+
+    
     /**
      * Store a newly created medical record in storage.
      *

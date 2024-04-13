@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Partner;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class PartnerController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class PartnerController extends Controller
      */
     public function index()
     {
-        //
+        $partners = Partner::all();
+        return $this->success($partners);
     }
 
     /**

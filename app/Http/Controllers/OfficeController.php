@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Office;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class OfficeController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class OfficeController extends Controller
      */
     public function index()
     {
-        //
+        $offices = Office::all();
+        return $this->success($offices);
     }
 
     /**

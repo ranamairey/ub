@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Access;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class AccessController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class AccessController extends Controller
      */
     public function index()
     {
-        //
+        $accesses = Access::all();
+        return $this->success($accesses);
     }
 
     /**

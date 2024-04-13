@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalCenter;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
 
 class MedicalCenterController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +17,8 @@ class MedicalCenterController extends Controller
      */
     public function index()
     {
-        //
+        $medicalCenters = MedicalCenter::all();
+        return $this->success($medicalCenters);
     }
 
     /**

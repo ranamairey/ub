@@ -21,9 +21,9 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
-        \App\Http\Middleware\ReceptionistMiddleware::class,
-        \App\Http\Middleware\NutritionistMiddleware::class,
+        // \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
+        // \App\Http\Middleware\ReceptionistMiddleware::class,
+        // \App\Http\Middleware\NutritionistMiddleware::class,
 
 
 
@@ -80,7 +80,6 @@ class Kernel extends HttpKernel
         'statistics' => \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
         'receptionist' => \App\Http\Middleware\ReceptionistMiddleware::class,
         'nutritionist' => \App\Http\Middleware\NutritionistMiddleware::class,
-
 
     ];
 }

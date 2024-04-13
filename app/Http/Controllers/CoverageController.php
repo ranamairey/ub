@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Coverage;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class CoverageController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class CoverageController extends Controller
      */
     public function index()
     {
-        //
+        $coverages = Coverage::all();
+        return $this->success($coverages);
     }
 
     /**

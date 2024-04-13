@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Agency;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class AgencyController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class AgencyController extends Controller
      */
     public function index()
     {
-        //
+        $agencies = Agency::all();
+        return $this->success($agencies);
     }
 
     /**

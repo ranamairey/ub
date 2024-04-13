@@ -10,9 +10,13 @@ use App\Models\EmployeeChoise;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiResponseTrait;
+
 
 class EmployeeController extends Controller
 {
+    use ApiResponseTrait;
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -64,7 +68,8 @@ class EmployeeController extends Controller
                 $employee->assign($role);
             } else {
                 
-            return response()->json('Bad Request', 400);
+            return $this->error($roleName);
+            
             }
         }
 
@@ -88,12 +93,9 @@ class EmployeeController extends Controller
                 'active' => false,
             ]);
 
-            return response()->json([
-                'message' => 'Employee account frozen successfully.',
-            ], 200);
+            return $this->success($employee ,'Employee account frozen successfully.' );
         } catch (ModelNotFoundException $e) {
-
-            return response()->json(['error' => 'Employee not found'], 404);
+            return $this->notFound($employee ,'Employee not found');
         }
     }
 
@@ -118,11 +120,12 @@ class EmployeeController extends Controller
 
 
         if (!$employee) {
-            return response()->json(['message' => 'Employee not found'], 404);
+            return $this->notFound($employee , 'Employee not found');
         }
 
         if (!Hash::check($request->input('password'), $employee->password)) {
-            return response()->json(['message' => 'Invalid password'], 401);
+            return $this->unauthorized($request->input('password') , 'Invalid password');
+            
         }
 
         $employeeChoise = $employee->employeeChoises()->create([
@@ -136,7 +139,7 @@ class EmployeeController extends Controller
         ]);
         $role = $employee->getRoles();
         $token = $employee->createToken($role[0]);
-        return response()->json(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise , 'role' => $role] , 200);
+        return $this->success(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise , 'role' => $role]);
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,25 +154,26 @@ class EmployeeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
 
         $employeeId = $request->input('employee_id');
         $employee = Employee::find($employeeId);
 
         if (!$employee) {
-            return response()->json(['message' => 'Employee not found'], 404);
+            return $this->notFound($employee , 'Employee not found');
         }
 
         $contract = $employee->contracts()->first();
 
         if (!$contract) {
-            return response()->json(['message' => 'Employee do not have a contract'], 404);
+            return $this->notFound($contract , 'Contract not found');
         }
         $expirationDate = Carbon::parse($contract->expiration_date);
 
         if( ! $expirationDate->isPast() ){
-            return response()->json(['message' => 'The contract did not expired yet'], 400);
+            return $this->error($contract , 'The contract did not expired yet');
+
         }
 
         $contract->delete();
@@ -180,8 +184,8 @@ class EmployeeController extends Controller
             'certificate' => $request->input('certificate'),
             'medical_center_id' => $request->input('medical_center_id'),
         ]);
-
-        return response()->json(['contract' => $contract], 201);
+        return $this->created($contract);
+        
 
 
     }
