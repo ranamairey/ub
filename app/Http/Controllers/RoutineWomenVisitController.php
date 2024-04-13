@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RoutineWomenVisit;
 use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
+use Illuminate\Validation\Rule;
+use App\Models\RoutineWomenVisit;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class RoutineWomenVisitController extends Controller
 {
@@ -15,6 +19,48 @@ class RoutineWomenVisitController extends Controller
     public function index()
     {
         //
+    }
+
+    public function createWomenVisit(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
+            'z_score' => ['required', 'integer'],
+            'current_status' => [
+                'required',
+                Rule::in(['mam','normal']),
+            ],
+            'status_type' => [
+                'required',
+                Rule::in(['pregnant','lactating','non']),
+            ],
+            'date' => ['required', 'date'],
+
+            ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        
+        if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+            return response()->json(['error' => 'The specified medical record does not exist.'], 422);
+        }
+
+        $employee = auth('sanctum')->user();
+
+        $routineChildVisit = RoutineWomenVisit::create([
+            'employee_id' => $employee->id,
+            'employee_choise_id' => $employee->employeeChoises()->first()->id,
+            'medical_record_id' => $request->input('medical_record_id'),
+            'current_status' =>  $request->input('current_status'),
+            'status_type'  =>   $request->input('status_type'),
+            'z_score' =>  $request->input('z_score'),
+            'date' =>   $request->input('date'),
+        ]);
+
+        return response()->json(['visit' => $routineChildVisit], 201);
+
     }
 
     /**

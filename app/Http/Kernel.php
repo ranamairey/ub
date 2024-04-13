@@ -22,6 +22,10 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
+        \App\Http\Middleware\ReceptionistMiddleware::class,
+        \App\Http\Middleware\NutritionistMiddleware::class,
+
+
 
     ];
 
@@ -74,5 +78,9 @@ class Kernel extends HttpKernel
         'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
         'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         'statistics' => \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
+        'receptionist' => \App\Http\Middleware\ReceptionistMiddleware::class,
+        'nutritionist' => \App\Http\Middleware\NutritionistMiddleware::class,
+
+
     ];
 }

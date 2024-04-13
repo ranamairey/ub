@@ -28,7 +28,6 @@ class MedicalRecordController extends Controller
             'special_needs' => 'required|boolean',
             'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'nullable|string|min:10|max:20',
-            'employee_id' => 'required|integer|exists:employees,id',
             'address.governorate_id' => ['required', 'exists:governorates,id'],
             'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
@@ -42,7 +41,17 @@ class MedicalRecordController extends Controller
 
         $validatedData = $validator->validated();
 
-        $employee = Employee::find($request->employee_id);
+        $employee = auth('sanctum')->user();
+
+        $existMedicalRecord = MedicalRecord::where([
+            ['name' , $request->input('name')],
+            ['mother_name' , $request->input('mother_name')],
+            ['father_name' , $request->input('father_name')]
+        ])->first();
+
+        if($existMedicalRecord){
+            return response()->json(['error'  => 'This patient already has a medical record'], 409);
+        }
 
         $medicalRecord = new MedicalRecord($validatedData);
         $medicalRecord->employee()->associate($employee);

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RoutineChildVisit;
 use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
+use Illuminate\Validation\Rule;
+use App\Models\RoutineChildVisit;
+use Illuminate\Support\Facades\Validator;
 
 class RoutineChildVisitController extends Controller
 {
@@ -81,5 +84,44 @@ class RoutineChildVisitController extends Controller
     public function destroy(RoutineChildVisit $routineChildVisit)
     {
         //
+    }
+
+    public function createChildVisit(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
+            'activity' => ['required', 'string'],
+            'z_score' => ['required', 'integer'],
+            'current_status' => [
+                'required',
+                Rule::in(['sam', 'mam', 'normal']),
+            ],
+            'date' => ['required', 'date'],
+
+            ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        
+        if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+            return response()->json(['error' => 'The specified medical record does not exist.'], 422);
+        }
+
+        $employee = auth('sanctum')->user();
+
+        $routineChildVisit = RoutineChildVisit::create([
+            'employee_id' => $employee->id,
+            'employee_choise_id' => $employee->employeeChoises()->first()->id,
+            'medical_record_id' => $request->input('medical_record_id'),
+            'current_status' =>  $request->input('current_status'),
+            'activity'  =>   $request->input('activity'),
+            'z_score' =>  $request->input('z_score'),
+            'date' =>   $request->input('date'),
+        ]);
+
+        return response()->json(['visit' => $routineChildVisit], 201);
+
     }
 }

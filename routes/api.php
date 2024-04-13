@@ -4,9 +4,11 @@ use App\Models\User;
 use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\test;
-use App\Http\Controllers\MedicalRecordController;
-use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\MedicalRecordController;
+use App\Http\Controllers\RoutineChildVisitController;
+use App\Http\Controllers\RoutineWomenVisitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,15 +34,24 @@ Route::group(['middleware' => 'auth:api'], function () {
   });
 Route::post('/login', [test::class, 'login']);
 */
-Route::post('/store', [EmployeeController::class, 'store']);
 
-Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
+
 
 Route::post('/login', [EmployeeController::class, 'login']);
 
+Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
+});
+
+Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
+Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
+Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+
+});
 
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
+  Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
+  Route::post('/store', [EmployeeController::class, 'store']);
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
 });
 
