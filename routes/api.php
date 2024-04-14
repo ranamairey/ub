@@ -61,6 +61,7 @@ Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
+Route::post('createAccount', [AccountController::class, 'create']);
 });
 
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
