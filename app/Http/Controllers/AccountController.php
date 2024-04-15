@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiResponseTrait;
+
 
 class AccountController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      *
@@ -22,9 +26,29 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:accounts',
+            'password' => 'required|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+        $account= Account::create([
+            'name'  => $request->input('name' ) ,
+            'email' => $request->input('email' ),
+            'password' => Hash::make($request->input('password'))
+        ]);
+
+        return $this->created($account);
+
+
+
     }
 
     /**
