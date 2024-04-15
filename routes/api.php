@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
@@ -55,31 +56,31 @@ Route::get('/getPartners' , [PartnerController::class ,  'index']);
 Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 
+Route::get('/findEmployee' , [MedicalCenterController::class ,  'findEmployee']);
 
 
+Route::post('/loginUser', [AccountController::class, 'login']);
 
 
 
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
-
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+Route::post('createAccount' , [AccountController::class , 'create']);
+Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRecord']);
 });
 
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
-
-
 });
 
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
   Route::post('/store', [EmployeeController::class, 'store']);
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
-
-
+  Route::post('updateEmployee/{id}' , [EmployeeController::class , 'updateEmployee']);
 });
 
 

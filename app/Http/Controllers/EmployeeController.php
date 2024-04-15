@@ -124,7 +124,6 @@ class EmployeeController extends Controller
 
         if (!Hash::check($request->input('password'), $employee->password)) {
             return $this->unauthorized($request->input('password') , 'Invalid password');
-
         }
 
         $employeeChoise = $employee->employeeChoises()->create([
@@ -183,9 +182,42 @@ class EmployeeController extends Controller
             'medical_center_id' => $request->input('medical_center_id'),
         ]);
         return $this->created($contract);
-
-
-
     }
+
+    public function updateEmployee(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'sometimes|required|string',
+            'phone_number' => 'sometimes|required|string',
+            
+        ]);
+
+        if ($request->has('password')) {
+            $data['password'] = Hash::make($request->input('password'));
+        }
+
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            return $this->notFound($employee_id , 'Employee not found');
+        }
+
+        $employee->update($data);
+
+        return $this->success($employee);
+    }
+
+    public function findEmployee($id)
+    {
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            return $this->notFound('Employee not found');
+        }
+
+        return $this->success($employee);;
+    }
+
+
 
 }

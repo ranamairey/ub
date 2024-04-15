@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\MedicalRecord;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Account extends Model
 {
-    use HasFactory;
+    use  HasApiTokens, HasFactory;
+
 
     protected $fillable = [
         'type',
