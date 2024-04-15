@@ -17,10 +17,20 @@ class MedicalCentersTableSeeder extends Seeder
      */
     public function run()
     {
+        $medical_centers2 = [
+
+            [
+                'name' => 'المركز الصحي الثابت في درعا السد',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
+        DB::table('medical_centers')->insert($medical_centers2);
+
         $medical_centers = [
 
             [
-                'type' => 'normal',
+                'name' => 'المركز الصحي الثابت في درعا البلد',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

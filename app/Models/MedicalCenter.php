@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MedicalCenter extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'type',
+        'name',
     ];
 
     public function outerMedicineOrders()
