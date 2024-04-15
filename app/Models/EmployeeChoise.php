@@ -19,12 +19,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class EmployeeChoise extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'medical_center_id',
         'coverage_id',
         'office_id',
-        'activity_id',
         'agency_id',
         'access_id',
         'partner_id'
@@ -46,10 +45,7 @@ class EmployeeChoise extends Model
     {
         return $this->belongsTo(Office::class , 'office_id');
     }
-    public function activity()
-    {
-        return $this->belongsTo(Activity::class , 'activity_id');
-    }
+   
     public function agency()
     {
         return $this->belongsTo(Agency::class , 'agency_id');

@@ -62,6 +62,7 @@ Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
+Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
 
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 });

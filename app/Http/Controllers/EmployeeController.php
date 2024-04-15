@@ -67,9 +67,9 @@ class EmployeeController extends Controller
             if ($role) {
                 $employee->assign($role);
             } else {
-                
+
             return $this->error($roleName);
-            
+
             }
         }
 
@@ -106,7 +106,6 @@ class EmployeeController extends Controller
             'employee_choise.medical_center_id' => ['required', 'exists:medical_centers,id'],
             'employee_choise.coverage_id' => ['required', 'exists:coverages,id'],
             'employee_choise.office_id' => ['required', 'exists:offices,id'],
-            'employee_choise.activity_id' => ['required', 'exists:activities,id'],
             'employee_choise.agency_id' => ['required', 'exists:agencies,id'],
             'employee_choise.access_id' => ['required', 'exists:accesses,id'],
             'employee_choise.partner_id' => ['required', 'exists:partners,id'],
@@ -125,14 +124,13 @@ class EmployeeController extends Controller
 
         if (!Hash::check($request->input('password'), $employee->password)) {
             return $this->unauthorized($request->input('password') , 'Invalid password');
-            
+
         }
 
         $employeeChoise = $employee->employeeChoises()->create([
             'medical_center_id' => $request['employee_choise']['medical_center_id'],
             'coverage_id' => $request['employee_choise']['coverage_id'],
             'office_id' => $request['employee_choise']['office_id'],
-            'activity_id' => $request['employee_choise']['activity_id'],
             'agency_id' => $request['employee_choise']['agency_id'],
             'access_id' => $request['employee_choise']['access_id'],
             'partner_id' => $request['employee_choise']['partner_id'],
@@ -185,7 +183,7 @@ class EmployeeController extends Controller
             'medical_center_id' => $request->input('medical_center_id'),
         ]);
         return $this->created($contract);
-        
+
 
 
     }

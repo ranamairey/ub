@@ -13,7 +13,7 @@ class MedicalRecordController extends Controller
 {
     use ApiResponseTrait;
 
-    
+
     /**
      * Store a newly created medical record in storage.
      *
@@ -81,4 +81,58 @@ class MedicalRecordController extends Controller
 
         ], 201);
     }
+    public function update(Request $request, $id)
+    {
+            $validator = Validator::make($request->all(), [
+                'category' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
+                'mother_name' => 'required|string|max:255',
+                'father_name' => 'required|string|max:255',
+                'gender' => 'required|in:Male,Female',
+                'phone_number' => 'required|string|min:10|max:20',
+                'residence_status' => 'required|in:Resident,Immigrant,Returnee',
+                'special_needs' => 'required|boolean',
+                'related_person' => 'nullable|string|max:255',
+                'related_person_phone_number' => 'nullable|string|min:10|max:20',
+                'address.governorate_id' => ['required', 'exists:governorates,id'],
+                'address.district_id' => ['required', 'exists:districts,id'],
+                'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
+                'address.name' => ['required', 'string', 'max:255'],
+            ]);
+
+
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+        $validatedData = $validator->validated();
+
+        $medicalRecord = MedicalRecord::findOrFail($id);
+
+        if (!$medicalRecord) {
+            return $this->notFound('Medical record not found');
+        }
+
+        $addressData = $request->get('address');
+
+        $medicalRecord->update($validatedData);
+
+        if ($addressData) {
+            $existingAddress = $medicalRecord->addresses()->first();
+
+            if ($existingAddress) {
+                $existingAddress->update($addressData);
+            } else {
+                $medicalRecord->addresses()->create($addressData);
+            }
+        }
+
+        $responseData = $medicalRecord->fresh()->toArray();
+        $address = $medicalRecord->addresses()->first();
+
+        $responseData['address'] = $address ? $address->fresh()->toArray() : null;
+
+        return $this->success($responseData, 'Medical record updated successfully!');
+    }
 }
+
