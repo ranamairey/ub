@@ -10,57 +10,43 @@ use Illuminate\Support\Facades\Hash;
 
 class CreateRolesAndAbilitiesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
+    {
 
-        {
-            // Create Doctor Role
-            $doctor = Bouncer::role()->firstOrCreate([
-                'name' => 'doctor',
-                'title' => 'Doctor',
+        $roles = [
+            'doctor' => 'Doctor',
+            'nutritionist' => 'Nutritionist',
+            'receptionist' => 'Receptionist',
+            'statistics-employee' => 'Statistics Employee',
+            'pharmacist' => 'Pharmacist',
+        ];
+
+        foreach ($roles as $name => $title) {
+            Bouncer::role()->firstOrCreate([
+                'name' => $name,
+                'title' => $title,
             ]);
+        }
 
-            // Create Nutritionist Role
-            $nutritionist = Bouncer::role()->firstOrCreate([
-                'name' => 'nutritionist',
-                'title' => 'Nutritionist',
-            ]);
 
-            // Create Receptionist Role
-            $receptionist = Bouncer::role()->firstOrCreate([
-                'name' => 'receptionist',
-                'title' => 'Receptionist',
-            ]);
+        $userData = [
+            ['name' => 'nutritionist', 'user_name' => 'nutritionist123', 'role' => 'nutritionist'],
+            ['name' => 'doctor', 'user_name' => 'doctor', 'role' => 'doctor'],
+            ['name' => 'receptionist', 'user_name' => 'receptionist', 'role' => 'receptionist'],
+            ['name' => 'pharmacist', 'user_name' => 'pharmacist', 'role' => 'pharmacist'],
+        ];
 
-            // Create Statistics Employee Role
-            $statisticsEmployee = Bouncer::role()->firstOrCreate([
-                'name' => 'statistics-employee',
-                'title' => 'Statistics Employee',
-            ]);
-
-            // Create Pharmacist Role
-            $pharmacist = Bouncer::role()->firstOrCreate([
-                'name' => 'pharmacist',
-                'title' => 'Pharmacist',
-            ]);
-
-            $adminData = [
-                'name' => 'Admin',
+        foreach ($userData as $data) {
+            $employeeData = [
+                'name' => $data['name'],
                 'phone_number' => '1234567890',
-                'user_name' => 'admin',
+                'user_name' => $data['user_name'],
                 'password' => Hash::make('secret123'),
                 'active' => true,
             ];
 
-            $admin = Employee::create($adminData);
-
-
-                $admin->assign($statisticsEmployee);
-
-
-}
+            $employee = Employee::firstOrCreate($employeeData);
+            $employee->assign($data['role']);
+        }
     }
+}

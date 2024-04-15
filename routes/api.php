@@ -12,6 +12,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\RoutineChildVisitController;
@@ -61,11 +62,14 @@ Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
+
+Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 });
 
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+
 
 });
 
@@ -73,6 +77,8 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
   Route::post('/store', [EmployeeController::class, 'store']);
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
+
+
 });
 
 
