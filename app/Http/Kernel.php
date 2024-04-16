@@ -80,6 +80,10 @@ class Kernel extends HttpKernel
         'statistics' => \App\Http\Middleware\StatisticsEmployeeMiddleware::class,
         'receptionist' => \App\Http\Middleware\ReceptionistMiddleware::class,
         'nutritionist' => \App\Http\Middleware\NutritionistMiddleware::class,
+        'doctor' => \App\Http\Middleware\DoctorMiddleware::class,
+        'pharmacist' => \App\Http\Middleware\PharmacisMiddleware::class,
+
+
 
     ];
 }
