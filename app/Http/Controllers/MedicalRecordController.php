@@ -33,14 +33,14 @@ class MedicalRecordController extends Controller
             'special_needs' => 'required|boolean',
             'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'nullable|string|min:10|max:20',
-            'address.governorate_id' => ['required', 'exists:governorates,id'],
-            'address.district_id' => ['required', 'exists:districts,id'],
+            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
+            // 'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
             'address.name' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->unprocessable($validator->errors());
         }
 
 
@@ -49,13 +49,13 @@ class MedicalRecordController extends Controller
         $employee = auth('sanctum')->user();
 
         $existMedicalRecord = MedicalRecord::where([
-            ['name' , $request->input('name')],
-            ['mother_name' , $request->input('mother_name')],
-            ['father_name' , $request->input('father_name')]
+            ['name', $request->input('name')],
+            ['mother_name', $request->input('mother_name')],
+            ['father_name', $request->input('father_name')]
         ])->first();
 
-        if($existMedicalRecord){
-            return response()->json(['error'  => 'This patient already has a medical record'], 409);
+        if ($existMedicalRecord) {
+            return $this->error(null, 'This patient already has a medical record');
         }
 
         $medicalRecord = new MedicalRecord($validatedData);
@@ -74,32 +74,32 @@ class MedicalRecordController extends Controller
 
         $recordId = $medicalRecord->id;
 
-        return response()->json([
-            'message' => 'Medical record created successfully!',
-            'id' => $recordId,
-            'data' => $validatedData,
-
-        ], 201);
+        return $this->created($medicalRecord, 'Medical record created successfully!');
     }
     public function update(Request $request, $id)
     {
-            $validator = Validator::make($request->all(), [
-                'category' => 'required|string|max:255',
-                'name' => 'required|string|max:255',
-                'mother_name' => 'required|string|max:255',
-                'father_name' => 'required|string|max:255',
-                'gender' => 'required|in:Male,Female',
-                'phone_number' => 'required|string|min:10|max:20',
-                'residence_status' => 'required|in:Resident,Immigrant,Returnee',
-                'special_needs' => 'required|boolean',
-                'related_person' => 'nullable|string|max:255',
-                'related_person_phone_number' => 'nullable|string|min:10|max:20',
-                'address.governorate_id' => ['required', 'exists:governorates,id'],
-                'address.district_id' => ['required', 'exists:districts,id'],
-                'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
-                'address.name' => ['required', 'string', 'max:255'],
-            ]);
+        $medicalRecord = MedicalRecord::findOrFail($id);
 
+        if (!$medicalRecord) {
+            return $this->notFound('Medical record not found');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'category' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+            'father_name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
+            'phone_number' => 'required|string|min:10|max:20',
+            'residence_status' => 'required|in:Resident,Immigrant,Returnee',
+            'special_needs' => 'required|boolean',
+            'related_person' => 'nullable|string|max:255',
+            'related_person_phone_number' => 'nullable|string|min:10|max:20',
+            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
+            // 'address.district_id' => ['required', 'exists:districts,id'],
+            'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
+            'address.name' => ['required', 'string', 'max:255'],
+        ]);
 
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
@@ -107,15 +107,9 @@ class MedicalRecordController extends Controller
 
         $validatedData = $validator->validated();
 
-        $medicalRecord = MedicalRecord::findOrFail($id);
-
-        if (!$medicalRecord) {
-            return $this->notFound('Medical record not found');
-        }
+        $medicalRecord->update($validatedData);
 
         $addressData = $request->get('address');
-
-        $medicalRecord->update($validatedData);
 
         if ($addressData) {
             $existingAddress = $medicalRecord->addresses()->first();
@@ -135,4 +129,3 @@ class MedicalRecordController extends Controller
         return $this->success($responseData, 'Medical record updated successfully!');
     }
 }
-

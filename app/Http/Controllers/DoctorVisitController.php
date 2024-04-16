@@ -20,6 +20,7 @@ class DoctorVisitController extends Controller
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
             'result' => ['required', 'string'],
             'date' => ['required', 'date'],
+            'activity'=>['required', 'in:health education,healthcare'],
 
             ]);
 
@@ -41,6 +42,7 @@ class DoctorVisitController extends Controller
             'medical_record_id' => $request->input('medical_record_id'),
             'result' => $request->input('result'),
             'date' => $request->input('date'),
+            'activity'=>$request->input('activity')
         ]);
 
         return $this->created($DoctorVisit);

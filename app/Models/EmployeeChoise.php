@@ -26,6 +26,7 @@ class EmployeeChoise extends Model
         'office_id',
         'agency_id',
         'access_id',
+        'activity_id',
         'partner_id'
     ];
 
@@ -37,6 +38,11 @@ class EmployeeChoise extends Model
     {
         return $this->belongsTo(MedicalCenter::class , 'medical_center_id');
     }
+
+    public function activity()
+    {
+        return $this->belongsTo(activity::class , 'activity_id');
+    }
     public function coverage()
     {
         return $this->belongsTo(Coverage::class , 'coverage_id');
@@ -45,7 +51,7 @@ class EmployeeChoise extends Model
     {
         return $this->belongsTo(Office::class , 'office_id');
     }
-   
+
     public function agency()
     {
         return $this->belongsTo(Agency::class , 'agency_id');
@@ -78,6 +84,7 @@ class EmployeeChoise extends Model
     {
         return $this->hasMany(MalnutritionChildVisit::class , 'employee_choise_id');
     }
+    
 
 
 

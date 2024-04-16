@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\test;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccessController;
+use App\Http\Controllers\HealthEducationLectureController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\AccountController;
@@ -63,12 +64,17 @@ Route::post('/loginUser', [AccountController::class, 'login']);
 
 
 
+
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
+////////////////////////////
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+Route::post('/HealthEducationLecture', [HealthEducationLectureController::class, 'createLecture']);
+///////////////////////////////
 Route::post('createAccount' , [AccountController::class , 'create']);
 Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRecord']);
+
 });
 
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {

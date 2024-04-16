@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CoverageSeeder::class);
         $this->call(OfficeSeeder::class);
         $this->call(PartnerSeeder::class);
+        
 
 
 

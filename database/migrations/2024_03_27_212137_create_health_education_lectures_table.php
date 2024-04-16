@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->unsignedBigInteger('address_id');
-            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
             $table->integer('male_children_number');
             $table->integer('female_children_number');
             $table->integer('adult_men_number');
@@ -29,6 +27,15 @@ return new class extends Migration
             $table->string('material_name');
             $table->string('program');
             $table->string('program_category');
+            $table->boolean('has_special_needs')->default(false);
+            $table->string('partner');
+            $table->string('access');
+            $table->string('agency');
+            $table->string('activity');
+            $table->string('office');
+            $table->string('coverage');
+            $table->date('date')->format('Y-m-d');
+
             $table->timestamps();
         });
     }

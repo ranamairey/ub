@@ -10,12 +10,29 @@ class HealthEducationLecture extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'phone_number',
-        'user_name',
-        'password',
-        'activity'
+        'employee_id',
+        'address_id',
+        'male_children_number',
+        'female_children_number',
+        'adult_men_number',
+        'adult_women_number',
+        'total',
+        'has_special_needs',
+        'is_beneficiaries',
+        'beneficiary_type',
+        'material_name',
+        'program',
+        'program_category',
+        'date',
+        'partner',
+        'access',
+        'agency',
+        'activity',
+        'office',
+        'coverage',
+
     ];
+
 
     public function addresses()
     {
@@ -26,4 +43,5 @@ class HealthEducationLecture extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
-}
+
+   }
