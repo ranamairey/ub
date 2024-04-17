@@ -83,6 +83,8 @@ Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWom
 
 Route::post('/statisticsLogin', [EmployeeController::class, 'statisticsLogin']);
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
+  Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
+  Route::get('/getEmployeeProfile/{id}', [EmployeeController::class, 'getEmployeeProfile']);
   Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
   Route::post('/store', [EmployeeController::class, 'store']);
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);

@@ -248,6 +248,82 @@ class EmployeeController extends Controller
     ]);
 }
 
+//////////////////////////////////////////
+public function getEmployeeDetails($id)
+{
+    $employee = Employee::find($id);
+
+    if (!$employee) {
+        return $this->notFound('Employee not found');
+    }
+
+    $contractStatus = 'Expired';
+    $accountStatus = $employee->active ? 'Active' : 'Frozen';
+
+    $isLoggedIn = false;
+
+
+    $medicalCenterIds = $employee->employeeChoises()->pluck('medical_center_id');
+    $currentWorkCenter = $medicalCenterIds->last();
+
+
+    $latestContract = $employee->contracts()->latest()->first();
+    if ($latestContract) {
+        $expirationDate = Carbon::parse($latestContract->expiration_date);
+        if (!$expirationDate->isPast()) {
+            $contractStatus = 'Active';
+        }
+    }
+
+
+    $responseData = [
+        'id' => $employee->id,
+        'contract_status' => $contractStatus,
+        'account_status' => $accountStatus,
+        'is_logged_in' => $isLoggedIn,
+        'current_work_center' => $currentWorkCenter,
+    ];
+
+    return $this->success($responseData);
+}
+//////////////////////////////////
+
+public function getEmployeeProfile(Request $request, $id)
+{
+    $employee = Employee::find($id);
+
+    if (!$employee) {
+        return $this->notFound('Employee not found');
+    }
+
+
+
+    $latestContract = $employee->contracts()->latest()->first();
+    $responseData = [
+        'id' => $employee->id,
+        'name' => $employee->name,
+        'phone_number' => $employee->phone_number,
+        'user_name' => $employee->user_name,
+        'address' => [
+            'name' => $employee->addresses()->first()?->name,
+            'subdistrict_id' => $employee->addresses()->first()?->subdistrict_id,
+        ],
+        'contract' => [
+            'expiration_date' => $latestContract?->expiration_date,
+            'contract_value' => $latestContract?->contract_value,
+            'certificate' => $latestContract?->certificate,
+            'medical_center_id' => $latestContract?->medical_center_id,
+        
+        ],
+
+        'roles' => $employee->roles->pluck('name'),
+    ];
+
+    return $this->success($responseData);
+}
+
+
+
 
 
 
