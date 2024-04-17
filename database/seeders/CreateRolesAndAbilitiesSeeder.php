@@ -34,6 +34,7 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
             ['name' => 'doctor', 'user_name' => 'doctor', 'role' => 'doctor'],
             ['name' => 'receptionist', 'user_name' => 'receptionist', 'role' => 'receptionist'],
             ['name' => 'pharmacist', 'user_name' => 'pharmacist', 'role' => 'pharmacist'],
+            ['name' => 'statistics-employee', 'user_name' => 'statistics-employee', 'role' => 'statistics-employee'],
         ];
 
         foreach ($userData as $data) {

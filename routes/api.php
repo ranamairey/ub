@@ -82,6 +82,8 @@ Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChi
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
 });
 
+
+Route::post('/statisticsLogin', [EmployeeController::class, 'statisticsLogin']);
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/freezeEmployee', [EmployeeController::class, 'freezeEmployee']);
   Route::post('/store', [EmployeeController::class, 'store']);

@@ -189,7 +189,7 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|required|string',
             'phone_number' => 'sometimes|required|string',
-            
+
         ]);
 
         if ($request->has('password')) {
@@ -217,6 +217,37 @@ class EmployeeController extends Controller
 
         return $this->success($employee);;
     }
+    ////////////////////////////////////////////////
+    public function statisticsLogin(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'user_name' => ['required', 'string', 'max:255'],
+        'password' => ['required', 'string', 'min:8'],
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+    }
+
+    $employee = Employee::where('user_name', $request->input('user_name'))->first();
+
+    if (!$employee) {
+        return $this->notFound($employee, 'Employee not found');
+    }
+
+    if (!Hash::check($request->input('password'), $employee->password)) {
+        return $this->unauthorized($request->input('password'), 'Invalid password');
+    }
+
+    $role = $employee->getRoles();
+    $token = $employee->createToken($role[0]);
+
+    return $this->success([
+        'token' => $token->plainTextToken,
+        'role' => $role,
+    ]);
+}
+
 
 
 
