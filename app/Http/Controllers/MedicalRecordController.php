@@ -76,6 +76,8 @@ class MedicalRecordController extends Controller
 
         return $this->created($medicalRecord, 'Medical record created successfully!');
     }
+
+
     public function update(Request $request, $id)
     {
         $medicalRecord = MedicalRecord::findOrFail($id);
@@ -128,4 +130,56 @@ class MedicalRecordController extends Controller
 
         return $this->success($responseData, 'Medical record updated successfully!');
     }
+
+    public function show(Request $request, $id)
+    {
+        $medicalRecord = MedicalRecord::with('addresses')->find($request->route('id')); // Access ID from route
+
+        if (!$medicalRecord) {
+            return $this->notFound('Medical record not found');
+        }
+        return $this->success($medicalRecord, 'Medical record retrieved successfully!');
+
+    }
+    public function getAllVisitsByRecordId(Request $request, $id)
+    {
+      $medicalRecord = MedicalRecord::find($id);
+
+      if (!$medicalRecord) {
+        return $this->notFound('Medical record not found');
+      }
+
+
+      $isChild = $medicalRecord->category === 'child';
+      $isWoman = $medicalRecord->category === 'pregnant';
+
+      if ($isChild) {
+
+        $childVisits = $medicalRecord->routineChildVisits()->get();
+
+
+        $data = [
+          'medical_record' => $medicalRecord->toArray(),
+          'visits' => $childVisits->toArray(),
+        ];
+
+        return $this->success($data, 'Child visits retrieved successfully!');
+      } else if ($isWoman) {
+
+        $womenVisits = $medicalRecord->routineWomenVisits()->get();
+
+
+        $data = [
+          'medical_record' => $medicalRecord->toArray(),
+          'visits' => $womenVisits->toArray(),
+        ];
+
+        return $this->success($data, 'Women visits retrieved successfully!');
+      } else {
+
+        return $this->notFound('ther is no visits');
+      }
+    }
+
+
 }

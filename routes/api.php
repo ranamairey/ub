@@ -80,6 +80,9 @@ Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
 Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
+Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
+Route::get('/getAllVisitsByRecordId/{id}', [MedicalRecordController::class, 'getAllVisitsByRecordId']);
+
 });
 
 
