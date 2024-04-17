@@ -57,7 +57,6 @@ Route::get('/getPartners' , [PartnerController::class ,  'index']);
 Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 
-Route::get('/findEmployee' , [MedicalCenterController::class ,  'findEmployee']);
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);
@@ -69,7 +68,6 @@ Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
 ////////////////////////////
-Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 Route::post('/HealthEducationLecture', [HealthEducationLectureController::class, 'createLecture']);
 ///////////////////////////////
 Route::post('createAccount' , [AccountController::class , 'create']);
@@ -89,6 +87,20 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/store', [EmployeeController::class, 'store']);
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
   Route::post('updateEmployee/{id}' , [EmployeeController::class , 'updateEmployee']);
+  Route::get('/findEmployee/{id}' , [EmployeeController::class ,  'findEmployee']);
+
 });
+
+Route::middleware(['auth:sanctum', 'doctor'])->group(function () {
+  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+});
+
+Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
+});
+
+
+
+
+
 
 
