@@ -4,82 +4,66 @@ namespace App\Http\Controllers;
 
 use App\Models\ChildTreatmentProgram;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use App\Models\MedicalRecord;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
+
 
 class ChildTreatmentProgramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    use ApiResponseTrait;
+
+
+    public function createChildTreatmentProgram(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'medical_record_id' => 'required|integer|exists:medical_records,id',
+            'program_type' => 'required|in:TSFP,OTP',
+            'acceptance_reason' => 'required|string',
+            'acceptance_party' => 'required|string|in:another-TSFP,OTP,Re-acceptance,SC,Community',
+            'acceptance_type' => 'required|in:new,old',
+            'target_weight' => 'required|numeric',
+            'measles_vaccine_received' => 'nullable|boolean',
+            'measles_vaccine_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'end_cause' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+
+        $employee = auth('sanctum')->user();
+        if (!$employee) {
+            return $this->unauthorized('You are not logged in');
+        }
+
+        if (!MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+            return $this->unprocessable($request->all(), 'The specified medical record does not exist.');
+        }
+
+        $programData = [
+            'medical_record_id' => $request->input('medical_record_id'),
+            'employee_id' => $employee->id,
+            'program_type' => $request->input('program_type'),
+            'acceptance_reason' => $request->input('acceptance_reason'),
+            'acceptance_party' => $request->input('acceptance_party'),
+            'acceptance_type' => $request->input('acceptance_type'),
+            'target_weight' => $request->input('target_weight'),
+            'measles_vaccine_received' => $request->input('measles_vaccine_received'),
+            'measles_vaccine_date' => $request->input('measles_vaccine_date'),
+            'end_date' => $request->input('end_date'),
+            'end_cause' => $request->input('end_cause'),
+        ];
+
+        $program = ChildTreatmentProgram::create($programData);
+
+        return $this->created($program);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ChildTreatmentProgram  $childTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ChildTreatmentProgram $childTreatmentProgram)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ChildTreatmentProgram  $childTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ChildTreatmentProgram $childTreatmentProgram)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ChildTreatmentProgram  $childTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ChildTreatmentProgram $childTreatmentProgram)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ChildTreatmentProgram  $childTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ChildTreatmentProgram $childTreatmentProgram)
-    {
-        //
-    }
 }

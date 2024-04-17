@@ -14,6 +14,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ChildTreatmentProgramController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
@@ -78,7 +79,9 @@ Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRe
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
 });
+
 
 
 Route::post('/statisticsLogin', [EmployeeController::class, 'statisticsLogin']);
