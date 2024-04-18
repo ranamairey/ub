@@ -15,10 +15,12 @@ class MedicalRecord extends Model
         'name',
         'mother_name',
         'father_name',
+        'last_name',
         'gender',
         'phone_number',
         'residence_status',
         'special_needs',
+        'birth_date',
         'related_person',
         'related_person_phone_number'
     ];

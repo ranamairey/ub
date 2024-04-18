@@ -19,7 +19,7 @@ class StatisticsEmployeeMiddleware
 
        
         $employee = auth('sanctum')->user();
-        if(!$employee ||   ! $employee->isA('statistics-employee')){
+        if(!$employee ||   ! $employee->isA('statistics-employee') || !$employee->active){
             return response()->json(['message' => 'Unauthorized'], 403);
         }
          return $next($request);

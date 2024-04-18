@@ -17,7 +17,7 @@ class PharmacistMiddleware
     public function handle(Request $request, Closure $next)
     {
         $employee = auth('sanctum')->user();
-        if(!$employee ||   ! $employee->isA('pharmacist')){
+        if(!$employee ||   ! $employee->isA('pharmacist') || !$employee->active){
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return $next($request);
