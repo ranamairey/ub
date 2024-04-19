@@ -18,7 +18,7 @@ class ReceptionistMiddleware
     {
   
         $employee = auth('sanctum')->user();
-        if(!$employee ||   ! $employee->isA('receptionist')){
+        if(!$employee ||   ! $employee->isA('receptionist') || !$employee->active){
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return $next($request);

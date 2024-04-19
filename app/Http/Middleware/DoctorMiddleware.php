@@ -17,7 +17,7 @@ class DoctorMiddleware
     public function handle(Request $request, Closure $next)
     {
         $employee = auth('sanctum')->user();
-        if(!$employee ||   ! $employee->isA('doctor')){
+        if(!$employee ||   ! $employee->isA('doctor') || !$employee->active){
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return $next($request);

@@ -23,12 +23,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('mother_name');
             $table->string('father_name');
+            $table->string('last_name');
             $table->enum('gender', ['Male', 'Female']);
             $table->string('phone_number');
             $table->enum('residence_status' , ['Resident' , 'Immigrant' , 'Returnee']);
             $table->boolean('special_needs');
             $table->string('related_person')->default(false);
             $table->string('related_person_phone_number');
+            $table->date('birth_date');
             $table->timestamps();
         });
     }

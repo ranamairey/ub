@@ -89,11 +89,43 @@ class EmployeeController extends Controller
 
             $employee = Employee::findOrFail($employeeId);
 
+            if($employee->active == false){
+                return $this->error($employee ,'Employee account already frozen .' );
+    
+                }
+
             $employee->update([
                 'active' => false,
             ]);
 
             return $this->success($employee ,'Employee account frozen successfully.' );
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound($employee ,'Employee not found');
+        }
+    }
+
+    public function unFreezeEmployee(Request $request)
+    {
+        $employeeId = $request->input('id');
+
+        if (!$employeeId) {
+            return response()->json(['error' => 'Missing employee ID'], 400);
+        }
+
+        try {
+
+            $employee = Employee::findOrFail($employeeId);
+            
+            if($employee->active == true){
+            return $this->error($employee ,'Employee account already unfrozen .' );
+
+            }
+
+            $employee->update([
+                'active' => true,
+            ]);
+
+            return $this->success($employee ,'Employee account unfrozen successfully.' );
         } catch (ModelNotFoundException $e) {
             return $this->notFound($employee ,'Employee not found');
         }
@@ -121,6 +153,10 @@ class EmployeeController extends Controller
         if (!$employee) {
             return $this->notFound($employee , 'Employee not found');
         }
+        if (!$employee->active) {
+            return $this->error($employee , 'Employee account is freeze');
+        }
+
 
         if (!Hash::check($request->input('password'), $employee->password)) {
             return $this->unauthorized($request->input('password') , 'Invalid password');
@@ -233,6 +269,9 @@ class EmployeeController extends Controller
 
     if (!$employee) {
         return $this->notFound($employee, 'Employee not found');
+    }
+    if (!$employee->active) {
+        return $this->error($employee , 'Employee account is freeze');
     }
 
     if (!Hash::check($request->input('password'), $employee->password)) {
