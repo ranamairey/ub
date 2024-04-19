@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
+            $table->unsignedBigInteger('employee_choise_id');
+            $table->foreign('employee_choise_id')->references('id')->on('employee_choises')->onDelete('cascade');
 
             $table->enum('program_type', ['tsfp', 'otp']);
 

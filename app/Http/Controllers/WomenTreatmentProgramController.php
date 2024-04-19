@@ -4,82 +4,61 @@ namespace App\Http\Controllers;
 
 use App\Models\WomenTreatmentProgram;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use App\Models\MedicalRecord;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class WomenTreatmentProgramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    use ApiResponseTrait;
+
+
+    public function createWomenTreatmentProgram(Request $request)
     {
-        //
+    $validator = Validator::make($request->all(), [
+        'medical_record_id' => 'required|integer|exists:medical_records,id',
+        'acceptance_reason' => 'required|string',
+        'acceptance_type' => 'required|in:new,old',
+        'target_weight' => 'required|numeric',
+        'tetanus_date' => 'nullable|date',
+        'vitamin_a_date' => 'nullable|date',
+        'end_date' => 'nullable|date',
+        'end_cause' => 'nullable|string',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+
+    $employee = auth('sanctum')->user();
+    if (!$employee) {
+        return $this->unauthorized('You are not logged in');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    if (!MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+        return $this->unprocessable($request->all(), 'The specified medical record does not exist.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\WomenTreatmentProgram  $womenTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function show(WomenTreatmentProgram $womenTreatmentProgram)
-    {
-        //
-    }
+    $programData = [
+        'medical_record_id' => $request->input('medical_record_id'),
+        'employee_id' => $employee->id,
+        'employee_choise_id' => $employee->employeeChoises()->first()->id,
+        'acceptance_reason' => $request->input('acceptance_reason'),
+        'acceptance_type' => $request->input('acceptance_type'),
+        'target_weight' => $request->input('target_weight'),
+        'vitamin_a_date' => $request->input('vitamin_a_date'),
+        'tetanus_date' => $request->input('tetanus_date'),
+        'end_date' => $request->input('end_date'),
+        'end_cause' => $request->input('end_cause'),
+    ];
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\WomenTreatmentProgram  $womenTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(WomenTreatmentProgram $womenTreatmentProgram)
-    {
-        //
-    }
+    $program = WomenTreatmentProgram::create($programData);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\WomenTreatmentProgram  $womenTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, WomenTreatmentProgram $womenTreatmentProgram)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\WomenTreatmentProgram  $womenTreatmentProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(WomenTreatmentProgram $womenTreatmentProgram)
-    {
-        //
-    }
+    return $this->created($program);
 }
+}
+
+

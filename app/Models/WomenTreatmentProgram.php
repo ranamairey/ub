@@ -14,6 +14,7 @@ class WomenTreatmentProgram extends Model
 
     protected $fillable = [
         'employee_id',
+        'employee_choise_id',
         'medical_record_id',
         'acceptance_type',
         'acceptance_reason',
@@ -35,6 +36,10 @@ class WomenTreatmentProgram extends Model
     public function malnutritionWomenVisits()
     {
         return $this->hasMany(MalnutritionWomenVisit::class , 'programs_id');
+    }
+    public function employeeChoise()
+    {
+        return $this->belongsTo(EmployeeChoise::class , 'employee_choise_id');
     }
 
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\HealthEducationLectureController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\WomenTreatmentProgramController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
@@ -79,6 +80,7 @@ Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRe
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
 Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
 Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 Route::get('/getAllVisitsByRecordId/{id}', [MedicalRecordController::class, 'getAllVisitsByRecordId']);

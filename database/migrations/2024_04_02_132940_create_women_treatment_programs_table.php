@@ -23,6 +23,10 @@ return new class extends Migration
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
 
+            $table->unsignedBigInteger('employee_choise_id');
+            $table->foreign('employee_choise_id')->references('id')->on('employee_choises')->onDelete('cascade');
+
+
             $table->enum('acceptance_type', ['new', 'old']);
 
             $table->string('acceptance_reason');
@@ -32,8 +36,8 @@ return new class extends Migration
             $table->date('tetanus_date')->format('Y-m-d')->nullable();
             $table->date('vitamin_a_date')->format('Y-m-d')->nullable();
 
-            $table->date('end_date')->format('Y-m-d');
-            $table->string('end_cause');
+            $table->date('end_date')->format('Y-m-d')->nullable();
+            $table->string('end_cause')->nullable();
 
             $table->timestamps();
         });

@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 
+
 class ChildTreatmentProgramController extends Controller
 {
 
@@ -48,6 +49,7 @@ class ChildTreatmentProgramController extends Controller
 
         $programData = [
             'medical_record_id' => $request->input('medical_record_id'),
+            'employee_choise_id' => $employee->employeeChoises()->first()->id,
             'employee_id' => $employee->id,
             'program_type' => $request->input('program_type'),
             'acceptance_reason' => $request->input('acceptance_reason'),

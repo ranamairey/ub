@@ -15,6 +15,7 @@ class ChildTreatmentProgram extends Model
         'employee_id',
         'medical_record_id',
         'program_type',
+        'employee_choise_id',
         'acceptance_reason',
         'acceptance_party',
         'acceptance_type',
@@ -23,7 +24,7 @@ class ChildTreatmentProgram extends Model
         'measles_vaccine_date',
         'end_date',
         'end_cause'
-        
+
     ];
 
     public function medicalRecord()
@@ -38,5 +39,9 @@ class ChildTreatmentProgram extends Model
     public function malnutritionChildVisits()
     {
         return $this->hasMany(MalnutritionChildVisit::class , 'programs_id');
+    }
+    public function employeeChoise()
+    {
+        return $this->belongsTo(EmployeeChoise::class , 'employee_choise_id');
     }
 }
