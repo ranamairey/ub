@@ -102,9 +102,33 @@ class AppointmentController extends Controller
         
 
         $appointments = Appointment::where('employee_id' , $employee->id)->get();
-
+        
         foreach ($appointments as $appointment) {
-           $status = 5;
+            $medicalRecord = $appointment->medicalRecord;
+            $status = 'normal';
+            if($medicalRecord->category == 'child'){
+            $childTreatmentPrograms = $medicalRecord->childTreatmentPrograms;
+                if($childTreatmentPrograms){
+                $filteredChildTreatmentPrograms = $childTreatmentPrograms->filter(function ($program) {
+                return is_null($program->end_cause) && is_null($program->end_date);
+                });
+                if(!$filteredChildTreatmentPrograms->isEmpty()){
+                $status = $filteredChildTreatmentPrograms->first()->program_type;
+                }
+                }
+            }
+
+            if($medicalRecord->category == 'pregnant'){
+            $womenTreatmentPrograms = $medicalRecord->womenTreatmentPrograms;
+                if($womenTreatmentPrograms){
+                $filteredWomenTreatmentPrograms = $womenTreatmentPrograms->filter(function ($program) {
+                return is_null($program->end_cause) && is_null($program->end_date);
+                });
+                if(!$filteredWomenTreatmentPrograms->isEmpty()){
+                $status = 'tsfp';
+                }
+                }
+            }
             $birthDate = Carbon::parse($appointment->medicalRecord->birth_date);
             $age =$birthDate->age;
             $fullName =$appointment->medicalRecord->name . " "  .$appointment->medicalRecord->father_name . " " . $appointment->medicalRecord->last_name;
@@ -112,7 +136,7 @@ class AppointmentController extends Controller
             $appointment->age = $age;
             $appointment->fullName = $fullName;
             $appointment->gender = $gender;   
-            $appointment->expectedNextVisit = null;
+            $appointment->status = $status;
         } 
         
     

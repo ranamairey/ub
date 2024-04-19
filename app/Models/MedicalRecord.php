@@ -60,7 +60,7 @@ class MedicalRecord extends Model
     }
     public function womenTreatmentPrograms()
     {
-        return $this->hasMany(WomenTreatmentPrograms::class , 'medical_record_id');
+        return $this->hasMany(WomenTreatmentProgram::class , 'medical_record_id');
     }
     public function childTreatmentPrograms()
     {

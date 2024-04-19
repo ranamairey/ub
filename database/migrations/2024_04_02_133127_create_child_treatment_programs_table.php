@@ -28,7 +28,7 @@ return new class extends Migration
             $table->enum('program_type', ['tsfp', 'otp']);
 
             $table->string('acceptance_reason');
-            $table->string('acceptance_party');
+            $table->enum('acceptance_party' , ['another-TSFP','OTP','Re-acceptance','SC','Community']);
             $table->enum('acceptance_type', ['new', 'old']);
 
 

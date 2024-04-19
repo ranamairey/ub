@@ -85,15 +85,27 @@ Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destr
 });
 
 Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
-Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
-Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
-Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
-Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
 Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 Route::get('/getAllVisitsByRecordId/{id}', [MedicalRecordController::class, 'getAllVisitsByRecordId']);
 Route::get('/getNutritionistAppointments' , [AppointmentController::class , 'show']);
+});
+
+Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {});
+Route::middleware(['auth:sanctum', 'child-doctorc'])->group(function () {});
+
+Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
+  Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+  Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
+
 
 });
+Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
+Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
+Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
+
+
+});
+
 
 
 

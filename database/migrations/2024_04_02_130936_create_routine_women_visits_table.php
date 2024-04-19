@@ -27,7 +27,6 @@ return new class extends Migration
 
             $table->enum('current_status', [ 'mam','normal']);
 
-
             $table->enum('status_type', [ 'pregnant','lactating','non']);
 
             $table->float('z_score')->nullable();

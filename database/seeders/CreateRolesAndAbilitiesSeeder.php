@@ -30,8 +30,10 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
 
 
         $userData = [
-            ['name' => 'nutritionist', 'user_name' => 'nutritionist', 'role' => 'nutritionist'],
-            ['name' => 'doctor', 'user_name' => 'doctor', 'role' => 'doctor'],
+            ['name' => 'women-nutritionist', 'user_name' => 'women-nutritionist', 'role' => 'women-nutritionist'],
+            ['name' => 'child-nutritionist', 'user_name' => 'child-nutritionist', 'role' => 'child-nutritionist'],
+            ['name' => 'women-doctor', 'user_name' => 'women-doctor', 'role' => 'women-doctor'],
+            ['name' => 'child-doctor', 'user_name' => 'child-doctor', 'role' => 'child-doctor'],
             ['name' => 'receptionist', 'user_name' => 'receptionist', 'role' => 'receptionist'],
             ['name' => 'pharmacist', 'user_name' => 'pharmacist', 'role' => 'pharmacist'],
             ['name' => 'statistics-employee', 'user_name' => 'statistics-employee', 'role' => 'statistics-employee'],

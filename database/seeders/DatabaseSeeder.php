@@ -3,7 +3,19 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\AccessSeeder;
+use Database\Seeders\AgencySeeder;
+use Database\Seeders\OfficeSeeder;
+use Database\Seeders\PartnerSeeder;
+use Database\Seeders\ActivitySeeder;
+use Database\Seeders\AdressesSeeder;
+use Database\Seeders\CoverageSeeder;
+use Database\Seeders\AppointmentSeeder;
+use Database\Seeders\MedicalRecordSeeder;
+use Database\Seeders\MedicalCentersTableSeeder;
+use Database\Seeders\CreateRolesAndAbilitiesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,6 +42,15 @@ class DatabaseSeeder extends Seeder
         $this->call(CoverageSeeder::class);
         $this->call(OfficeSeeder::class);
         $this->call(PartnerSeeder::class);
+        $this->call(MedicalRecordSeeder::class);
+        $this->call(AppointmentSeeder::class);
+        $this->call(EmployeeChoiseSeeder::class);
+        $this->call(WomenTreatmentProgramSeeder::class);
+        $this->call(ChildTreatmentProgramSeeder::class);
+
+
+
+
         
 
 
