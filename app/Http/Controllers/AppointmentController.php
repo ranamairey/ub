@@ -66,10 +66,10 @@ class AppointmentController extends Controller
             return $this->notFound('Medical record not found');
         }
 
-        if($employee->isA('doctor')){
-            $type = "Doctor";
+        if($employee->isA('women-doctor') || $employee->isA('child-doctor')){
+            $type = "doctor";
         }
-        else if($employee->isA('nutritionist')){
+        else if($employee->isA('women-nutritionist') || ($employee->isA('child-nutritionist'))){
             $type = "Nutritionist";
         }
         else{
