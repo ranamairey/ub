@@ -9,7 +9,6 @@ use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\WomenTreatmentProgramController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
@@ -21,7 +20,10 @@ use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\RoutineChildVisitController;
 use App\Http\Controllers\RoutineWomenVisitController;
 use App\Http\Controllers\ChildTreatmentProgramController;
+use App\Http\Controllers\WomenTreatmentProgramController;
 use App\Http\Controllers\HealthEducationLectureController;
+use App\Http\Controllers\MalnutritionChildVisitController;
+use App\Http\Controllers\MalnutritionWomenVisitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,8 +67,16 @@ Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
 
 Route::post('/loginUser', [AccountController::class, 'login']);
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+Route::get('/getAccount/{id}' , [AccountController::class , 'show']);
+Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+Route::post('/createMalnutritionWomenVisits', [MalnutritionWomenVisitController::class , 'store']);
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);

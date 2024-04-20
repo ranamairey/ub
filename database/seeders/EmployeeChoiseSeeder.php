@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 
 class EmployeeChoiseSeeder extends Seeder
 {
@@ -35,6 +36,7 @@ class EmployeeChoiseSeeder extends Seeder
                 'agency_id' => $agencyIds[rand(0, count($agencyIds) - 1)],
                 'access_id' => $accessIds[rand(0, count($accessIds) - 1)],
                 'partner_id' => $partnerIds[rand(0, count($partnerIds) - 1)],
+                'created_at' => Carbon::now()->addHours($i),
             ]);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -32,6 +33,7 @@ class ChildTreatmentProgramSeeder extends Seeder
                 'measles_vaccine_date' => '2022-8-8',
                 'end_date' => '2025-8-8',
                 'end_cause' => "jhgfdfghjklpoiuytrtyuio",
+                'created_at' => Carbon::now()->addHours($i),
             ]);
         }
             for ($i = 0; $i < 2; $i++) {
@@ -48,6 +50,7 @@ class ChildTreatmentProgramSeeder extends Seeder
                     'measles_vaccine_date' => '2022-8-8',
                     'end_date' => null,
                     'end_cause' =>null,
+                    'created_at' => Carbon::now()->addHours($i),
                 ]);
             }
     }

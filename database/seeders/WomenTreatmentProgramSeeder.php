@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -30,7 +31,9 @@ class WomenTreatmentProgramSeeder extends Seeder
                 'tetanus_date' =>  "2022-2-2",
                 'vitamin_a_date' =>"2023-3-3",
                 'end_date' => "2021-1-1" ,
-                'end_cause' => "trdfghjklkijuytfrgthjk",]);
+                'end_cause' => "trdfghjklkijuytfrgthjk",
+                'created_at' => Carbon::now()->addHours($i),
+                ]);
             }
             for ($i = 0; $i < 2; $i++) {
                 DB::table('women_treatment_programs')->insert([
@@ -43,7 +46,10 @@ class WomenTreatmentProgramSeeder extends Seeder
                     'tetanus_date' => "2023-3-3",
                     'vitamin_a_date' => "2022-2-2",
                     'end_date' => null ,
-                    'end_cause' => null,]);
+                    'end_cause' => null,
+                    'created_at' => Carbon::now()->addHours($i),
+                ]);
+                    
                 }
         }
     }

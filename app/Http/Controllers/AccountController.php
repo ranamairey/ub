@@ -129,9 +129,15 @@ class AccountController extends Controller
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function show(Account $account)
+    public function show($id)
     {
-        //
+            $account = Account::find($id);
+        
+            if (!$account) {
+                return $this->notFound($id , 'Account not found');
+            } 
+            return $this->success($account);
+        
     }
 
     /**

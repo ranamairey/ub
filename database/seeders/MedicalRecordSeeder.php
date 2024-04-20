@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,7 @@ class MedicalRecordSeeder extends Seeder
                 'related_person' => "mmmm",
                 'related_person_phone_number' => "00000000",
                 'birth_date' => date('Y-m-d', strtotime('-'.rand(0,5).' years')),
+                'created_at' => Carbon::now()->addHours($i),
             ]);
         }
     }

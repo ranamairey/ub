@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MalnutritionWomenVisit;
 use Illuminate\Http\Request;
+use App\Models\EmployeeChoise;
+use App\Http\Controllers\Controller;
+use App\Models\WomenTreatmentProgram;
+use App\Traits\ApiResponseTrait;
+use App\Models\MalnutritionChildVisit;
+use App\Models\MalnutritionWomenVisit;
+use Illuminate\Support\Facades\Validator;
 
 class MalnutritionWomenVisitController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +43,36 @@ class MalnutritionWomenVisitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'programs_id' => 'required|exists:child_treatment_programs,id',
+            'muac' => 'required|integer',
+            'note' => 'required|string',
+            'current_date' => 'required|date_format:Y-m-d',
+            'next_visit_date' => 'required|date_format:Y-m-d',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $program =WomenTreatmentProgram::find($request->programs_id);
+    
+        if(!$program){
+            return $this->notFound($request->programs_id , "Program not found");
+        }
+        $employee_id =4;
+         // auth('sanctum')->user()->id;
+        $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id;
+        $visit = MalnutritionWomenVisit::create([
+            'employee_id' => $employee_id,
+            'programs_id' => $request->programs_id,
+            'employee_choise_id' => $employee_choise_id,
+            'muac' => $request->muac,
+            'note' => $request->note,
+            'current_date' => $request->current_date,
+            'next_visit_date' => $request->next_visit_date,
+    
+        ]);
+        return $this->created($visit);
     }
 
     /**
