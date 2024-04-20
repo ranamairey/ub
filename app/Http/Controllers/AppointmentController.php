@@ -94,15 +94,15 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(){
-    
+
         $employee = auth('sanctum')->user();
         if (!$employee) {
             return $this->notFound($employee , 'Employee not found');
         }
-        
+
 
         $appointments = Appointment::where('employee_id' , $employee->id)->get();
-        
+
         foreach ($appointments as $appointment) {
             $medicalRecord = $appointment->medicalRecord;
             $status = 'normal';
@@ -135,15 +135,15 @@ class AppointmentController extends Controller
             $gender =$appointment->medicalRecord->gender;
             $appointment->age = $age;
             $appointment->fullName = $fullName;
-            $appointment->gender = $gender;   
+            $appointment->gender = $gender;
             $appointment->status = $status;
-        } 
-        
-    
+        }
+
+
         return $this->success($appointments);
 
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.

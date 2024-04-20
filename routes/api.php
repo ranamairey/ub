@@ -91,8 +91,6 @@ Route::post('/createAppointment' , [AppointmentController::class , 'store']);
 Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destroy']);
 /////////////////////////////////////////////////////////////
 
-Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
-Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 
 
@@ -103,6 +101,8 @@ Route::middleware(['auth:sanctum', 'nutritionist'])->group(function () {
 Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 Route::get('/getAllVisitsByRecordId/{id}', [MedicalRecordController::class, 'getAllVisitsByRecordId']);
 Route::get('/getNutritionistAppointments' , [AppointmentController::class , 'show']);
+Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 });
 /*
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {});
