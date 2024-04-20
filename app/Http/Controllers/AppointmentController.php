@@ -69,7 +69,7 @@ class AppointmentController extends Controller
         if($employee->isA('women-doctor') || $employee->isA('child-doctor')){
             $type = "doctor";
         }
-        else if($employee->isA('women-nutritionist') || ($employee->isA('child-nutritionist'))){
+        else if($employee->isA('women-nutritionist') || ($employee->isA('child-nutritionist'))|| ($employee->isA('nutritionist'))){
             $type = "Nutritionist";
         }
         else{
