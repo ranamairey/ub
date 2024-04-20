@@ -137,7 +137,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 });
 
-Route::middleware(['auth:sanctum', 'doctor'])->group(function () {
+Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
  // Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
 
