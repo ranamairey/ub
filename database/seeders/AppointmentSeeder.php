@@ -19,12 +19,12 @@ class AppointmentSeeder extends Seeder
         $medicalRecordIds = DB::table('medical_records')->pluck('id');
         $employeeIds = DB::table('employees')->pluck('id');
 
-        for ($i = 0; $i < 10; $i++) {
-            $employeeId = rand(1, 2);
-            $employeeType = $employeeId === 1 ? 'Nutritionist' : 'Doctor';
+        for ($i = 0; $i < 20; $i++) {
+            $employeeId = rand(1,4);
+            $employeeType = ($employeeId === 1 || $employeeId === 2) ? 'Nutritionist' : 'Doctor';
             DB::table('appointments')->insert([
                 'medical_record_id' => $medicalRecordIds[rand(0, count($medicalRecordIds) - 1)],
-                'receptionist_id' => 3,
+                'receptionist_id' => 5,
                 'employee_id' => $employeeId,
                 'employee_type' => $employeeType,
 

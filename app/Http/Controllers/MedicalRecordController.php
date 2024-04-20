@@ -87,22 +87,16 @@ class MedicalRecordController extends Controller
         if (!$medicalRecord) {
             return $this->notFound('Medical record not found');
         }
-
+        
         $validator = Validator::make($request->all(), [
-            'category' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'mother_name' => 'required|string|max:255',
-            'father_name' => 'required|string|max:255',
-            'gender' => 'required|in:Male,Female',
-            'phone_number' => 'required|string|min:10|max:20',
-            'residence_status' => 'required|in:Resident,Immigrant,Returnee',
-            'special_needs' => 'required|boolean',
-            'related_person' => 'nullable|string|max:255',
-            'related_person_phone_number' => 'nullable|string|min:10|max:20',
+            'phone_number' => 'sometimes|required|string|min:10|max:20',
+            'residence_status' => 'sometimes|required|in:Resident,Immigrant,Returnee',
+            // 'related_person' => 'nullable|string|max:255',
+            'related_person_phone_number' => 'sometimes|required|string|min:10|max:20',
             // 'address.governorate_id' => ['required', 'exists:governorates,id'],
             // 'address.district_id' => ['required', 'exists:districts,id'],
-            'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
-            'address.name' => ['required', 'string', 'max:255'],
+            'address.subdistrict_id' => ['sometimes','required', 'exists:subdistricts,id'],
+            'address.name' => ['sometimes','required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {

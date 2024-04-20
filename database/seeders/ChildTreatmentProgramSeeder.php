@@ -22,7 +22,7 @@ class ChildTreatmentProgramSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             DB::table('child_treatment_programs')->insert([
                 'medical_record_id' => $medicalRecordIds[rand(0, count($medicalRecordIds) - 1)],
-                'employee_id' => 1,
+                'employee_id' => rand(1, 2),
                 'employee_choise_id' => 1,
                 'program_type' => ['tsfp', 'otp'][array_rand(['tsfp', 'otp'])],
                 'acceptance_reason' => "lkjhgvfcvghjklkjhgfdfghjklkjhgfdfghj",

@@ -72,7 +72,7 @@ class EmployeeController extends Controller
 
             }
         }
-
+        $employee->role = $role->name;
         return $this->created($employee);
 
     }

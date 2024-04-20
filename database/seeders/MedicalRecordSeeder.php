@@ -20,8 +20,8 @@ class MedicalRecordSeeder extends Seeder
         
         for ($i = 0; $i < 5; $i++) {
             DB::table('medical_records')->insert([
-                'employee_id' => 3, // assuming you have 10 employees
-                'account_id' => null, // assuming you have 10 accounts
+                'employee_id' => 3, 
+                'account_id' => null, 
                 'category' => 'pregnant',
                 'name' => "Malak" . $i,
                 'mother_name' => "Samah". $i,
@@ -39,8 +39,8 @@ class MedicalRecordSeeder extends Seeder
 
         for ($i = 0; $i < 5; $i++) {
             DB::table('medical_records')->insert([
-                'employee_id' => 3, // assuming you have 10 employees
-                'account_id' => null, // assuming you have 10 accounts
+                'employee_id' => 5, 
+                'account_id' => null,
                 'category' => 'child',
                 'name' => "Rana" . $i,
                 'mother_name' => "Mom". $i,

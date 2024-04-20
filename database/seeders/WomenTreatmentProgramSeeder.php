@@ -23,7 +23,7 @@ class WomenTreatmentProgramSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             DB::table('women_treatment_programs')->insert([
                 'medical_record_id' => $medicalRecordIds[rand(0, count($medicalRecordIds) - 1)],
-                'employee_id' => 1,
+                'employee_id' => rand(1, 2),
                 'employee_choise_id' => 1,
                 'acceptance_type' => ['new', 'old'][array_rand(['new', 'old'])],
                 'acceptance_reason' => "Blablablablablabla",
@@ -38,7 +38,7 @@ class WomenTreatmentProgramSeeder extends Seeder
             for ($i = 0; $i < 2; $i++) {
                 DB::table('women_treatment_programs')->insert([
                     'medical_record_id' => $medicalRecordIds[rand(0, count($medicalRecordIds) - 1)],
-                    'employee_id' => 1,
+                    'employee_id' =>rand(1, 2),
                     'employee_choise_id' => 1,
                     'acceptance_type' => ['new', 'old'][array_rand(['new', 'old'])],
                     'acceptance_reason' => "Blablablablablabla",

@@ -37,10 +37,9 @@ class DoctorVisitController extends Controller
         }
 
         $employee = auth('sanctum')->user();
-
         $DoctorVisit = DoctorVisit::create([
             'employee_id' => $employee->id,
-            'employee_choise_id' => $employee->employeeChoises()->first()->id,
+            'employee_choise_id' => $employee->employeeChoises()->latest('created_at')->first()->id,
             'medical_record_id' => $request->input('medical_record_id'),
             'medical_record_id' => $request->input('medical_record_id'),
             'result' => $request->input('result'),
