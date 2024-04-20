@@ -14,8 +14,13 @@ class RoutineChildVisit extends Model
         'medical_record_id',
         'current_status',
         'z_score',
-        'activity',
-        'date'
+        'date',
+        'sam_acceptance',
+        'high_energy_biscuits',
+        'fat_intake',
+        'micronutrients',
+        'health_education',
+        'nutritional_survey'
     ];
 
     public function medicalRecord()

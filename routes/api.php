@@ -89,6 +89,11 @@ Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRe
 
 Route::post('/createAppointment' , [AppointmentController::class , 'store']);
 Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destroy']);
+/////////////////////////////////////////////////////////////
+
+Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
+Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 
 
 
@@ -99,7 +104,7 @@ Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 Route::get('/getAllVisitsByRecordId/{id}', [MedicalRecordController::class, 'getAllVisitsByRecordId']);
 Route::get('/getNutritionistAppointments' , [AppointmentController::class , 'show']);
 });
-
+/*
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {});
 Route::middleware(['auth:sanctum', 'child-doctorc'])->group(function () {});
 
@@ -116,7 +121,7 @@ Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, '
 
 });
 
-
+*/
 
 
 Route::post('/statisticsLogin', [EmployeeController::class, 'statisticsLogin']);
@@ -133,7 +138,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'doctor'])->group(function () {
-  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+ // Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
 
 });

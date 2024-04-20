@@ -15,7 +15,12 @@ class RoutineWomenVisit extends Model
         'current_status',
         'status_type',
         'z_score',
-        'date'
+        'date',
+        'IYCF',
+        'nutritional_survey',
+        'micronutrients',
+        'high_energy_biscuits',
+        'health_education'
     ];
 
     public function medicalRecord()

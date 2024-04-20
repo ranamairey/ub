@@ -24,8 +24,9 @@ return new class extends Migration
 
             $table->unsignedBigInteger('medical_record_id');
             $table->foreign('medical_record_id')->references('id')->on('medical_records')->onDelete('cascade');
-            $table->enum('activity', ['health education','healthcare']);
             $table->string('result');
+            $table->boolean('health_education');
+            $table->boolean('health_care');
             $table->date('date')->format('Y-m-d');
             $table->timestamps();
         });

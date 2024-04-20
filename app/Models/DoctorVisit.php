@@ -16,7 +16,8 @@ class DoctorVisit extends Model
         'employee_id',
         'employee_choise_id',
         'medical_record_id',
-        'activity',
+        'health_care',
+        'health_education',
         'result',
         'date'
     ];

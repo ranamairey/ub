@@ -92,13 +92,17 @@ class RoutineChildVisitController extends Controller
 
         $validator = Validator::make($request->all(), [
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
-            'activity' => ['required', 'string'],
             'z_score' => ['required', 'integer'],
             'current_status' => [
                 'required',
                 Rule::in(['sam', 'mam', 'normal']),
             ],
             'date' => ['required', 'date'],
+            'health_education' => ['required', 'boolean'],
+            'nutritional_survey' => ['required', 'boolean'],
+            'micronutrients' => ['required', 'boolean'],
+            'fat_intake' => ['required', 'boolean'],
+            'high_energy_biscuits' => ['required', 'boolean'],
 
             ]);
 
@@ -111,7 +115,7 @@ class RoutineChildVisitController extends Controller
             return $this->unprocessable($routineChildVisit , 'The specified medical record does not exist.');
         }
 
-        
+
         $employee = auth('sanctum')->user();
 
         $routineChildVisit = RoutineChildVisit::create([
@@ -119,9 +123,15 @@ class RoutineChildVisitController extends Controller
             'employee_choise_id' => $employee->employeeChoises()->first()->id,
             'medical_record_id' => $request->input('medical_record_id'),
             'current_status' =>  $request->input('current_status'),
-            'activity'  =>   $request->input('activity'),
             'z_score' =>  $request->input('z_score'),
             'date' =>   $request->input('date'),
+            'sam_acceptance' => $request->input('sam_acceptance'),
+            'health_education' => $request->input('health_education'),
+            'nutritional_survey' => $request->input('nutritional_survey'),
+            'micronutrients' => $request->input('micronutrients'),
+            'fat_intake' => $request->input('fat_intake'),
+            'high_energy_biscuits' => $request->input('high_energy_biscuits'),
+
         ]);
 
         return $this->created($routineChildVisit);

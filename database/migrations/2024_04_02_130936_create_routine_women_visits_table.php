@@ -27,6 +27,16 @@ return new class extends Migration
 
             $table->enum('current_status', [ 'mam','normal']);
 
+            $table->boolean('IYCF');
+
+            $table->boolean('nutritional_survey');
+
+            $table->boolean('micronutrients');
+
+            $table->boolean('high_energy_biscuits');
+
+            $table->boolean('health_education');
+
             $table->enum('status_type', [ 'pregnant','lactating','non']);
 
             $table->float('z_score')->nullable();

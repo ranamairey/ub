@@ -36,19 +36,24 @@ class RoutineWomenVisitController extends Controller
                 'required',
                 Rule::in(['pregnant','lactating','non']),
             ],
-            'date' => ['required', 'date'],
+            'date' => ['required', 'date'], 'IYCF' => ['required', 'boolean'],
+            'nutritional_survey' => ['required', 'boolean'],
+            'micronutrients' => ['required', 'boolean'],
+            'high_energy_biscuits' => ['required', 'boolean'],
+            'health_education' => ['required', 'boolean'],
 
             ]);
+
 
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
 
-        
+
         if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
             return $this->unprocessable($routineWomenVisit , 'The specified medical record does not exist.');
         }
-    
+
 
         $employee = auth('sanctum')->user();
 
@@ -60,6 +65,11 @@ class RoutineWomenVisitController extends Controller
             'status_type'  =>   $request->input('status_type'),
             'z_score' =>  $request->input('z_score'),
             'date' =>   $request->input('date'),
+            'IYCF' => $request->input('IYCF'),
+            'nutritional_survey' => $request->input('nutritional_survey'),
+            'micronutrients' => $request->input('micronutrients'),
+            'high_energy_biscuits' => $request->input('high_energy_biscuits'),
+            'health_education' => $request->input('health_education'),
         ]);
         return $this->created($routineWomenVisit);
 

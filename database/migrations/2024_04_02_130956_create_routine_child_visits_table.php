@@ -28,7 +28,17 @@ return new class extends Migration
 
             $table->enum('current_status', ['sam', 'mam','normal']);
 
-            $table->string('activity');
+            $table->boolean('health_education');
+
+            $table->boolean('sam_acceptance');
+
+            $table->boolean('nutritional_survey');
+
+            $table->boolean('micronutrients');
+
+            $table->boolean('fat_intake');
+
+            $table->boolean('high_energy_biscuits');
 
             $table->float('z_score');
 
