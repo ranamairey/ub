@@ -20,10 +20,17 @@ class MalnutritionWomenVisitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($programId)
     {
-        //
+        $visits = MalnutritionWomenVisit::where('programs_id', $programId)->get();
+
+        if (!$visits->count()) {
+            return $this->notFound('No visits found for program ID: ' . $programId);
+        }
+
+        return $this->success($visits);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -50,17 +57,16 @@ class MalnutritionWomenVisitController extends Controller
             'current_date' => 'required|date_format:Y-m-d',
             'next_visit_date' => 'required|date_format:Y-m-d',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $program =WomenTreatmentProgram::find($request->programs_id);
-    
+
         if(!$program){
             return $this->notFound($request->programs_id , "Program not found");
         }
-        $employee_id =4;
-         // auth('sanctum')->user()->id;
+        $employee_id = auth('sanctum')->user()->id;
         $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id;
         $visit = MalnutritionWomenVisit::create([
             'employee_id' => $employee_id,
@@ -70,7 +76,7 @@ class MalnutritionWomenVisitController extends Controller
             'note' => $request->note,
             'current_date' => $request->current_date,
             'next_visit_date' => $request->next_visit_date,
-    
+
         ]);
         return $this->created($visit);
     }

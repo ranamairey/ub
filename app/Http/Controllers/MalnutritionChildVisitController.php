@@ -20,10 +20,17 @@ class MalnutritionChildVisitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($programId)
     {
-        //
+        $visits = MalnutritionChildVisit::where('programs_id', $programId)->get();
+
+        if (!$visits->count()) {
+            return $this->notFound('No visits found for program ID: ' . $programId);
+        }
+
+        return $this->success($visits);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -43,7 +50,7 @@ class MalnutritionChildVisitController extends Controller
      */
     public function store(Request $request)
     {
- 
+
     $validator = Validator::make($request->all(), [
         'programs_id' => 'required|exists:child_treatment_programs,id',
         'edema' => 'required|boolean',
@@ -64,8 +71,7 @@ class MalnutritionChildVisitController extends Controller
     if(!$program){
         return $this->notFound($request->programs_id , "Program not found");
     }
-    $employee_id =1;
-     // auth('sanctum')->user()->id;
+    $employee_id = auth('sanctum')->user()->id;
     $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id;
     $visit = MalnutritionChildVisit::create([
         'employee_id' => $employee_id,
