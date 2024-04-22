@@ -20,7 +20,9 @@ class RoutineChildVisit extends Model
         'fat_intake',
         'micronutrients',
         'health_education',
-        'nutritional_survey'
+        'nutritional_survey',
+        'weight',
+        'height',
     ];
 
     public function medicalRecord()

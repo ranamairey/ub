@@ -20,7 +20,9 @@ class RoutineWomenVisit extends Model
         'nutritional_survey',
         'micronutrients',
         'high_energy_biscuits',
-        'health_education'
+        'health_education',
+        'weight',
+        'height',
     ];
 
     public function medicalRecord()

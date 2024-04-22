@@ -106,6 +106,15 @@ Route::post('/creaMalnutritionWomenVisits', [MalnutritionWomenVisitController::c
 Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
 Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
 Route::delete('/deletenutritionistAppointment/{id}' , [AppointmentController::class , 'destroy']);
+Route::get('/getChildTreatmentsByMedicalCenter/{id}', [ChildTreatmentProgramController::class , 'getChildTreatmentsByMedicalCenter']);
+Route::get('/getWomenTreatmentsByMedicalCenter/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentsByMedicalCenter']);
+Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
+Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
+Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
+
+
+
+
 });
 /*
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {});
@@ -147,6 +156,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getStatisticsEmployees' , [EmployeeController::class ,  'getStatisticsEmployees']);
   Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);
   Route::get('/getHealthEducationEmployees' , [EmployeeController::class ,  'getHealthEducationEmployees']);
+
 
 });
 

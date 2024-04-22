@@ -30,6 +30,10 @@ return new class extends Migration
 
             $table->boolean('health_education');
 
+            $table->float('weight');
+
+            $table->float('height');
+
             $table->boolean('sam_acceptance');
 
             $table->boolean('nutritional_survey');

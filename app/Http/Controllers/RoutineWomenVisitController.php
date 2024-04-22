@@ -41,6 +41,8 @@ class RoutineWomenVisitController extends Controller
             'micronutrients' => ['required', 'boolean'],
             'high_energy_biscuits' => ['required', 'boolean'],
             'health_education' => ['required', 'boolean'],
+            'weight' => ['required','numeric'],
+            'height' => ['required','numeric'],
 
             ]);
 
@@ -70,6 +72,9 @@ class RoutineWomenVisitController extends Controller
             'micronutrients' => $request->input('micronutrients'),
             'high_energy_biscuits' => $request->input('high_energy_biscuits'),
             'health_education' => $request->input('health_education'),
+            'weight' => $request->input('weight'),
+            'height' => $request->input('height'),
+
         ]);
         return $this->created($routineWomenVisit);
 

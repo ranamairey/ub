@@ -59,6 +59,20 @@ class WomenTreatmentProgramController extends Controller
 
     return $this->created($program);
 }
+
+
+public function getWomenTreatmentsByMedicalCenter($medicalCenterId)
+{
+    $treatments = WomenTreatmentProgram::whereHas('employeeChoise', function ($query) use ($medicalCenterId) {
+        $query->where('medical_center_id', $medicalCenterId);
+    })->get();
+
+    if (!$treatments->count()) {
+        return $this->notFound('No women treatment programs found for this medical center');
+    }
+
+    return $this->success($treatments);
+}
 }
 
 

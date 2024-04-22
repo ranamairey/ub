@@ -103,6 +103,8 @@ class RoutineChildVisitController extends Controller
             'micronutrients' => ['required', 'boolean'],
             'fat_intake' => ['required', 'boolean'],
             'high_energy_biscuits' => ['required', 'boolean'],
+            'weight' => ['required','numeric'],
+            'height' => ['required','numeric'],
 
             ]);
 
@@ -131,6 +133,8 @@ class RoutineChildVisitController extends Controller
             'micronutrients' => $request->input('micronutrients'),
             'fat_intake' => $request->input('fat_intake'),
             'high_energy_biscuits' => $request->input('high_energy_biscuits'),
+            'weight' => $request->input('weight'),
+            'height' => $request->input('height'),
 
         ]);
 
