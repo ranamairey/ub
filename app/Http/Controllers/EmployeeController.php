@@ -91,7 +91,7 @@ class EmployeeController extends Controller
 
             if($employee->active == false){
                 return $this->error($employee ,'Employee account already frozen .' );
-    
+
                 }
 
             $employee->update([
@@ -115,7 +115,7 @@ class EmployeeController extends Controller
         try {
 
             $employee = Employee::findOrFail($employeeId);
-            
+
             if($employee->active == true){
             return $this->error($employee ,'Employee account already unfrozen .' );
 
@@ -283,6 +283,7 @@ class EmployeeController extends Controller
 
     return $this->success([
         'token' => $token->plainTextToken,
+        'employee'=>$employee,
         'role' => $role,
     ]);
 }
@@ -352,7 +353,7 @@ public function getEmployeeProfile(Request $request, $id)
             'contract_value' => $latestContract?->contract_value,
             'certificate' => $latestContract?->certificate,
             'medical_center_id' => $latestContract?->medical_center_id,
-        
+
         ],
 
         'roles' => $employee->roles->pluck('name'),
@@ -360,6 +361,107 @@ public function getEmployeeProfile(Request $request, $id)
 
     return $this->success($responseData);
 }
+////////////////////////////////
+public function getWomenNutritionists()
+{
+    $womenNutritionists = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'women-nutritionist');
+    })->get();
+
+    if (!$womenNutritionists->count()) {
+        return $this->notFound('No women nutritionists found');
+    }
+
+    return $this->success($womenNutritionists);
+}
+public function getWomenDoctors()
+{
+    $womenDoctors = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'women-doctor');
+    })->get();
+
+    if (!$womenDoctors->count()) {
+        return $this->notFound('No women doctors found');
+    }
+
+    return $this->success($womenDoctors);
+}
+public function getChildDoctors()
+{
+    $childDoctors = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'child-doctor');
+    })->get();
+
+    if (!$childDoctors->count()) {
+        return $this->notFound('No child doctors found');
+    }
+
+    return $this->success($childDoctors);
+}
+
+public function getReceptionists()
+{
+    $receptionists = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'receptionist');
+    })->get();
+
+    if (!$receptionists->count()) {
+        return $this->notFound('No receptionists found');
+    }
+
+    return $this->success($receptionists);
+}
+public function getPharmacists()
+{
+    $pharmacists = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'pharmacist');
+    })->get();
+
+    if (!$pharmacists->count()) {
+        return $this->notFound('No pharmacists found');
+    }
+
+    return $this->success($pharmacists);
+}
+public function getStatisticsEmployees()
+{
+    $statisticsEmployees = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'statistics-employee');
+    })->get();
+
+    if (!$statisticsEmployees->count()) {
+        return $this->notFound('No statistics employees found');
+    }
+
+    return $this->success($statisticsEmployees);
+}
+public function getHealthEducationEmployees()
+{
+    $healthEducationEmployees = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'health-education');
+    })->get();
+
+    if (!$healthEducationEmployees->count()) {
+        return $this->notFound('No health education employees found');
+    }
+
+    return $this->success($healthEducationEmployees);
+}
+public function getChildNutritionists()
+{
+    $childNutritionists = Employee::whereHas('roles', function ($query) {
+        $query->where('name', 'child-nutritionist');
+    })->get();
+
+    if (!$childNutritionists->count()) {
+        return $this->notFound('No child nutritionists found');
+    }
+
+    return $this->success($childNutritionists);
+}
+
+////////////////////////////////////////////
+
 
 
 

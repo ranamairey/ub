@@ -19,6 +19,8 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
             'receptionist' => 'Receptionist',
             'statistics-employee' => 'Statistics Employee',
             'pharmacist' => 'Pharmacist',
+            'health-education' => 'health education',
+
         ];
 
         foreach ($roles as $name => $title) {
@@ -37,6 +39,7 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
             ['name' => 'child-doctor', 'user_name' => 'child-doctor', 'role' => 'child-doctor'],
             ['name' => 'receptionist', 'user_name' => 'receptionist', 'role' => 'receptionist'],
             ['name' => 'pharmacist', 'user_name' => 'pharmacist', 'role' => 'pharmacist'],
+            ['name' => 'health-education', 'user_name' => 'health-education', 'role' => 'health-education'],
             ['name' => 'statistics-employee', 'user_name' => 'statistics-employee', 'role' => 'statistics-employee'],
         ];
 
