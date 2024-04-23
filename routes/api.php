@@ -147,7 +147,6 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('updateEmployee/{id}' , [EmployeeController::class , 'updateEmployee']);
   Route::get('/findEmployee/{id}' , [EmployeeController::class ,  'findEmployee']);
   Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);
-
   Route::get('/getChildNutritionists' , [EmployeeController::class ,  'getChildNutritionists']);
   Route::get('/getWomenDoctors' , [EmployeeController::class ,  'getWomenDoctors']);
   Route::get('/getChildDoctors' , [EmployeeController::class ,  'getChildDoctors']);
@@ -159,7 +158,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 
 });
-
+//test
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
  // Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
