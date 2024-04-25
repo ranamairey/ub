@@ -17,9 +17,15 @@ class RoutineChildVisitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($record)
     {
-        //
+        $visits = RoutineChildVisit::where('medical_record_id', $record)->get();
+
+        if (!$visits->count()) {
+            return $this->notFound('No visits found for Record ID: ' . $record);
+        }
+
+        return $this->success($visits);
     }
 
     /**
