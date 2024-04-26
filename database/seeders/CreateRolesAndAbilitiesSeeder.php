@@ -13,14 +13,17 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
     public function run()
     {
 
-        $roles = [
-            'doctor' => 'Doctor',
-            'nutritionist' => 'Nutritionist',
-            'receptionist' => 'Receptionist',
-            'statistics-employee' => 'Statistics Employee',
-            'pharmacist' => 'Pharmacist',
-            'health-education' => 'health education',
-
+         $roles = [
+            'doctor'=>'طبيب/ة' ,
+            'women-doctor'=>'طبيب/ة نسائية'  ,
+            'child-doctor' => 'طبيب/ة أطفال',
+            'nutritionist'=>'أخصائي/ة تغذية' ,
+            'child-nutritionist'=> 'أخصائي/ة تغذية أطفال' ,
+            'women-nutritionist'=> 'أخصائي/ة تغذية نساء' ,
+            'receptionist'=>'موظف/ة استقبال' ,
+            'statistics-employee'=>'موظف/ة إحصائات' ,
+            'pharmacist'=>'صيدلاني/ة' ,
+            'health-education'=>'موظف/ة تثقيف صحي',
         ];
 
         foreach ($roles as $name => $title) {
@@ -50,6 +53,7 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
                 'user_name' => $data['user_name'],
                 'password' => Hash::make('secret123'),
                 'active' => true,
+                'is_logged' => false
             ];
 
             $employee = Employee::firstOrCreate($employeeData);

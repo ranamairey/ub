@@ -54,7 +54,6 @@ class MalnutritionWomenVisitController extends Controller
             'programs_id' => 'required|exists:child_treatment_programs,id',
             'muac' => 'required|integer',
             'note' => 'required|string',
-            'current_date' => 'required|date_format:Y-m-d',
             'next_visit_date' => 'required|date_format:Y-m-d',
         ]);
 
@@ -74,7 +73,7 @@ class MalnutritionWomenVisitController extends Controller
             'employee_choise_id' => $employee_choise_id,
             'muac' => $request->muac,
             'note' => $request->note,
-            'current_date' => $request->current_date,
+            'current_date' => now()->format('Y-m-d'),
             'next_visit_date' => $request->next_visit_date,
 
         ]);

@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Contract extends Model
 {
-    use HasFactory , SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'employee_id',
         'medical_center_id',
         'contract_value',
         'certificate',
+        'is_valid',
         'expiration_date'
     ];
-    protected $dates = ['deleted_at'];
+    
 
 
     public function employee()

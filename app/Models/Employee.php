@@ -22,7 +22,8 @@ class Employee extends Model
         'phone_number',
         'user_name',
         'password',
-        'active'
+        'active',
+        'is_logged'
     ];
 
     public function addresses()

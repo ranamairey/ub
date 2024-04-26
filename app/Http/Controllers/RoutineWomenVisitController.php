@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
+use App\Models\EmployeeChoise;
 use Illuminate\Validation\Rule;
+use App\Traits\ApiResponseTrait;
 use App\Models\RoutineWomenVisit;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\ApiResponseTrait;
 
 class RoutineWomenVisitController extends Controller
 {
@@ -68,7 +69,7 @@ class RoutineWomenVisitController extends Controller
 
         $routineWomenVisit = RoutineWomenVisit::create([
             'employee_id' => $employee->id,
-            'employee_choise_id' => $employee->employeeChoises()->first()->id,
+            'employee_choise_id' => EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id,
             'medical_record_id' => $request->input('medical_record_id'),
             'current_status' =>  $request->input('current_status'),
             'status_type'  =>   $request->input('status_type'),

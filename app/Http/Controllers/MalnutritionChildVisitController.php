@@ -59,7 +59,7 @@ class MalnutritionChildVisitController extends Controller
         'muac' => 'required|integer',
         'z_score' => 'required|numeric',
         'note' => 'required|string',
-        'current_date' => 'required|date_format:Y-m-d',
+        // 'current_date' => 'required|date_format:Y-m-d',
         'next_visit_date' => 'required|date_format:Y-m-d',
     ]);
 
@@ -83,7 +83,7 @@ class MalnutritionChildVisitController extends Controller
         'muac' => $request->muac,
         'z_score' => $request->z_score,
         'note' => $request->note,
-        'current_date' => $request->current_date,
+        'current_date' => now()->format('Y-m-d'),
         'next_visit_date' => $request->next_visit_date,
 
     ]);

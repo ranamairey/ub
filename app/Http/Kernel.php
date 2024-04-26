@@ -82,7 +82,7 @@ class Kernel extends HttpKernel
         'nutritionist' => \App\Http\Middleware\NutritionistMiddleware::class,
         'child-doctor' => \App\Http\Middleware\ChildDoctorMiddleware::class,
         'women-doctor' => \App\Http\Middleware\WomenDoctorMiddleware::class,
-        'women-nutritionist' => \App\Http\Middleware\WomenNutritionisMiddleware::class,
+        'women-nutritionist' => \App\Http\Middleware\WomenNutritionistMiddleware::class,
         'child-nutritionist' => \App\Http\Middleware\ChildNutritionistMiddleware::class,
         'pharmacist' => \App\Http\Middleware\PharmacisMiddleware::class,
 

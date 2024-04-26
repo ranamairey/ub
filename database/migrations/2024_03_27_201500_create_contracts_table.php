@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('expiration_date');
             $table->integer('contract_value');
             $table->string('certificate');
-            $table->softDeletes();
+            $table->boolean('is_valid');
             $table->timestamps();
         });
     }

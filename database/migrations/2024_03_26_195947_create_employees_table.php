@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('user_name')->unique();
             $table->boolean('active');
+            $table->boolean('is_logged');
             $table->string('password');
 
             $table->timestamps();

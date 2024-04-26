@@ -19,7 +19,6 @@ class DoctorVisitController extends Controller
         $validator = Validator::make($request->all(), [
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
             'result' => ['required', 'string'],
-            'date' => ['required', 'date'],
             'health_education' => ['required', 'boolean'],
             'health_care' => ['required', 'boolean'],
 
@@ -43,7 +42,7 @@ class DoctorVisitController extends Controller
             'medical_record_id' => $request->input('medical_record_id'),
             'medical_record_id' => $request->input('medical_record_id'),
             'result' => $request->input('result'),
-            'date' => $request->input('date'),
+            'date' => now()->format('Y-m-d'),
             'health_education' => $request->input('health_education'),
             'health_care' => $request->input('health_care'),
         ]);

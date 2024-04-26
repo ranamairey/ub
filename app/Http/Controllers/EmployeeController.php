@@ -8,9 +8,11 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\EmployeeChoise;
 use Illuminate\Support\Carbon;
+use App\Traits\ApiResponseTrait;
+use Silber\Bouncer\Database\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\ApiResponseTrait;
 
 
 class EmployeeController extends Controller
@@ -44,6 +46,7 @@ class EmployeeController extends Controller
             'user_name' => $request->user_name,
             'password' => Hash::make($request->password),
             'active' => true,
+            'is_logged' => false
         ]);
 
         $addressData = $request->get('address');
@@ -58,6 +61,7 @@ class EmployeeController extends Controller
             'contract_value' => $request['contract']['contract_value'],
             'certificate' => $request['contract']['certificate'],
             'medical_center_id' => $request['contract']['medical_center_id'],
+            'is_valid' => true
         ]);
 
         $roleName = $request->input('role');
@@ -171,8 +175,10 @@ class EmployeeController extends Controller
             'partner_id' => $request['employee_choise']['partner_id'],
         ]);
         $role = $employee->getRoles();
+        $employee->is_logged=true;
+        $employee->save();
         $token = $employee->createToken($role[0]);
-        return $this->success(['token' => $token->plainTextToken, 'employee choise' => $employeeChoise , 'role' => $role]);
+        return $this->success(['token' => $token->plainTextToken, 'employee' => $employee , 'role' => $role]);
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,15 +215,17 @@ class EmployeeController extends Controller
 
         }
 
-        $contract->delete();
+        $contract->is_valid= false;
+        $contract->save();
 
         $newContract= $employee->contracts()->create([
             'expiration_date' => $request->input('expiration_date'),
             'contract_value' => $request->input('contract_value'),
             'certificate' => $request->input('certificate'),
+            'is_valid' => true,
             'medical_center_id' => $request->input('medical_center_id'),
         ]);
-        return $this->created($contract);
+        return $this->created($newContract);
     }
 
     public function updateEmployee(Request $request, $id)
@@ -279,6 +287,8 @@ class EmployeeController extends Controller
     }
 
     $role = $employee->getRoles();
+    $employee->is_logged=true;
+    $employee->save();
     $token = $employee->createToken($role[0]);
 
     return $this->success([
@@ -371,6 +381,17 @@ public function getWomenNutritionists()
     if (!$womenNutritionists->count()) {
         return $this->notFound('No women nutritionists found');
     }
+    foreach ($womenNutritionists as $womenNutritionist) {
+        $employee_choise = EmployeeChoise::where('employee_id', $womenNutritionist->id)->latest('created_at')->first();
+        $womenNutritionist->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $womenNutritionist->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $womenNutritionist->contract_status = true;
+        } else {
+            $womenNutritionist->contract_status = false;
+        }
+    }
 
     return $this->success($womenNutritionists);
 }
@@ -383,6 +404,17 @@ public function getWomenDoctors()
     if (!$womenDoctors->count()) {
         return $this->notFound('No women doctors found');
     }
+    foreach ($womenDoctors as $womenDoctor) {
+        $employee_choise = EmployeeChoise::where('employee_id', $womenDoctor->id)->latest('created_at')->first();
+        $womenDoctor->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $womenDoctor->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $womenDoctor->contract_status = true;
+        } else {
+            $womenDoctor->contract_status = false;
+        }
+    }
 
     return $this->success($womenDoctors);
 }
@@ -394,6 +426,17 @@ public function getChildDoctors()
 
     if (!$childDoctors->count()) {
         return $this->notFound('No child doctors found');
+    }
+    foreach ($childDoctors as $childDoctor) {
+        $employee_choise = EmployeeChoise::where('employee_id', $childDoctor->id)->latest('created_at')->first();
+        $childDoctor->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $childDoctor->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $childDoctor->contract_status = true;
+        } else {
+            $childDoctor->contract_status = false;
+        }
     }
 
     return $this->success($childDoctors);
@@ -408,6 +451,17 @@ public function getReceptionists()
     if (!$receptionists->count()) {
         return $this->notFound('No receptionists found');
     }
+    foreach ($receptionists as $receptionist) {
+        $employee_choise = EmployeeChoise::where('employee_id', $receptionist->id)->latest('created_at')->first();
+        $receptionist->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $receptionist->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $receptionist->contract_status = true;
+        } else {
+            $receptionist->contract_status = false;
+        }
+    }
 
     return $this->success($receptionists);
 }
@@ -419,6 +473,17 @@ public function getPharmacists()
 
     if (!$pharmacists->count()) {
         return $this->notFound('No pharmacists found');
+    }
+    foreach ($pharmacists as $pharmacist) {
+        $employee_choise = EmployeeChoise::where('employee_id', $pharmacist->id)->latest('created_at')->first();
+        $pharmacist->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $pharmacist->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $pharmacist->contract_status = true;
+        } else {
+            $pharmacist->contract_status = false;
+        }
     }
 
     return $this->success($pharmacists);
@@ -433,6 +498,19 @@ public function getStatisticsEmployees()
         return $this->notFound('No statistics employees found');
     }
 
+    foreach ($statisticsEmployees as $statisticsEmployee) {
+        $employee_choise = EmployeeChoise::where('employee_id', $statisticsEmployee->id)->latest('created_at')->first();
+        $statisticsEmployee->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $statisticsEmployee->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $statisticsEmployee->contract_status = true;
+        } else {
+            $statisticsEmployee->contract_status = false;
+        }
+    }
+
+
     return $this->success($statisticsEmployees);
 }
 public function getHealthEducationEmployees()
@@ -444,9 +522,21 @@ public function getHealthEducationEmployees()
     if (!$healthEducationEmployees->count()) {
         return $this->notFound('No health education employees found');
     }
+    foreach ($healthEducationEmployees as $healthEducationEmployee) {
+        $employee_choise = EmployeeChoise::where('employee_id', $healthEducationEmployee->id)->latest('created_at')->first();
+        $healthEducationEmployee->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $healthEducationEmployee->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $healthEducationEmployee->contract_status = true;
+        } else {
+            $healthEducationEmployee->contract_status = false;
+        }
+    }
 
     return $this->success($healthEducationEmployees);
 }
+
 public function getChildNutritionists()
 {
     $childNutritionists = Employee::whereHas('roles', function ($query) {
@@ -457,15 +547,56 @@ public function getChildNutritionists()
         return $this->notFound('No child nutritionists found');
     }
 
+    foreach ($childNutritionists as $childNutritionist) {
+        $employee_choise = EmployeeChoise::where('employee_id', $childNutritionist->id)->latest('created_at')->first();
+        $childNutritionist->medical_center_name = $employee_choise->medicalCenter->name;
+        $lastContract = Contract::where('employee_id', $childNutritionist->id)->latest('created_at')->first();
+        $expirationDate = Carbon::parse($lastContract->expiration_date);
+        if(!($expirationDate->isPast() && $lastContract->is_valid = true)){
+            $childNutritionist->contract_status = true;
+        } else {
+            $childNutritionist->contract_status = false;
+        }
+    }
+    
     return $this->success($childNutritionists);
 }
 
 ////////////////////////////////////////////
+public function getAllRoles(){
+    $roles = Role::select('title')->get();
 
+    return $this->success($roles);
+}
+///////////////////////////////////////////////////////////////////
+public function getEmployeesInfo(){
 
+    $allEmployees = Employee::count();
+    $activeEmployees = Employee::where('is_logged' , true )->count();
+    $freezedEmployees = Employee::where('active' , false )->count();
+    
+    $contracts = Contract::where('is_valid' , true)->get();
+    $activeContracts = collect();
+    foreach($contracts as $contract){
+        $expirationDate = Carbon::parse($contract->expiration_date);
+        if(!$expirationDate->isPast()){
+            $activeContracts->push($contract);
+        }
+    }
+    $activeContractsCount = $activeContracts->count();
+    $expiredContracts = Contract::where('is_valid' , false)->count();
+    
 
+    $info=[
+        'allEmployees' => $allEmployees,
+        'activeEmployees' => $activeEmployees,
+        'freezedEmployees' =>$freezedEmployees,
+        'activeContracts' => $activeContractsCount,
+        'expiredContracts' =>$expiredContracts
+    ];
 
+    return $this->success($info);
 
-
+}
 
 }
