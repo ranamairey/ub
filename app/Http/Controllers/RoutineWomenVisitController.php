@@ -66,7 +66,7 @@ class RoutineWomenVisitController extends Controller
 
 
         $employee = auth('sanctum')->user();
-
+$employee_id = auth('sanctum')->user()->id;
         $routineWomenVisit = RoutineWomenVisit::create([
             'employee_id' => $employee->id,
             'employee_choise_id' => EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id,

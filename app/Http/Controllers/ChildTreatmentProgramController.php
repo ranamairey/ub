@@ -71,7 +71,9 @@ class ChildTreatmentProgramController extends Controller
 {
     $treatments = ChildTreatmentProgram::whereHas('employeeChoise', function ($query) use ($medicalCenterId) {
         $query->where('medical_center_id', $medicalCenterId);
-    })->get();
+    })->with('MedicalRecord')
+    ->get();;
+
 
     if (!$treatments->count()) {
         return $this->notFound('No child treatment programs found for this medical center');

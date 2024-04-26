@@ -111,8 +111,8 @@ Route::get('/getWomenTreatmentsByMedicalCenter/{id}', [WomenTreatmentProgramCont
 Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
 Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
 Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
-
-
+Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+Route::post('/creaMalnutritionWomenVisits', [MalnutritionWomenVisitController::class , 'store']);
 
 
 });
@@ -120,10 +120,10 @@ Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, '
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
   // Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
    Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
- 
+
  });
 Route::middleware(['auth:sanctum', 'child-doctorc'])->group(function () {});
-
+/*
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
@@ -131,15 +131,17 @@ Route::post('/creaMalnutritionWomenVisits', [MalnutritionWomenVisitController::c
 
 
 
-});
+});*/
+/*
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
 Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
 Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
-Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+//Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
 
 
 
 });
+*/
 
 
 
@@ -154,7 +156,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
   Route::post('updateEmployee/{id}' , [EmployeeController::class , 'updateEmployee']);
   Route::get('/findEmployee/{id}' , [EmployeeController::class ,  'findEmployee']);
-  
+
 });
 
 Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);

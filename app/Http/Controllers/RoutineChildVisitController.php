@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Models\RoutineChildVisit;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ApiResponseTrait;
+use App\Models\EmployeeChoise;
 
 class RoutineChildVisitController extends Controller
 {
@@ -125,8 +126,9 @@ class RoutineChildVisitController extends Controller
 
 
         $employee = auth('sanctum')->user();
-
+        $employee_id = auth('sanctum')->user()->id;
         $routineChildVisit = RoutineChildVisit::create([
+
             'employee_id' => $employee->id,
             'employee_choise_id' => $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id,
             'medical_record_id' => $request->input('medical_record_id'),
