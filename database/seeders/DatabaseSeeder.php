@@ -48,6 +48,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WomenTreatmentProgramSeeder::class);
         $this->call(ChildTreatmentProgramSeeder::class);
         $this->call(ContractSeeder::class);
+        $this->call(AddressSeeder::class);
+
 
 
 
