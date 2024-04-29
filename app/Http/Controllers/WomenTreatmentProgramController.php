@@ -73,9 +73,30 @@ public function getWomenTreatmentsByMedicalCenter($medicalCenterId)
     }
 
 
+
     return $this->success($treatments);
 }
 
+public function getWomenTreatmentProgramByMedicalRecordId(Request $request, $medicalRecordId)
+{
+    $validator = Validator::make(['medical_record_id' => $medicalRecordId], [
+        'medical_record_id' => 'required|integer|exists:medical_records,id',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+    }
+
+    $treatmentProgram = WomenTreatmentProgram::where('medical_record_id', $medicalRecordId)
+        ->with('MedicalRecord')
+        ->first();
+
+    if (!$treatmentProgram) {
+        return $this->notFound('No women treatment program found for the specified medical record ID.');
+    }
+
+    return $this->success($treatmentProgram);
+}
 }
 
 

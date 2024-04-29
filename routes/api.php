@@ -111,7 +111,7 @@ Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWom
 Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
 Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
-
+Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
 
 
 });
@@ -123,6 +123,7 @@ Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']
 Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
 Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
 Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+Route::get('/getChildTreatmentProgramByMedicalRecordId/{id}', [ChildTreatmentProgramController::class , 'getChildTreatmentProgramByMedicalRecordId']);
 
 
 });
