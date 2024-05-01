@@ -4,6 +4,7 @@ use App\Models\User;
 use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\test;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AgencyController;
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   });
 Route::post('/login', [test::class, 'login']);
 */
+Route::get('/test' , [Controller::class ,  'test']);
 
 
 
