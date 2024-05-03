@@ -132,11 +132,21 @@ Route::get('/getChildTreatmentProgramByMedicalRecordId/{id}', [ChildTreatmentPro
 
 
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
-    // Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
-     Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
+  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+  Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
+Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
+
 
    });
-  Route::middleware(['auth:sanctum', 'child-doctorc'])->group(function () {});
+Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
+  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+
+  Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
+
+Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
+
+
+  });
 
 
 
@@ -151,10 +161,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::post('/renewalEmployeeContract', [EmployeeController::class, 'renewalEmployeeContract']);
   Route::post('updateEmployee/{id}' , [EmployeeController::class , 'updateEmployee']);
   Route::get('/findEmployee/{id}' , [EmployeeController::class ,  'findEmployee']);
-
-});
-
-Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);
+  Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);
   Route::get('/getChildNutritionists' , [EmployeeController::class ,  'getChildNutritionists']);
   Route::get('/getWomenDoctors' , [EmployeeController::class ,  'getWomenDoctors']);
   Route::get('/getChildDoctors' , [EmployeeController::class ,  'getChildDoctors']);
@@ -163,9 +170,11 @@ Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNut
   Route::get('/getStatisticsEmployees' , [EmployeeController::class ,  'getStatisticsEmployees']);
   Route::get('/getWomenNutritionists' , [EmployeeController::class ,  'getWomenNutritionists']);
   Route::get('/getHealthEducationEmployees' , [EmployeeController::class ,  'getHealthEducationEmployees']);
-Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
-Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
+  Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
+  Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
+});
 
+  
 
 
 

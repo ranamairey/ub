@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MedicalRecord;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
 use App\Traits\ApiResponseTrait;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 
 class MedicalRecordController extends Controller
@@ -175,6 +177,21 @@ class MedicalRecordController extends Controller
 
         return $this->notFound('ther is no visits');
       }
+    }
+
+    public function getRecordDetails($id){
+        $medicalRecord = MedicalRecord::find($id);
+        if(!$medicalRecord){
+            return $this->notFound($id , "The medical record with given id not found.");
+        }
+        $fullName =$medicalRecord->name . " "  .$medicalRecord->father_name . " " . $medicalRecord->last_name;
+        $birthDate = Carbon::parse($medicalRecord->birth_date);
+        $age =$birthDate->age;
+        $medicalRecord->full_name= $fullName;
+        $medicalRecord->age = $age;
+        $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
+
+        return $this->success($medicalRecord);
     }
 
 
