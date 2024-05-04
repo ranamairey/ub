@@ -179,6 +179,7 @@ class MedicalRecordController extends Controller
       }
     }
 
+    //  Also for search
     public function getRecordDetails($id){
         $medicalRecord = MedicalRecord::find($id);
         if(!$medicalRecord){
@@ -193,6 +194,7 @@ class MedicalRecordController extends Controller
 
         return $this->success($medicalRecord);
     }
+
 
 
 }

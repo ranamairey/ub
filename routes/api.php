@@ -104,8 +104,8 @@ Route::get('/getChildTreatmentsByMedicalCenter/{id}', [ChildTreatmentProgramCont
 Route::get('/getWomenTreatmentsByMedicalCenter/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentsByMedicalCenter']);
 Route::post('/creaMalnutritionWomenVisits', [MalnutritionWomenVisitController::class , 'store']);
 Route::get('/getDoctorVisitsByMedicalRecordId/{id}', [DoctorVisitController::class , 'getDoctorVisitsByMedicalRecordId']);
-
-
+Route::get('/seachAboutMedicalRecordId/{id}', [MedicalRecordController::class , 'seachAboutMedicalRecordId']);
+Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
@@ -135,16 +135,15 @@ Route::post('/graduateChildTreatmentProgram/{id}', [ChildTreatmentProgramControl
 
 
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
-  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+  Route::post('/createWomenDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
-Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
 
 
    });
 Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
-  Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
-  Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
-Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
+  Route::post('/createChildDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
+  Route::get('/getChildDoctorAppointments' , [AppointmentController::class , 'show']);
+
 
 
   });

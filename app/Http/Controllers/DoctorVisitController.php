@@ -67,6 +67,18 @@ class DoctorVisitController extends Controller
             return $this->notFound('No doctor visits found for the specified medical record ID.');
         }
 
+        foreach ($visits as $visit) {
+            $health_care = $visit->health_care;
+            $health_education = $visit->health_education;
+            if(!$health_care){
+                $activity = "تثقيف صحي" ;
+            }
+            if(!$health_education){
+                $activity  = "رعاية صحية" ;
+            }
+            $visit->activity = $activity;
+        }
         return $this->success($visits);
+        
     }
 }
