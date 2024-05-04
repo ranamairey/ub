@@ -97,6 +97,31 @@ public function getWomenTreatmentProgramByMedicalRecordId(Request $request, $med
 
     return $this->success($treatmentProgram);
 }
+
+public function graduateTreatmentProgram(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'end_cause' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+    }
+
+
+    $treatmentProgram = WomenTreatmentProgram::find($id);
+    if (!$treatmentProgram) {
+        return $this->notFound('No women treatment program found for the specified medical record ID.');
+    }
+
+    $treatmentProgram->update([
+        'end_date' =>  now()->format('Y-m-d'),
+        'end_cause' => $request->input('end_cause'),
+    ]);
+
+    return $this->success($treatmentProgram);
+}
+
 }
 
 

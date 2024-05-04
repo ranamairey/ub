@@ -105,5 +105,29 @@ public function getChildTreatmentProgramByMedicalRecordId(Request $request, $med
 }
 
 
+public function graduateChildTreatmentProgram(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'end_cause' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+    }
+
+
+    $treatmentProgram = ChildTreatmentProgram::find($id);
+    if (!$treatmentProgram) {
+        return $this->notFound('No child treatment program found for the specified medical record ID.');
+    }
+
+    $treatmentProgram->update([
+        'end_date' =>  now()->format('Y-m-d'),
+        'end_cause' => $request->input('end_cause'),
+    ]);
+
+    return $this->success($treatmentProgram);
+}
+
 
 }

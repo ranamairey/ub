@@ -50,4 +50,23 @@ class DoctorVisitController extends Controller
         return $this->created($DoctorVisit);
 
     }
+    
+    public function getDoctorVisitsByMedicalRecordId(Request $request, $medicalRecordId)
+    {
+        $validator = Validator::make(['medical_record_id' => $medicalRecordId], [
+            'medical_record_id' => 'required|integer|exists:medical_records,id',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+        $visits = DoctorVisit::where('medical_record_id', $medicalRecordId)->get();
+
+        if (!$visits->count()) {
+            return $this->notFound('No doctor visits found for the specified medical record ID.');
+        }
+
+        return $this->success($visits);
+    }
 }
