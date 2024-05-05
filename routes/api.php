@@ -15,6 +15,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\WomenTreatmentProgramController;
 use App\Http\Controllers\HealthEducationLectureController;
 use App\Http\Controllers\MalnutritionChildVisitController;
 use App\Http\Controllers\MalnutritionWomenVisitController;
+use App\Http\Controllers\MedicalCenterMedicineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,8 @@ Route::get('/getAgencies' , [AgencyController::class ,  'index']);
 Route::get('/getAccesses' , [AccessController::class ,  'index']);
 Route::get('/getPartners' , [PartnerController::class ,  'index']);
 Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
+
+
 
 
 
@@ -168,6 +172,10 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getHealthEducationEmployees' , [EmployeeController::class ,  'getHealthEducationEmployees']);
   Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
   Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
+  Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
+  Route::post('/updateMedicineStock', [MedicalCenterMedicineController::class, 'updateMedicineStock']);
+
+
 });
 
 
@@ -176,7 +184,6 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 
 Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
-
 
 });
 

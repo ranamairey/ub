@@ -4,82 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalCenterMedicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Traits\ApiResponseTrait;
+use App\Models\EmployeeChoise;
+use Illuminate\Support\Facades\Auth;
 
 class MedicalCenterMedicineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    use ApiResponseTrait;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function updateMedicineStock(Request $request)
     {
-        //
-    }
+        $medicineQuantities = $request->get('medicine_quantities');
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MedicalCenterMedicine  $medicalCenterMedicine
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MedicalCenterMedicine $medicalCenterMedicine)
-    {
-        //
-    }
+        $employee = Auth::guard('sanctum')->user()->with('employeeChoises')->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MedicalCenterMedicine  $medicalCenterMedicine
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MedicalCenterMedicine $medicalCenterMedicine)
-    {
-        //
-    }
+        if (!$employee) {
+            return $this->unauthorized(null, 'Unauthorized access');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MedicalCenterMedicine  $medicalCenterMedicine
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MedicalCenterMedicine $medicalCenterMedicine)
-    {
-        //
-    }
+        $chosenMedicalCenterId = $employee->employeeChoises->first()->medical_center_id;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MedicalCenterMedicine  $medicalCenterMedicine
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MedicalCenterMedicine $medicalCenterMedicine)
-    {
-        //
+        // Retrieve medical center ID from employee choice
+
+
+
+        try {
+            DB::transaction(function () use ($chosenMedicalCenterId, $medicineQuantities) {
+                $updatedMedicines = [];
+
+                foreach ($medicineQuantities as $medicineId => $quantity) {
+                    $previousQuantity = DB::table('medical_center_medicines')
+                        ->where('medical_center_id', $chosenMedicalCenterId)
+                        ->where('medicine_id', $medicineId)
+                        ->value('quntity');
+
+                    $updatedQuantity = $previousQuantity + $quantity;
+
+                    DB::table('medical_center_medicines')
+                        ->updateOrInsert(
+                            [
+                                'medical_center_id' => $chosenMedicalCenterId,
+                                'medicine_id' => $medicineId,
+                            ],
+                            [
+                                'quntity' => $updatedQuantity,
+                            ]
+                        );
+
+                    $updatedMedicines[] = [
+                        'medicine_id' => $medicineId,
+                        'previous_quantity' => $previousQuantity,
+                        'new_quantity' => $updatedQuantity,
+                    ];
+                }
+
+            });
+
+            return $this->success( 'Medicine stock updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Error updating medicine stock: ' . $e->getMessage());
+            return $this->error(null, 'Error updating medicine stock.');
+        }
     }
 }

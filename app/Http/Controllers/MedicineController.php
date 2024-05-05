@@ -4,82 +4,53 @@ namespace App\Http\Controllers;
 
 use App\Models\Medicine;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+
 
 class MedicineController extends Controller
+
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ApiResponseTrait;
+
+    public function addMedicine(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'scientific_name' => 'required|string|max:255',
+            'titer' => 'required|integer',
+            'code' => 'required|integer',
+            'unit' => 'required|integer',
+
+        ]);
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+
+    $employee = auth('sanctum')->user();
+    if (!$employee) {
+        return $this->unauthorized('You are not logged in');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $medicine = new Medicine;
+        $medicine->name = $request->input('name');
+        $medicine->type = $request->input('type');
+        $medicine->scientific_name = $request->input('scientific_name');
+        $medicine->titer = $request->input('titer');
+        $medicine->code = $request->input('code');
+        $medicine->unit = $request->input('unit');
+        $medicine->employee_id =  $employee->id;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Medicine  $medicine
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Medicine $medicine)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Medicine  $medicine
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Medicine $medicine)
-    {
-        //
-    }
+        $medicine->save();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Medicine  $medicine
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Medicine $medicine)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Medicine  $medicine
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Medicine $medicine)
-    {
-        //
+
+            return $this->created($medicine);
+
     }
 }
