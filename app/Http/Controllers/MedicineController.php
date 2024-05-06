@@ -44,13 +44,8 @@ class MedicineController extends Controller
         $medicine->code = $request->input('code');
         $medicine->unit = $request->input('unit');
         $medicine->employee_id =  $employee->id;
-
-
         $medicine->save();
 
-
-
-            return $this->created($medicine);
-
+        return $this->created($medicine);
     }
 }

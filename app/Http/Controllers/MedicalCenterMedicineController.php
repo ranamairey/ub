@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MedicalCenterMedicine;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Traits\ApiResponseTrait;
+use App\Models\MedicalCenter;
 use App\Models\EmployeeChoise;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MedicalCenterMedicine;
 
 class MedicalCenterMedicineController extends Controller
 {
@@ -18,13 +19,14 @@ class MedicalCenterMedicineController extends Controller
         $medicineQuantities = $request->get('medicine_quantities');
 
 
-        $employee = Auth::guard('sanctum')->user()->with('employeeChoises')->first();
+        $employee = Auth::guard('sanctum')->user();
 
         if (!$employee) {
             return $this->unauthorized(null, 'Unauthorized access');
         }
 
-        $chosenMedicalCenterId = $employee->employeeChoises->first()->medical_center_id;
+        $chosenMedicalCenterId =  $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
+        echo $chosenMedicalCenterId;
 
         // Retrieve medical center ID from employee choice
 
@@ -67,5 +69,23 @@ class MedicalCenterMedicineController extends Controller
             Log::error('Error updating medicine stock: ' . $e->getMessage());
             return $this->error(null, 'Error updating medicine stock.');
         }
+
     }
+
+    public function getMedicalCenterMedicine(){
+        $employee = auth('sanctum')->user();
+        $medicalCenterId =  $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
+        $medicalCenter = MedicalCenter::find($medicalCenterId);
+        $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines;
+
+        if (!$medicalCenterMedicines->count()) {
+            return $this->notFound('No medicines found for this medical center');
+        }
+        
+        foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
+            $medicalCenterMedicine->medicine=$medicalCenterMedicine->medicine;
+        }
+        return $this->success($medicalCenterMedicines);
+    }
+    
 }

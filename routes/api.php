@@ -14,19 +14,20 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
+use App\Http\Controllers\MedicineOrderController;
 use App\Http\Controllers\RoutineChildVisitController;
 use App\Http\Controllers\RoutineWomenVisitController;
 use App\Http\Controllers\ChildTreatmentProgramController;
+use App\Http\Controllers\MedicalCenterMedicineController;
 use App\Http\Controllers\WomenTreatmentProgramController;
 use App\Http\Controllers\HealthEducationLectureController;
 use App\Http\Controllers\MalnutritionChildVisitController;
 use App\Http\Controllers\MalnutritionWomenVisitController;
-use App\Http\Controllers\MedicalCenterMedicineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,6 +144,8 @@ Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
 Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
   Route::post('/createChildDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getChildDoctorAppointments' , [AppointmentController::class , 'show']);
+Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
+
 
 
 
@@ -172,8 +175,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getHealthEducationEmployees' , [EmployeeController::class ,  'getHealthEducationEmployees']);
   Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
   Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
-  Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
-  Route::post('/updateMedicineStock', [MedicalCenterMedicineController::class, 'updateMedicineStock']);
+  
 
 
 });
@@ -184,11 +186,11 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 
 Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
+  Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
+  Route::post('/updateMedicineStock', [MedicalCenterMedicineController::class, 'updateMedicineStock']);
+  Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
 
 });
-
-
-
 
 
 

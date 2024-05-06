@@ -16,7 +16,8 @@ class Medicine extends Model
         'scientific_name',
         'titer',
         'code',
-        'unit'
+        'unit',
+        'employee_id'
     ];
 
     public function medicalCenterMedicines()

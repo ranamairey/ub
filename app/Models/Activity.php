@@ -17,4 +17,8 @@ class Activity extends Model
     {
         return $this->hasMany(EmployeeChoise::class , 'activity_id');
     }
+    public function medicineOrders()
+    {
+        return $this->hasMany(MedicineOrder::class , 'activity_id');
+    }
 }
