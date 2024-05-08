@@ -99,7 +99,7 @@ class RoutineChildVisitController extends Controller
 
         $validator = Validator::make($request->all(), [
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
-            'z_score' => ['required', 'integer'],
+            'z_score' => ['required', 'numeric'],
             'current_status' => [
                 'required',
                 Rule::in(['sam', 'mam', 'normal']),

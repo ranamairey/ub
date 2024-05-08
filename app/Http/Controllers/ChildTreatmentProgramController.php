@@ -71,8 +71,10 @@ class ChildTreatmentProgramController extends Controller
 {
     $treatments = ChildTreatmentProgram::whereHas('employeeChoise', function ($query) use ($medicalCenterId) {
         $query->where('medical_center_id', $medicalCenterId);
-    })->with('MedicalRecord')
-    ->get();;
+    })
+    ->whereNull('end_cause')
+    ->with('MedicalRecord')
+    ->get();
 
 
     if (!$treatments->count()) {
@@ -128,6 +130,85 @@ public function graduateChildTreatmentProgram(Request $request, $id)
 
     return $this->success($treatmentProgram);
 }
+
+
+public function transsformChildTreatmentProgram(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'end_cause' => 'required|string',
+        'new_program_type' => 'required|in:tsfp,otp',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+    }
+
+    $treatmentProgram = ChildTreatmentProgram::find($id);
+    if (!$treatmentProgram) {
+        return $this->notFound('No child treatment program found for the specified medical record ID.');
+    }
+    if ($treatmentProgram->end_date) {
+        return $this->unprocessable('The child treatment program is already terminated.');
+    }
+
+    $currentProgramType = $treatmentProgram->program_type;
+    if ($request->input('new_program_type') === $currentProgramType) {
+        return $this->unprocessable('Cannot transfer to the same program type.');
+    }
+
+    switch ($currentProgramType) {
+        case 'otp':
+            if ($request->input('end_cause') !== 'Referral to tsfp') {
+                return $this->unprocessable('Invalid transfer reason for OTP program.');
+            }
+            $newProgramType = 'tsfp';
+            break;
+        case 'tsfp':
+            if ($request->input('end_cause') !== 'Referral to otp') {
+                return $this->unprocessable('Invalid transfer reason for TSFP program.');
+            }
+            $newProgramType = 'otp';
+            break;
+        default:
+            return $this->unprocessable('Invalid current program type.');
+    }
+
+
+    $newTreatmentProgramData = [
+        'medical_record_id' => $treatmentProgram->medical_record_id,
+        'employee_choise_id' => $treatmentProgram->employee_choise_id,
+        'employee_id' => $treatmentProgram->employee_id,
+        'program_type' => $newProgramType,
+        'acceptance_reason' => $request->input('end_cause'),
+        'acceptance_party' => 'Re-acceptance',
+        'acceptance_type' => 'old',
+        'target_weight' => $treatmentProgram->target_weight,
+        'measles_vaccine_received' => $treatmentProgram->measles_vaccine_received,
+        'measles_vaccine_date' => $treatmentProgram->measles_vaccine_date,
+
+
+    ];
+
+
+    $newTreatmentProgram = ChildTreatmentProgram::create($newTreatmentProgramData);
+
+    $treatmentProgram->update([
+        'end_date' => now()->format('Y-m-d'),
+        'end_cause' => $request->input('end_cause'),
+    ]);
+
+
+    $lastVisitData = $treatmentProgram->lastVisit;
+    if ($lastVisitData) {
+        $newTreatmentProgram->lastVisit()->update($lastVisitData);
+    }
+
+    return $this->success([
+        'graduated_program' => $treatmentProgram,
+        'new_program' => $newTreatmentProgram,
+    ]);
+}
+
 
 
 }

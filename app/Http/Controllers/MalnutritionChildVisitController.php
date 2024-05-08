@@ -56,11 +56,11 @@ class MalnutritionChildVisitController extends Controller
         'edema' => 'required|boolean',
         'weight' => 'required|numeric',
         'height' => 'required|numeric',
-        'muac' => 'required|integer',
+        'muac' => 'required|numeric',
         'z_score' => 'required|numeric',
-        'note' => 'required|string',
+        'note' => 'string',
         // 'current_date' => 'required|date_format:Y-m-d',
-        'next_visit_date' => 'required|date_format:Y-m-d',
+        'next_visit_date' => 'date_format:Y-m-d',
     ]);
 
     if ($validator->fails()) {

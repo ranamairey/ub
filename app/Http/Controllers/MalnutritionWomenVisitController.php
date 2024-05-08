@@ -52,9 +52,9 @@ class MalnutritionWomenVisitController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'programs_id' => 'required|exists:child_treatment_programs,id',
-            'muac' => 'required|integer',
-            'note' => 'required|string',
-            'next_visit_date' => 'required|date_format:Y-m-d',
+            'muac' => 'required|numeric',
+            'note' => 'string',
+            'next_visit_date' => 'date_format:Y-m-d',
         ]);
 
         if ($validator->fails()) {

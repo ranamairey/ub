@@ -28,11 +28,11 @@ return new class extends Migration
 
             $table->integer('muac');
 
-            $table->text('note');
+            $table->text('note')->nullable();
 
             $table->date('current_date')->format('Y-m-d');
 
-            $table->date('next_visit_date')->format('Y-m-d');
+            $table->date('next_visit_date')->format('Y-m-d')->nullable();
 
 
 

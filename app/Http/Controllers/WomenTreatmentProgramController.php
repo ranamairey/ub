@@ -65,6 +65,7 @@ public function getWomenTreatmentsByMedicalCenter($medicalCenterId)
     $treatments = WomenTreatmentProgram::whereHas('employeeChoise', function ($query) use ($medicalCenterId) {
         $query->where('medical_center_id', $medicalCenterId);
     })
+    ->whereNull('end_cause')
     ->with('MedicalRecord')
     ->get();
 
@@ -97,6 +98,7 @@ public function getWomenTreatmentProgramByMedicalRecordId(Request $request, $med
 
     return $this->success($treatmentProgram);
 }
+
 
 public function graduateTreatmentProgram(Request $request, $id)
 {
