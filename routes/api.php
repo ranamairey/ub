@@ -135,6 +135,8 @@ Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::get('/getChildTreatmentProgramByMedicalRecordId/{id}', [ChildTreatmentProgramController::class , 'getChildTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateChildTreatmentProgram/{id}', [ChildTreatmentProgramController::class , 'graduateChildTreatmentProgram']);
   Route::post('/transsformChildTreatmentProgram/{id}', [ChildTreatmentProgramController::class , 'transsformChildTreatmentProgram']);
+  Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+
 });
 
 
@@ -187,7 +189,10 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 
 Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
+  // إضافة دواء على جدول الأدوية
   Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
+
+  // إضافة دواء على مركز طبي أو تحديث الكميات
   Route::post('/updateMedicineStock', [MedicalCenterMedicineController::class, 'updateMedicineStock']);
   Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
 
