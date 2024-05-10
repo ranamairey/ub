@@ -22,6 +22,7 @@ class ChildTreatmentProgram extends Model
         'target_weight',
         'measles_vaccine_received',
         'measles_vaccine_date',
+        'date',
         'end_date',
         'end_cause'
 

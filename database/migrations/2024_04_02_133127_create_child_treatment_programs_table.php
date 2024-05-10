@@ -37,6 +37,9 @@ return new class extends Migration
             $table->boolean('measles_vaccine_received')->nullable();
             $table->date('measles_vaccine_date')->format('Y-m-d')->nullable();
 
+            $table->date('date')->format('Y-m-d');
+
+
             $table->date('end_date')->format('Y-m-d')->nullable();
             $table->string('end_cause')->nullable();
 

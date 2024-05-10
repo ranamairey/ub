@@ -60,6 +60,7 @@ class ChildTreatmentProgramController extends Controller
             'measles_vaccine_date' => $request->input('measles_vaccine_date'),
             'end_date' => $request->input('end_date'),
             'end_cause' => $request->input('end_cause'),
+            'date' => Carbon::now()->format('Y-m-d'),
         ];
 
         $program = ChildTreatmentProgram::create($programData);

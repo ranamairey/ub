@@ -33,6 +33,9 @@ return new class extends Migration
 
             $table->float('target_weight');
 
+            $table->date('date')->format('Y-m-d');
+
+
             $table->date('tetanus_date')->format('Y-m-d')->nullable();
             $table->date('vitamin_a_date')->format('Y-m-d')->nullable();
 

@@ -44,13 +44,14 @@ class RoutineWomenVisitController extends Controller
                 'required',
                 Rule::in(['pregnant','lactating','non']),
             ],
-            'date' => ['required', 'date'], 'IYCF' => ['required', 'boolean'],
+            //'date' => ['required', 'date'],
+            'IYCF' => ['required', 'boolean'],
             'nutritional_survey' => ['required', 'boolean'],
             'micronutrients' => ['required', 'boolean'],
             'high_energy_biscuits' => ['required', 'boolean'],
             'health_education' => ['required', 'boolean'],
             'weight' => ['required','numeric'],
-            'height' => ['required','numeric'],
+
 
             ]);
 
@@ -74,14 +75,16 @@ $employee_id = auth('sanctum')->user()->id;
             'current_status' =>  $request->input('current_status'),
             'status_type'  =>   $request->input('status_type'),
             'z_score' =>  $request->input('z_score'),
-            'date' =>   $request->input('date'),
+            'date' => now()->format('Y-m-d'),
             'IYCF' => $request->input('IYCF'),
             'nutritional_survey' => $request->input('nutritional_survey'),
             'micronutrients' => $request->input('micronutrients'),
             'high_energy_biscuits' => $request->input('high_energy_biscuits'),
             'health_education' => $request->input('health_education'),
             'weight' => $request->input('weight'),
-            'height' => $request->input('height'),
+
+
+
 
         ]);
         return $this->created($routineWomenVisit);

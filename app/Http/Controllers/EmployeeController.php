@@ -13,8 +13,13 @@ use Silber\Bouncer\Database\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Aspects\Logger;
+use App\Aspects\transaction;
 
+use Illuminate\Support\Facades\Log;
 
+#[\App\Aspects\Logger]
+#[\App\Aspects\transaction]
 class EmployeeController extends Controller
 {
     use ApiResponseTrait;
@@ -134,7 +139,7 @@ class EmployeeController extends Controller
             return $this->notFound($employee ,'Employee not found');
         }
     }
-
+    #[\App\Aspects\transaction]
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
             'user_name' => ['required', 'string', 'max:255'],
@@ -178,6 +183,7 @@ class EmployeeController extends Controller
         $employee->is_logged=true;
         $employee->save();
         $token = $employee->createToken($role[0]);
+        Log::info("Login successful for user: " . $request->user_name);
         return $this->success(['token' => $token->plainTextToken, 'employee' => $employee , 'role' => $role]);
     }
 
@@ -558,7 +564,7 @@ public function getChildNutritionists()
             $childNutritionist->contract_status = false;
         }
     }
-    
+
     return $this->success($childNutritionists);
 }
 
@@ -574,7 +580,7 @@ public function getEmployeesInfo(){
     $allEmployees = Employee::count();
     $activeEmployees = Employee::where('is_logged' , true )->count();
     $freezedEmployees = Employee::where('active' , false )->count();
-    
+
     $contracts = Contract::where('is_valid' , true)->get();
     $activeContracts = collect();
     foreach($contracts as $contract){
@@ -585,7 +591,7 @@ public function getEmployeesInfo(){
     }
     $activeContractsCount = $activeContracts->count();
     $expiredContracts = Contract::where('is_valid' , false)->count();
-    
+
 
     $info=[
         'allEmployees' => $allEmployees,

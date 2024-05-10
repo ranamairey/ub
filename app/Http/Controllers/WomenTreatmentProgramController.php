@@ -8,7 +8,7 @@ use App\Traits\ApiResponseTrait;
 use App\Models\MedicalRecord;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\Carbon;
 class WomenTreatmentProgramController extends Controller
 {
 
@@ -41,8 +41,7 @@ class WomenTreatmentProgramController extends Controller
     if (!MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
         return $this->unprocessable($request->all(), 'The specified medical record does not exist.');
     }
-
-    $programData = [
+    $program = WomenTreatmentProgram::create([
         'medical_record_id' => $request->input('medical_record_id'),
         'employee_id' => $employee->id,
         'employee_choise_id' => $employee->employeeChoises()->first()->id,
@@ -51,11 +50,12 @@ class WomenTreatmentProgramController extends Controller
         'target_weight' => $request->input('target_weight'),
         'vitamin_a_date' => $request->input('vitamin_a_date'),
         'tetanus_date' => $request->input('tetanus_date'),
+        'date' => Carbon::now()->format('Y-m-d'),
         'end_date' => $request->input('end_date'),
         'end_cause' => $request->input('end_cause'),
-    ];
 
-    $program = WomenTreatmentProgram::create($programData);
+    ]);
+
 
     return $this->created($program);
 }
@@ -96,6 +96,7 @@ public function getWomenTreatmentProgramByMedicalRecordId(Request $request, $med
         return $this->notFound('No women treatment program found for the specified medical record ID.');
     }
 
+    $treatmentProgram->created_at_formatted = $treatmentProgram->created_at->format('d-m-Y');
     return $this->success($treatmentProgram);
 }
 

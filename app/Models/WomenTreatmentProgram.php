@@ -21,6 +21,7 @@ class WomenTreatmentProgram extends Model
         'target_weight',
         'tetanus_date',
         'vitamin_a_date',
+        'date',
         'end_date',
         'end_cause'
     ];
