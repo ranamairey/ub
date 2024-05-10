@@ -7,12 +7,10 @@
     "require": {
         "php": "^8.0.2",
         "ahmadvoid/simple-aop": "dev-main",
-        "box/spout": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
-        "maatwebsite/excel": "^1.1",
         "owen-it/laravel-auditing": "^13.6",
         "silber/bouncer": "^1.0"
     },
