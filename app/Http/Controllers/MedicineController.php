@@ -48,4 +48,17 @@ class MedicineController extends Controller
 
         return $this->created($medicine);
     }
+
+
+    public function getAllmedicines(){
+
+        $medicines = Medicine::all();
+
+        if ($medicines->isEmpty()) {
+            return $this->notFound([],'No medicine found' );
+        }
+
+        return $this->success($medicines);
+        
+    }
 }

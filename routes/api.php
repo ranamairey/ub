@@ -111,6 +111,9 @@ Route::post('/creaMalnutritionWomenVisits', [MalnutritionWomenVisitController::c
 Route::get('/getDoctorVisitsByMedicalRecordId/{id}', [DoctorVisitController::class , 'getDoctorVisitsByMedicalRecordId']);
 Route::get('/seachAboutMedicalRecordId/{id}', [MedicalRecordController::class , 'seachAboutMedicalRecordId']);
 Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
+// عرض الأدوية من قبل الطبيب و الأخصائي من أجل طلبات صرف الأدوية
+Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
+
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
@@ -121,8 +124,8 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateTreatmentProgram/{id}', [WomenTreatmentProgramController::class , 'graduateTreatmentProgram']);
-
-
+  // إنشاء طلبية صرف دوا
+  Route::post('/WomenNutritionistsMedicineOrder', [MedicineOrderController::class, 'WomenNutritionistsMedicineOrder']);
 });
 
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
@@ -136,6 +139,9 @@ Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::post('/graduateChildTreatmentProgram/{id}', [ChildTreatmentProgramController::class , 'graduateChildTreatmentProgram']);
   Route::post('/transsformChildTreatmentProgram/{id}', [ChildTreatmentProgramController::class , 'transsformChildTreatmentProgram']);
   Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
+   // إنشاء طلبية صرف دوا
+   Route::post('/ChildNutritionistsMedicineOrder', [MedicineOrderController::class, 'ChildNutritionistsMedicineOrder']);
+
 
 });
 
@@ -147,11 +153,7 @@ Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
 Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
   Route::post('/createChildDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getChildDoctorAppointments' , [AppointmentController::class , 'show']);
-Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
-
-
-
-
+  Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
   });
 
 
@@ -178,9 +180,8 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getHealthEducationEmployees' , [EmployeeController::class ,  'getHealthEducationEmployees']);
   Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
   Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
-
-
-
+    // إضافة دواء على جدول الأدوية
+  Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
 });
 
 
@@ -189,12 +190,12 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 
 
 Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
-  // إضافة دواء على جدول الأدوية
-  Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
 
   // إضافة دواء على مركز طبي أو تحديث الكميات
   Route::post('/updateMedicineStock', [MedicalCenterMedicineController::class, 'updateMedicineStock']);
-  Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
+  Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
+  Route::get('/getAllMedicineOrders' , [MedicineOrderController::class , 'getAllMedicineOrders']);
+ 
 
 });
 
