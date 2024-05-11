@@ -89,8 +89,10 @@ public function getWomenTreatmentProgramByMedicalRecordId(Request $request, $med
     }
 
     $treatmentProgram = WomenTreatmentProgram::where('medical_record_id', $medicalRecordId)
-        ->with('MedicalRecord')
-        ->first();
+    ->with('MedicalRecord')
+    ->orderByDesc('created_at')
+    ->first();
+
 
     if (!$treatmentProgram) {
         return $this->notFound('No women treatment program found for the specified medical record ID.');

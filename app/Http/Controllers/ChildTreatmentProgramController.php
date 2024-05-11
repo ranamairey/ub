@@ -8,6 +8,7 @@ use App\Traits\ApiResponseTrait;
 use App\Models\MedicalRecord;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 
 
@@ -97,8 +98,10 @@ public function getChildTreatmentProgramByMedicalRecordId(Request $request, $med
     }
 
     $treatmentProgram = ChildTreatmentProgram::where('medical_record_id', $medicalRecordId)
-        ->with('MedicalRecord')
-        ->first();
+    ->with('MedicalRecord')
+    ->orderByDesc('created_at')
+    ->first();
+
 
     if (!$treatmentProgram) {
         return $this->notFound('No child treatment program found for the specified medical record ID.');
@@ -186,6 +189,7 @@ public function transsformChildTreatmentProgram(Request $request, $id)
         'target_weight' => $treatmentProgram->target_weight,
         'measles_vaccine_received' => $treatmentProgram->measles_vaccine_received,
         'measles_vaccine_date' => $treatmentProgram->measles_vaccine_date,
+        'date' => Carbon::now()->format('Y-m-d'),
 
 
     ];

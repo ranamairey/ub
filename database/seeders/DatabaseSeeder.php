@@ -10,12 +10,15 @@ use Database\Seeders\AgencySeeder;
 use Database\Seeders\OfficeSeeder;
 use Database\Seeders\PartnerSeeder;
 use Database\Seeders\ActivitySeeder;
+use Database\Seeders\AccountSeeder;
 use Database\Seeders\AdressesSeeder;
 use Database\Seeders\CoverageSeeder;
 use Database\Seeders\AppointmentSeeder;
 use Database\Seeders\MedicalRecordSeeder;
 use Database\Seeders\MedicalCentersTableSeeder;
 use Database\Seeders\CreateRolesAndAbilitiesSeeder;
+use Database\Seeders\MedicineSeeder;
+use Database\Seeders\MedicalCenterMedicineSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -49,12 +52,15 @@ class DatabaseSeeder extends Seeder
         $this->call(ChildTreatmentProgramSeeder::class);
         $this->call(ContractSeeder::class);
         $this->call(AddressSeeder::class);
+        $this->call(MedicineSeeder::class);
+        $this->call(MedicalCenterMedicineSeeder::class);
+        $this->call(AccountSeeder::class);
 
 
 
 
 
-        
+
 
 
 

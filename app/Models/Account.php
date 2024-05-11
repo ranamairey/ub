@@ -22,5 +22,9 @@ class Account extends Model
     {
         return $this->hasMany(MedicalRecord::class , 'account_id');
     }
+    public function hasMedicalRecord()
+    {
+        return $this->medicalRecords()->first() !== null;
+    }
 
 }

@@ -89,7 +89,7 @@ class MedicalRecordController extends Controller
         if (!$medicalRecord) {
             return $this->notFound('Medical record not found');
         }
-        
+
         $validator = Validator::make($request->all(), [
             'phone_number' => 'sometimes|required|string|min:10|max:20',
             'residence_status' => 'sometimes|required|in:Resident,Immigrant,Returnee',
@@ -193,6 +193,24 @@ class MedicalRecordController extends Controller
         $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
 
         return $this->success($medicalRecord);
+    }
+
+    public function showMyRecord()
+    {  $loggedInUser = auth('sanctum')->user();
+
+        $linkedAccount = $loggedInUser->Account;
+
+        if (!$linkedAccount) {
+            return $this->error(null, 'User is not linked to any medical record');
+        }
+
+        if (!$linkedAccount->hasMedicalRecord()) {
+            return $this->notFound('User has no medical records');
+        }
+
+        $medicalRecord = $linkedAccount->medicalRecords->first();
+
+        return $this->success($medicalRecord, 'Medical record retrieved successfully!');
     }
 
 

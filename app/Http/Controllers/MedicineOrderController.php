@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\DoctorVisit;
 use Illuminate\Http\Request;
 use App\Models\MedicineOrder;
@@ -68,7 +67,7 @@ class MedicineOrderController extends Controller
             'medical_center_medicine_id' => ['required', 'exists:medical_center_medicines,id'],
 
         ]);
-        
+
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
@@ -110,19 +109,19 @@ class MedicineOrderController extends Controller
             'type' => 'required|in:malnutrition,routine',
 
         ]);
-        
+
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
 
-        if(type == "malnutrition"){
+        if($request->input('type') == "malnutrition"){
             $visit = MalnutritionWomenVisit::find( $request->input('visit_id'));
             if(!$visit){
                 return $this->notFound( $request->input('visit_id') , "Malnutrition Women Visitwith given id is not found");
             }
         }
 
-        if(type == "routine"){
+        if($request->input('type') == "routine"){
             $visit = RoutineWomenVisit::find( $request->input('visit_id'));
             if(!$visit){
                 return $this->notFound( $request->input('visit_id') , "Routine Women visit with given id is not found");
@@ -165,19 +164,19 @@ class MedicineOrderController extends Controller
             'type' => 'required|in:malnutrition,routine',
 
         ]);
-        
+
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
 
-        if(type == "malnutrition"){
+        if($request->input('type') == "malnutrition"){
             $visit = MalnutritionChildVisit::find( $request->input('visit_id'));
             if(!$visit){
                 return $this->notFound( $request->input('visit_id') , "Malnutrition Child Visitwith given id is not found");
             }
         }
 
-        if(type == "routine"){
+        if($request->input('type') == "routine"){
             $visit = RoutineChildVisit::find( $request->input('visit_id'));
             if(!$visit){
                 return $this->notFound( $request->input('visit_id') , "Routine Child visit with given id is not found");
@@ -210,48 +209,4 @@ class MedicineOrderController extends Controller
 
 
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MedicineOrder  $medicineOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MedicineOrder $medicineOrder)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MedicineOrder  $medicineOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MedicineOrder $medicineOrder)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MedicineOrder  $medicineOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MedicineOrder $medicineOrder)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MedicineOrder  $medicineOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MedicineOrder $medicineOrder)
-    {
-        //
-    }
 }
