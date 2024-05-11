@@ -6,6 +6,7 @@ use App\Models\Medicine;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
+use App\Models\MedicalCenterMedicine;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -59,6 +60,26 @@ class MedicineController extends Controller
         }
 
         return $this->success($medicines);
-        
+    }
+
+    public function medicineDestruction(Request $request){
+        $validator = Validator::make($request->all(), [
+            'medical_center_medicine_id' =>  ['required', 'exists:medical_center_medicines,id'],
+            'reason' => 'required|string|in:expiration,poorstorage,emergency',
+            'quantity' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+        $medicalCenterMedicineId = $request->input('medical_center_medicine_id');
+        $medicalCenterMedicine =MedicalCenterMedicine::find($medicalCenterMedicineId);
+        if(!$medicalCenterMedicine){
+            return $this->notFound($medicalCenterMedicineId , "Medical Center Medicine not found with given id");
+        }
+        $medicalCenterMedicine->quntity -= $request->input('quantity');
+        $medicalCenterMedicine->save();
+
+        return $this->success($medicalCenterMedicine);
+
     }
 }
