@@ -196,6 +196,8 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
   Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
   Route::get('/getAllMedicineOrders' , [MedicineOrderController::class , 'getAllMedicineOrders']);
   Route::post('/medicineDestruction', [MedicineController::class , 'medicineDestruction']);
+  Route::get('/acceptOrder/{id}', [MedicineOrderController::class , 'acceptOrder']);
+
 
 
 

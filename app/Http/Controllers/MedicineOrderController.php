@@ -30,16 +30,34 @@ class MedicineOrderController extends Controller
         if ($medicineOrders->isEmpty()) {
             return $this->notFound([],'No medicine order found' );
         }
-
         foreach ($medicineOrders as $medicineOrder) {
-            $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine;
-            $medicine = $medicalCenterMedicine->medicine;
-            $medicineOrder->medicine = $medicine;
-            // $medicineOrders->makeHidden('medical_center_medicine');
+            if(!$medicineOrder->is_aprroved){
+                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine;
+                $medicine = $medicalCenterMedicine->medicine;
+                $medicineOrder->medicine = $medicine;
+                // $medicineOrders->makeHidden('medical_center_medicine');
+            }
         }
-
         return $this->success($medicineOrders);
     }
+
+    public function acceptOrder($orderId){
+        $medicineOrder = MedicineOrder::find($orderId);
+        if (!$medicineOrder){
+            return $this->notFound($orderId , "Medicine order with given id is not found.");
+        }
+        $medicalCenterMedicineId = $medicineOrder->medical_center_medicine_id;
+        $medicalCenterMedicine = MedicalCenterMedicine::find($medicalCenterMedicineId);
+        $medicalCenterMedicineQuantity = $medicalCenterMedicine->quntity;
+        $medicalCenterMedicineQuantity -= $medicineOrder->quantity;
+        $medicalCenterMedicine->quntity = $medicalCenterMedicineQuantity;
+        $medicineOrder->is_aprroved = true;
+        $medicineOrder->save();
+        $medicalCenterMedicine->save();
+        return $medicalCenterMedicineQuantity;
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -96,7 +114,6 @@ class MedicineOrderController extends Controller
 
         return $this->created($medicineOrder);
     }
-
 
     public function WomenNutritionistsMedicineOrder(Request $request)
     {
