@@ -51,7 +51,7 @@ class MalnutritionWomenVisitController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'programs_id' => 'required|exists:child_treatment_programs,id',
+            'programs_id' => 'required|exists:Women_treatment_programs,id',
             'muac' => 'required|numeric',
             'note' => 'string',
             'next_visit_date' => 'date_format:Y-m-d',
