@@ -17,12 +17,15 @@ class MedicineSeeder extends Seeder
     {
         $faker = FakerFactory::create('ar_JO');
 
+        $medicineTypes = ['Ordinary', 'Nutrition'];
+
         for ($i = 0; $i < 50; $i++) {
             $employeeId = DB::table('employees')->pluck('id')->random(); // Random selection
+            $randomTypeIndex = array_rand($medicineTypes);  // Random index in medicineTypes
 
             DB::table('medicines')->insert([
                 'name' => $faker->unique()->name . ' دواء',
-                'type' => $faker->word,
+                'type' => $medicineTypes[$randomTypeIndex],  // Use random type from array
                 'scientific_name' => $faker->word . ' (scientific name)',
                 'titer' => $faker->randomNumber(2),
                 'code' => $faker->unique()->randomNumber(8),

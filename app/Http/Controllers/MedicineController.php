@@ -20,7 +20,7 @@ class MedicineController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
+            'type' => 'required|string|max:255|in:Nutrition,Ordinary',
             'scientific_name' => 'required|string|max:255',
             'titer' => 'required|integer',
             'code' => 'required|integer',
