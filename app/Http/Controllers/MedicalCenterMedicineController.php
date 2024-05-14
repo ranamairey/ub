@@ -40,7 +40,7 @@ class MedicalCenterMedicineController extends Controller
                     $previousQuantity = DB::table('medical_center_medicines')
                         ->where('medical_center_id', $chosenMedicalCenterId)
                         ->where('medicine_id', $medicineId)
-                        ->value('quntity');
+                        ->value('quantity');
 
                     $updatedQuantity = $previousQuantity + $quantity;
 
@@ -51,7 +51,7 @@ class MedicalCenterMedicineController extends Controller
                                 'medicine_id' => $medicineId,
                             ],
                             [
-                                'quntity' => $updatedQuantity,
+                                'quantity' => $updatedQuantity,
                             ]
                         );
 
@@ -84,6 +84,24 @@ class MedicalCenterMedicineController extends Controller
         
         foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
             $medicalCenterMedicine->medicine=$medicalCenterMedicine->medicine;
+        }
+        return $this->success($medicalCenterMedicines);
+    }
+
+    public function getNotEmptyMedicalCenterMedicine(){
+        $employee = auth('sanctum')->user();
+        $medicalCenterId =  $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
+        $medicalCenter = MedicalCenter::find($medicalCenterId);
+        $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines;
+
+        if (!$medicalCenterMedicines->count()) {
+            return $this->notFound('No medicines found for this medical center');
+        }
+        
+        foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
+            if(!($medicalCenterMedicine->quantity == 0)){
+                $medicalCenterMedicine->medicine=$medicalCenterMedicine->medicine;
+            }
         }
         return $this->success($medicalCenterMedicines);
     }

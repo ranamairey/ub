@@ -34,7 +34,7 @@ class MedicalCenterMedicineSeeder extends Seeder
                 DB::table('medical_center_medicines')->insert([
                     'medical_center_id' => $medicalCenterId,
                     'medicine_id' => $medicineId,
-                    'quntity' => $faker->numberBetween(10, 100), // Random quantity between 10 and 100
+                    'quantity' => $faker->numberBetween(10, 100), // Random quantity between 10 and 100
                 ]);
             } else {
                 // Log a warning if either medical center or medicine doesn't exist

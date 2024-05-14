@@ -21,10 +21,11 @@ return new class extends Migration
             $table->string('medicine_orderable_type');
             $table->integer('quantity');
             $table->unsignedBigInteger('activity_id');
-            $table->foreign('activity_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->unsignedBigInteger('medical_center_medicine_id');
             $table->foreign('medical_center_medicine_id')->references('id')->on('medical_center_medicines')->onDelete('cascade');;
             $table->boolean('is_aprroved');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

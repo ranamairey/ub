@@ -71,12 +71,16 @@ class MedicineController extends Controller
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
+        $quantity = $request->input('quantity');
         $medicalCenterMedicineId = $request->input('medical_center_medicine_id');
         $medicalCenterMedicine =MedicalCenterMedicine::find($medicalCenterMedicineId);
         if(!$medicalCenterMedicine){
             return $this->notFound($medicalCenterMedicineId , "Medical Center Medicine not found with given id");
         }
-        $medicalCenterMedicine->quntity -= $request->input('quantity');
+        if($quantity > $medicalCenterMedicine->quantity){
+            return $this->error($quantity , "The quantity you entered is greater than the quantity that is available in the pharmacy.");
+        }
+        $medicalCenterMedicine->quantity -= $quantity;
         $medicalCenterMedicine->save();
 
         return $this->success($medicalCenterMedicine);

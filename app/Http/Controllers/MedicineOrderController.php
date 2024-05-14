@@ -31,9 +31,17 @@ class MedicineOrderController extends Controller
             return $this->notFound([],'No medicine order found' );
         }
         foreach ($medicineOrders as $medicineOrder) {
-            if(!$medicineOrder->is_aprroved){
-                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine;
-                $medicine = $medicalCenterMedicine->medicine;
+            echo "111";
+            if(!($medicineOrder->is_aprroved)){
+            echo "111";
+
+                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine();
+            echo "111";
+            echo "222";
+
+            $medicine = $medicalCenterMedicine->medicine;
+                echo "222";
+
                 $medicineOrder->medicine = $medicine;
                 // $medicineOrders->makeHidden('medical_center_medicine');
             }
@@ -48,13 +56,26 @@ class MedicineOrderController extends Controller
         }
         $medicalCenterMedicineId = $medicineOrder->medical_center_medicine_id;
         $medicalCenterMedicine = MedicalCenterMedicine::find($medicalCenterMedicineId);
-        $medicalCenterMedicineQuantity = $medicalCenterMedicine->quntity;
-        $medicalCenterMedicineQuantity -= $medicineOrder->quantity;
-        $medicalCenterMedicine->quntity = $medicalCenterMedicineQuantity;
+        $medicalCenterMedicine->quantity -= $medicineOrder->quantity;
         $medicineOrder->is_aprroved = true;
         $medicineOrder->save();
         $medicalCenterMedicine->save();
         return $medicalCenterMedicineQuantity;
+    }
+
+    public function rejectOrder($orderId){
+        $medicineOrder = MedicineOrder::find($orderId);
+        if (!$medicineOrder){
+            return $this->notFound($orderId , "Medicine order with given id is not found.");
+        }
+        $medicalCenterMedicineId = $medicineOrder->medical_center_medicine_id;
+        $medicalCenterMedicine = MedicalCenterMedicine::find($medicalCenterMedicineId);
+        if (!$medicalCenterMedicine) {
+            return "Medical Center Medicine with given id is not found.";
+        }
+        $medicineOrder->delete();
+        $medicalCenterMedicine->save();
+        return $medicalCenterMedicine->quantity;
     }
 
 
@@ -103,6 +124,9 @@ class MedicineOrderController extends Controller
         }
         $employee = auth('sanctum')->user();
 
+        if($request->input('quantity') > $medicalCenterMedicine->quantity){
+            return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
+        }
 
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
@@ -158,6 +182,10 @@ class MedicineOrderController extends Controller
         //////////////////////////////////////////////////////////////////////////////////////////
         $employee = auth('sanctum')->user();
 
+        if($request->input('quantity') > $medicalCenterMedicine->quantity){
+            return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
+        }
+
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
             'quantity'=> $request->input('quantity'),
@@ -212,6 +240,10 @@ class MedicineOrderController extends Controller
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////////
         $employee = auth('sanctum')->user();
+
+        if($request->input('quantity') > $medicalCenterMedicine->quantity){
+            return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
+        }
 
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
