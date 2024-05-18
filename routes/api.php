@@ -198,7 +198,7 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
   Route::post('/medicineDestruction', [MedicineController::class , 'medicineDestruction']);
   Route::get('/acceptOrder/{id}', [MedicineOrderController::class , 'acceptOrder']);
   Route::get('/rejectOrder/{id}', [MedicineOrderController::class , 'rejectOrder']);
-  Route::get('/getNotEmptyMedicalCenterMedicine', [MedicineOrderController::class , 'getNotEmptyMedicalCenterMedicine']);
+  Route::get('/getNotEmptyMedicalCenterMedicine', [MedicalCenterMedicineController::class , 'getNotEmptyMedicalCenterMedicine']);
 
 
 

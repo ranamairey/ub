@@ -92,7 +92,8 @@ class MedicalCenterMedicineController extends Controller
         $employee = auth('sanctum')->user();
         $medicalCenterId =  $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
         $medicalCenter = MedicalCenter::find($medicalCenterId);
-        $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines;
+        $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines()->where('quantity', '!=' , 0)->get();
+
 
         if (!$medicalCenterMedicines->count()) {
             return $this->notFound('No medicines found for this medical center');

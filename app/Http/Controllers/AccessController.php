@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Access;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
+use App\Interfaces\AccessRepositoryInterface;
 
 
 class AccessController extends Controller
 {
     use ApiResponseTrait;
+
+    private AccessRepositoryInterface $accessRepository;
+
+    public function __construct(AccessRepositoryInterface $accessRepository) 
+    {
+        $this->accessRepository = $accessRepository;
+    }
 
     /**
      * Display a listing of the resource.
@@ -18,7 +26,7 @@ class AccessController extends Controller
      */
     public function index()
     {
-        $accesses = Access::all();
+        $accesses = $this->accessRepository->getAllAccess();
         return $this->success($accesses);
     }
 

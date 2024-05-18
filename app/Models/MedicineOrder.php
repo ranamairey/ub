@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Models\Activity;
 use App\Models\MedicalCenterMedicine;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MedicineOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'employee_id',
@@ -20,6 +21,8 @@ class MedicineOrder extends Model
         'medical_center_medicine_id',
         'is_aprroved'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function orderable()
     {

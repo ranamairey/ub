@@ -25,26 +25,16 @@ class MedicineOrderController extends Controller
      */
     public function getAllMedicineOrders()
     {
-        $medicineOrders = MedicineOrder::all();
+        $medicineOrders = MedicineOrder::where('is_aprroved', '=' , false)->get();
 
         if ($medicineOrders->isEmpty()) {
             return $this->notFound([],'No medicine order found' );
         }
         foreach ($medicineOrders as $medicineOrder) {
-            echo "111";
-            if(!($medicineOrder->is_aprroved)){
-            echo "111";
-
-                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine();
-            echo "111";
-            echo "222";
-
-            $medicine = $medicalCenterMedicine->medicine;
-                echo "222";
-
+                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine()->first();
+                $medicine =$medicalCenterMedicine->medicine()->first();
                 $medicineOrder->medicine = $medicine;
-                // $medicineOrders->makeHidden('medical_center_medicine');
-            }
+            // $medicineOrders->makeHidden('medical_center_medicine');
         }
         return $this->success($medicineOrders);
     }
@@ -57,10 +47,13 @@ class MedicineOrderController extends Controller
         $medicalCenterMedicineId = $medicineOrder->medical_center_medicine_id;
         $medicalCenterMedicine = MedicalCenterMedicine::find($medicalCenterMedicineId);
         $medicalCenterMedicine->quantity -= $medicineOrder->quantity;
+        if ($medicineOrder->is_aprroved == true){
+            return $this->error($orderId , "This order is already has been approved");
+        }
         $medicineOrder->is_aprroved = true;
         $medicineOrder->save();
         $medicalCenterMedicine->save();
-        return $medicalCenterMedicineQuantity;
+        return $medicalCenterMedicine;
     }
 
     public function rejectOrder($orderId){

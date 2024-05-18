@@ -6,11 +6,11 @@ use App\Models\Medicine;
 use App\Models\MedicalCenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MedicalCenterMedicine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    // , SoftDeletes;
 
     protected $fillable = [
         'medical_center_id',
@@ -18,7 +18,7 @@ class MedicalCenterMedicine extends Model
         'quantity'
     ];
 
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
 
     public function medicalCenter()
     {
