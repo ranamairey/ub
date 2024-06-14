@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Employee;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Traits\ApiResponseTrait;
@@ -193,26 +194,23 @@ class MedicalRecordController extends Controller
         $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
 
         return $this->success($medicalRecord);
-    }
-
-    public function showMyRecord()
-    {  $loggedInUser = auth('sanctum')->user();
-
-        $linkedAccount = $loggedInUser->Account;
-
-        if (!$linkedAccount) {
-            return $this->error(null, 'User is not linked to any medical record');
         }
+        public function showMyRecord()
+        {
+            $loggedInUser = auth('sanctum')->user();
 
-        if (!$linkedAccount->hasMedicalRecord()) {
-            return $this->notFound('User has no medical records');
+            $linkedAccount = $loggedInUser->account;
+
+            if (!$linkedAccount) {
+                return $this->error(null, 'User is not linked to any medical record');
+            }
+
+            // Check for at least one linked record
+            if ($linkedAccount->medicalRecords->count() > 0) {
+                $medicalRecord = $linkedAccount->medicalRecords->first();
+                return $this->success($medicalRecord, 'Medical record retrieved successfully!');
+            } else {
+                return $this->notFound('User has no medical records');
+            }
         }
-
-        $medicalRecord = $linkedAccount->medicalRecords->first();
-
-        return $this->success($medicalRecord, 'Medical record retrieved successfully!');
     }
-
-
-
-}

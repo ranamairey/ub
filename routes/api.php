@@ -211,6 +211,7 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/showMyRecord', [MedicalRecordController::class, 'showMyRecord']);
+  Route::get('/showLinkedRecords', [AccountController::class, 'showLinkedRecords']);
 });
 
 
