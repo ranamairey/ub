@@ -15,14 +15,12 @@ class MedicineOrderSeeder extends Seeder
      */
     public function run()
     {
+         $medicineOrderableTypes = [
+            'App\Models\RoutineWomenVisit',
+            'App\Models\DoctorVisit',
         
-        $medicineOrderableTypes = [
-            RoutineWomenVisit::class,
-            // MalnutritionWomenVisit::class,
-            DoctorVisit::class,
-            // MalnutritionChildVisit::class,
-            // RoutineChildVisit::class
-        ];
+      ];
+
 
         $employeeCount = DB::table('employees')->count();
         $activityCount = DB::table('activities')->count();

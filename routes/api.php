@@ -132,9 +132,14 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateTreatmentProgram/{id}', [WomenTreatmentProgramController::class , 'graduateTreatmentProgram']);
-  // إنشاء طلبية صرف دوا
+
   Route::post('/womenNutritionistsMedicineOrder', [MedicineOrderController::class, 'WomenNutritionistsMedicineOrder']);
+
+  Route::get('/getRoutineMedicinesForVisit/{id}', [MedicineOrderController::class, 'getRoutineMedicinesForVisit']);
+
 });
+
+Route::get('/getdoctorMedicinesForVisit/{id}', [MedicineOrderController::class, 'getdoctorMedicinesForVisit']);
 
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentschild' , [AppointmentController::class , 'show']);
