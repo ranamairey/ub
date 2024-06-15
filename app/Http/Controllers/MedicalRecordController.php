@@ -213,4 +213,73 @@ class MedicalRecordController extends Controller
                 return $this->notFound('User has no medical records');
             }
         }
+
+
+        public function getCompletedTreatmentsByRecordId(Request $request, $id)
+{
+    $medicalRecord = MedicalRecord::find($id);
+
+    if (!$medicalRecord) {
+        return $this->notFound('Medical record not found');
+    }
+
+    // Check category for appropriate treatment program model
+    $isChild = $medicalRecord->category === 'child';
+    $isWoman = $medicalRecord->category === 'pregnant';
+
+    if ($isChild) {
+        $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
+    } else if ($isWoman) {
+        $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
+    } else {
+        return $this->notFound('No treatment programs found for this category');
+    }
+
+    // Validate that all completed treatments have end_date
+    foreach ($completedTreatments as $treatment) {
+        if (!$treatment->end_date) {
+            return $this->error(null, 'Incomplete treatment program found. All completed treatments must have an end_date.');
+        }
+    }
+
+    $data = [
+        'medical_record' => $medicalRecord->toArray(),
+        'completed_treatments' => $completedTreatments->toArray(),
+    ];
+
+    return $this->success($data, 'Completed treatment programs retrieved successfully!');
+}
+public function search(Request $request)
+{
+    $input = $request->input('input');
+
+    $query = MedicalRecord::with('addresses');
+
+    if (is_numeric($input)) {
+        $medicalRecords = $query->where('id', $input)->get();
+    } else {
+        $medicalRecords = $query->where(function ($q) use ($input) {
+            $q->where('name', 'LIKE', '%' . $input . '%')
+              ->orWhere('father_name', 'LIKE', '%' . $input . '%')
+              ->orWhere('last_name', 'LIKE', '%' . $input . '%');
+        })->get();
+    }
+
+    if ($medicalRecords->isEmpty()) {
+        return $this->notFound('Medical records not found');
+    }
+
+    $results = [];
+    foreach ($medicalRecords as $medicalRecord) {
+        $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
+        $birthDate = Carbon::parse($medicalRecord->birth_date);
+        $age = $birthDate->age;
+        $medicalRecord->full_name = $fullName;
+        $medicalRecord->age = $age;
+        $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
+        $results[] = $medicalRecord;
+    }
+
+    return $this->success($results, 'Medical records retrieved successfully!');
+}
     }

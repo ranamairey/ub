@@ -14,9 +14,10 @@ class GovernorateController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $stores = Governorate::all();
 
+        return response()->json($stores);
+    }
     /**
      * Show the form for creating a new resource.
      *

@@ -16,32 +16,6 @@ class AppointmentController extends Controller
 {
     use ApiResponseTrait;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -143,37 +117,22 @@ class AppointmentController extends Controller
         return $this->success($appointments);
 
     }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Appointment $appointment)
+    public function index()
     {
-        //
-    }
+        $appointments = Appointment::all();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Appointment $appointment)
-    {
-        //
-    }
+        foreach ($appointments as $appointment) {
+            $birthDate = Carbon::parse($appointment->medicalRecord->birth_date);
+            $age = $birthDate->age;
+            $fullName = $appointment->medicalRecord->name . " " . $appointment->medicalRecord->father_name . " " . $appointment->medicalRecord->last_name;
+            $gender = $appointment->medicalRecord->gender;
+            $appointment->age = $age;
+            $appointment->fullName = $fullName;
+            $appointment->gender = $gender;
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
+        return $this->success($appointments);
+    }
     public function destroy($id)
     {
         $appointment = Appointment::find($id);

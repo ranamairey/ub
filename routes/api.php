@@ -14,12 +14,15 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\SubdistrictController;
+use App\Http\Controllers\GovernorateController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\MedicineOrderController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\RoutineChildVisitController;
 use App\Http\Controllers\RoutineWomenVisitController;
 use App\Http\Controllers\ChildTreatmentProgramController;
@@ -65,11 +68,11 @@ Route::get('/getAgencies' , [AgencyController::class ,  'index']);
 Route::get('/getAccesses' , [AccessController::class ,  'index']);
 Route::get('/getPartners' , [PartnerController::class ,  'index']);
 Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
+Route::get('/getCompletedTreatmentsByRecordId/{id}' , [MedicalRecordController::class , 'getCompletedTreatmentsByRecordId']);
 
-
-
-
-
+Route::get('/getGovernorate' , [GovernorateController::class ,  'index']);
+Route::get('/getDistrict' , [DistrictController::class ,  'index']);
+Route::get('/getSubdistrict' , [SubdistrictController::class ,  'index']);
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);
@@ -97,9 +100,14 @@ Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destr
 
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 
+Route::get('/showAppointment', [AppointmentController::class, 'index']);
+
+Route::get('/search', [MedicalRecordController::class, 'search']);
+
 
 
 });
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);

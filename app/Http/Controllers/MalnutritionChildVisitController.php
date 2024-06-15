@@ -15,11 +15,6 @@ class MalnutritionChildVisitController extends Controller
 {
     use ApiResponseTrait;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index($programId)
     {
         $visits = MalnutritionChildVisit::where('programs_id', $programId)->get();
@@ -31,23 +26,6 @@ class MalnutritionChildVisitController extends Controller
         return $this->success($visits);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
@@ -90,48 +68,4 @@ class MalnutritionChildVisitController extends Controller
     return $this->created($visit);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MalnutritionChildVisit  $malnutritionChildVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MalnutritionChildVisit $malnutritionChildVisit)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MalnutritionChildVisit  $malnutritionChildVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MalnutritionChildVisit $malnutritionChildVisit)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MalnutritionChildVisit  $malnutritionChildVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MalnutritionChildVisit $malnutritionChildVisit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MalnutritionChildVisit  $malnutritionChildVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MalnutritionChildVisit $malnutritionChildVisit)
-    {
-        //
-    }
 }
