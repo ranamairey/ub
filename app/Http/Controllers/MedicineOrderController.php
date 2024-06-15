@@ -275,10 +275,61 @@ class MedicineOrderController extends Controller
       return response()->json(['prescribed_medicines' => $prescribedMedicines], 200);
     }
 
-    public function getdoctorMedicinesForVisit($visitId)
+    public function gettretmentMedicinesForVisit($visitId)
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
-        ->where('medicine_orderable_type', 'App\Models\DoctorVisit') // Update model name if needed
+        ->where('medicine_orderable_type', 'App\Models\MalnutritionWomenVisit') // Update model name if needed
+        ->get();
+
+      if ($medicineOrders->isEmpty()) {
+        return response()->json(['message' => 'No prescribed medicines found for the given visit ID'], 404);
+      }
+
+      $prescribedMedicines = [];
+
+      foreach ($medicineOrders as $medicineOrder) {
+        $medicalCenterMedicine = $medicineOrder->medicalCenterMedicine()->first();
+        $medicine = $medicalCenterMedicine->medicine()->first();
+
+        $prescribedMedicines[] = [
+          'medicine_order_id' => $medicineOrder->id, // Added medicine order ID
+          'medicine_name' => $medicine->name,
+          'quantity' => $medicineOrder->quantity,
+        ];
+      }
+
+      return response()->json(['prescribed_medicines' => $prescribedMedicines], 200);
+    }
+    public function getchildtretmentMedicinesForVisit($visitId)
+    {
+      $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
+        ->where('medicine_orderable_type', 'App\Models\MalnutritionChildVisit') // Update model name if needed
+        ->get();
+
+      if ($medicineOrders->isEmpty()) {
+        return response()->json(['message' => 'No prescribed medicines found for the given visit ID'], 404);
+      }
+
+      $prescribedMedicines = [];
+
+      foreach ($medicineOrders as $medicineOrder) {
+        $medicalCenterMedicine = $medicineOrder->medicalCenterMedicine()->first();
+        $medicine = $medicalCenterMedicine->medicine()->first();
+
+        $prescribedMedicines[] = [
+          'medicine_order_id' => $medicineOrder->id, // Added medicine order ID
+          'medicine_name' => $medicine->name,
+          'quantity' => $medicineOrder->quantity,
+        ];
+      }
+
+      return response()->json(['prescribed_medicines' => $prescribedMedicines], 200);
+    }
+
+    public function getchildroutineMedicinesForVisit($visitId)
+    {
+      $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
+        ->where('medicine_orderable_type', 'App\Models\RoutineChildVisit') // Update model name if needed
         ->get();
 
       if ($medicineOrders->isEmpty()) {
