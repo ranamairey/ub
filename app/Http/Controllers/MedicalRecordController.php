@@ -17,12 +17,6 @@ class MedicalRecordController extends Controller
     use ApiResponseTrait;
 
 
-    /**
-     * Store a newly created medical record in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -38,8 +32,6 @@ class MedicalRecordController extends Controller
             'birth_date' => 'required|date',
             'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'nullable|string|min:10|max:20',
-            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
-            // 'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
             'address.name' => ['required', 'string', 'max:255'],
         ]);
@@ -48,10 +40,22 @@ class MedicalRecordController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-
         $validatedData = $validator->validated();
-
         $employee = auth('sanctum')->user();
+
+        if ($validatedData['category'] === 'pregnant' && $validatedData['gender'] === 'Male') {
+            return $this->error(null, 'A male gender cannot be assigned to a pregnant patient.');
+        }
+
+        if ($validatedData['category'] === 'Child') {
+            $birthDate = Carbon::parse($validatedData['birth_date']);
+            $maxDate = now()->subYears(15);
+
+            if ($birthDate->greaterThan($maxDate)) {
+                $age = $birthDate->diffInYears(now());
+                return $this->error(null, 'The birth date must be 15 years or more in the past for the "child" category. Current age: ' . $age);
+            }
+        }
 
         $existMedicalRecord = MedicalRecord::where([
             ['name', $request->input('name')],
@@ -60,14 +64,12 @@ class MedicalRecordController extends Controller
         ])->first();
 
         if ($existMedicalRecord) {
-            return $this->error(null, 'This patient already has a medical record');
+            return $this->error(null, 'This patient already has a medical record.');
         }
 
         $medicalRecord = new MedicalRecord($validatedData);
         $medicalRecord->employee()->associate($employee);
         $medicalRecord->save();
-
-        $recordId = $medicalRecord->id;
 
         $addressData = $request->get('address');
 
@@ -76,13 +78,8 @@ class MedicalRecordController extends Controller
             'subdistrict_id' => $addressData['subdistrict_id'],
         ]);
 
-
-        $recordId = $medicalRecord->id;
-
         return $this->created($medicalRecord, 'Medical record created successfully!');
     }
-
-
     public function update(Request $request, $id)
     {
         $medicalRecord = MedicalRecord::findOrFail($id);
@@ -94,10 +91,7 @@ class MedicalRecordController extends Controller
         $validator = Validator::make($request->all(), [
             'phone_number' => 'sometimes|required|string|min:10|max:20',
             'residence_status' => 'sometimes|required|in:Resident,Immigrant,Returnee',
-            // 'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'sometimes|required|string|min:10|max:20',
-            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
-            // 'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['sometimes','required', 'exists:subdistricts,id'],
             'address.name' => ['sometimes','required', 'string', 'max:255'],
         ]);

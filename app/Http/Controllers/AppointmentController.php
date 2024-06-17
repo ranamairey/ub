@@ -1,16 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use Carbon\Carbon;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-
 
 class AppointmentController extends Controller
 {
@@ -26,35 +23,46 @@ class AppointmentController extends Controller
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
+
         $employeeId = $request->input('employee_id');
         $employee = Employee::find($employeeId);
 
         if (!$employee) {
-            return $this->notFound($employee , 'Employee not found');
+            return $this->notFound($employee, 'Employee not found');
         }
-        $medicalRecordId = $request->input('medical_record_id');
 
-        $medicalRecord = MedicalRecord::find($medicalRecordId );
+        $medicalRecordId = $request->input('medical_record_id');
+        $medicalRecord = MedicalRecord::find($medicalRecordId);
 
         if (!$medicalRecord) {
             return $this->notFound('Medical record not found');
         }
 
-        if($employee->isA('women-doctor') || $employee->isA('child-doctor')){
-            $type = "doctor";
-        }
-        else if($employee->isA('women-nutritionist') || ($employee->isA('child-nutritionist'))|| ($employee->isA('nutritionist'))){
-            $type = "Nutritionist";
-        }
-        else{
-            return $this->error($employeeId , "Error in employee type");
-        }
+        $type = "";
+
+        if (($employee->isA('women-doctor') && $medicalRecord->category === 'pregnant') ||
+        ($employee->isA('child-doctor') && $medicalRecord->category === 'child')) {
+        $type = "doctor";
+    } else if (($employee->isA('women-nutritionist') && $medicalRecord->category === 'pregnant') ||
+               ($employee->isA('child-nutritionist') && $medicalRecord->category === 'child')) {
+        $type = "Nutritionist";
+    } else if (($employee->isA('women-nutritionist') || $employee->isA('nutritionist')) &&
+               $medicalRecord->category !== 'child') {
+        $type = "Nutritionist";
+    } else if ($employee->isA('child-doctor') && $medicalRecord->category !== 'child') {
+
+        return $this->error($employeeId, "Employee is a child doctor but patient is not a child. Consider a different doctor.");
+    } else {
+        return $this->error($employeeId, "Error in employee type");
+    }
+
+
         $receptionistId = auth('sanctum')->user()->id;
 
         $appointment = Appointment::create([
-            'employee_id' => $employeeId ,
+            'employee_id' => $employeeId,
             'receptionist_id' => $receptionistId,
-            'medical_record_id' => $medicalRecordId ,
+            'medical_record_id' => $medicalRecordId,
             'type' => $type
         ]);
 
