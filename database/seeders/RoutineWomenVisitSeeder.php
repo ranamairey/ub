@@ -33,10 +33,7 @@ class RoutineWomenVisitSeeder extends Seeder
                 'health_education' => (bool)random_int(0, 1),
                 'weight' => rand(50, 100) / 10, // random weight between 5.0 and 10.0
                 'status_type' => $statusTypes[array_rand($statusTypes)],
-<<<<<<< HEAD
-=======
                 //'z_score' => rand(-30, 30) / 10, // random z_score between -3.0 and 3.0
->>>>>>> 51ce279bbaab79de8515fd83216d77a9aba3a1a0
                 'date' => Carbon::now()->subDays(rand(1, 365))->format('Y-m-d'),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

@@ -45,8 +45,12 @@ class MedicineOrderController extends Controller
         if (!$medicineOrder){
             return $this->notFound($orderId , "Medicine order with given id is not found.");
         }
+        $medicineOrderQuantity = $medicineOrder->quantity;
         $medicalCenterMedicineId = $medicineOrder->medical_center_medicine_id;
         $medicalCenterMedicine = MedicalCenterMedicine::find($medicalCenterMedicineId);
+        if($medicineOrderQuantity > $medicalCenterMedicine->quantity){
+          return $this->error($medicineOrderQuantity , "الكمية المطلوبة أكبر من الكمية الموجودة في الصيدلية.");
+        }
         $medicalCenterMedicine->quantity -= $medicineOrder->quantity;
         if ($medicineOrder->is_aprroved == true){
             return $this->error($orderId , "This order is already has been approved");
@@ -300,6 +304,7 @@ class MedicineOrderController extends Controller
 
       return response()->json(['prescribed_medicines' => $prescribedMedicines], 200);
     }
+    
     public function getchildtretmentMedicinesForVisit($visitId)
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)

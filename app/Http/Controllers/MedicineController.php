@@ -31,10 +31,10 @@ class MedicineController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-    $employee = auth('sanctum')->user();
-    if (!$employee) {
+        $employee = auth('sanctum')->user();
+        if (!$employee) {
         return $this->unauthorized('You are not logged in');
-    }
+        }
 
 
         $medicine = new Medicine;
@@ -50,6 +50,9 @@ class MedicineController extends Controller
         return $this->created($medicine);
     }
 
+    public function getMedicineById(){
+        
+    }
 
     public function getAllmedicines(){
 
