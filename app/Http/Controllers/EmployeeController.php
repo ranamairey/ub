@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Bouncer;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Contract;
 use App\Models\Employee;
 use Illuminate\Http\Request;
@@ -15,11 +17,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Aspects\Logger;
 use App\Aspects\transaction;
-
 use Illuminate\Support\Facades\Log;
 
-#[\App\Aspects\Logger]
-#[\App\Aspects\transaction]
 class EmployeeController extends Controller
 {
     use ApiResponseTrait;
@@ -605,4 +604,30 @@ public function getEmployeesInfo(){
 
 }
 
+
+public function getEmployeesByLastChoiceMedicalCenter($medicalCenterId)
+{
+    $latestChoices = EmployeeChoise::select('employee_id')
+        ->where('medical_center_id', $medicalCenterId)
+        ->groupBy('employee_id')
+        ->orderBy('created_at', 'desc')
+        ->distinct()
+        ->get();
+
+    $employeeIds = [];
+    foreach ($latestChoices as $choice) {
+        $employeeIds[] = $choice->employee_id;
+    }
+
+    $employees = Employee::whereIn('id', $employeeIds)
+        ->where('active', 1)
+        ->where('is_logged', 1)
+        ->get();
+
+    return $this->success(['employees' => $employees]);
 }
+}
+
+
+
+

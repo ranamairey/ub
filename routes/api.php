@@ -61,6 +61,7 @@ Route::get('/test' , [Controller::class ,  'test']);
 
 
 Route::post('/login', [EmployeeController::class, 'login']);
+Route::get('/getEmployeesByLastChoiceMedicalCenter/{id}', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);
 Route::get('/getOffices' ,  [OfficeController::class ,  'index']);
 Route::get('/getActivities' , [ActivityController::class ,  'index']);
@@ -102,7 +103,7 @@ Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVi
 
 Route::get('/showAppointment', [AppointmentController::class, 'index']);
 
-Route::get('/search', [MedicalRecordController::class, 'search']);
+Route::post('/search', [MedicalRecordController::class, 'search']);
 
 
 
