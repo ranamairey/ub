@@ -140,6 +140,7 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
 
 });
 
+
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentschild' , [AppointmentController::class , 'show']);
   Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
