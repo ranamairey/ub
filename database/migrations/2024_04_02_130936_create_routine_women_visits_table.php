@@ -41,6 +41,11 @@ return new class extends Migration
 
             $table->enum('status_type', [ 'pregnant','lactating','non']);
 
+<<<<<<< HEAD
+=======
+           
+
+>>>>>>> 51ce279bbaab79de8515fd83216d77a9aba3a1a0
             $table->date('date')->format('Y-m-d');
 
             $table->timestamps();

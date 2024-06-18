@@ -14,12 +14,15 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\SubdistrictController;
+use App\Http\Controllers\GovernorateController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\MedicineOrderController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\RoutineChildVisitController;
 use App\Http\Controllers\RoutineWomenVisitController;
 use App\Http\Controllers\ChildTreatmentProgramController;
@@ -58,6 +61,7 @@ Route::get('/test' , [Controller::class ,  'test']);
 
 
 Route::post('/login', [EmployeeController::class, 'login']);
+Route::get('/getEmployeesByLastChoiceMedicalCenter/{id}', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);
 Route::get('/getOffices' ,  [OfficeController::class ,  'index']);
 Route::get('/getActivities' , [ActivityController::class ,  'index']);
@@ -65,11 +69,11 @@ Route::get('/getAgencies' , [AgencyController::class ,  'index']);
 Route::get('/getAccesses' , [AccessController::class ,  'index']);
 Route::get('/getPartners' , [PartnerController::class ,  'index']);
 Route::get('/getMedicalCenters' , [MedicalCenterController::class ,  'index']);
+Route::get('/getCompletedTreatmentsByRecordId/{id}' , [MedicalRecordController::class , 'getCompletedTreatmentsByRecordId']);
 
-
-
-
-
+Route::get('/getGovernorate' , [GovernorateController::class ,  'index']);
+Route::get('/getDistrict' , [DistrictController::class ,  'index']);
+Route::get('/getSubdistrict' , [SubdistrictController::class ,  'index']);
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);
@@ -97,9 +101,14 @@ Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destr
 
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 
+Route::get('/showAppointment', [AppointmentController::class, 'index']);
+
+Route::post('/search', [MedicalRecordController::class, 'search']);
+
 
 
 });
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
@@ -124,8 +133,10 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateTreatmentProgram/{id}', [WomenTreatmentProgramController::class , 'graduateTreatmentProgram']);
-  // إنشاء طلبية صرف دوا
   Route::post('/womenNutritionistsMedicineOrder', [MedicineOrderController::class, 'WomenNutritionistsMedicineOrder']);
+  Route::get('/getRoutineMedicinesForVisit/{id}', [MedicineOrderController::class, 'getRoutineMedicinesForVisit']);
+  Route::get('/gettretmentMedicinesForVisit/{id}', [MedicineOrderController::class, 'gettretmentMedicinesForVisit']);
+
 });
 
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
@@ -141,6 +152,8 @@ Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
 
   Route::post('/childNutritionistsMedicineOrder', [MedicineOrderController::class, 'ChildNutritionistsMedicineOrder']);
+  Route::get('/getchildtretmentMedicinesForVisit/{id}', [MedicineOrderController::class, 'getchildtretmentMedicinesForVisit']);
+  Route::get('/getchildroutineMedicinesForVisit/{id}', [MedicineOrderController::class, 'getchildroutineMedicinesForVisit']);
 
 
 });
@@ -211,6 +224,7 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/showMyRecord', [MedicalRecordController::class, 'showMyRecord']);
+  Route::get('/showLinkedRecords', [AccountController::class, 'showLinkedRecords']);
 });
 
 

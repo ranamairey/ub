@@ -26,5 +26,6 @@ class Account extends Model
     {
         return $this->medicalRecords()->first() !== null;
     }
+    
 
 }

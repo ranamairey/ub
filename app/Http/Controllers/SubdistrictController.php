@@ -14,7 +14,9 @@ class SubdistrictController extends Controller
      */
     public function index()
     {
-        //
+        $stores = Subdistrict::all();
+
+        return response()->json($stores);
     }
 
     /**

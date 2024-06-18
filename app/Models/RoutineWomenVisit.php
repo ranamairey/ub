@@ -14,6 +14,10 @@ class RoutineWomenVisit extends Model
         'medical_record_id',
         'current_status',
         'status_type',
+<<<<<<< HEAD
+=======
+       
+>>>>>>> 51ce279bbaab79de8515fd83216d77a9aba3a1a0
         'date',
         'IYCF',
         'nutritional_survey',

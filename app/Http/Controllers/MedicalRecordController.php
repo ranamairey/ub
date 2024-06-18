@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Employee;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Traits\ApiResponseTrait;
@@ -16,12 +17,6 @@ class MedicalRecordController extends Controller
     use ApiResponseTrait;
 
 
-    /**
-     * Store a newly created medical record in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,8 +32,6 @@ class MedicalRecordController extends Controller
             'birth_date' => 'required|date',
             'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'nullable|string|min:10|max:20',
-            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
-            // 'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
             'address.name' => ['required', 'string', 'max:255'],
         ]);
@@ -47,10 +40,22 @@ class MedicalRecordController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-
         $validatedData = $validator->validated();
-
         $employee = auth('sanctum')->user();
+
+        if ($validatedData['category'] === 'pregnant' && $validatedData['gender'] === 'Male') {
+            return $this->error(null, 'A male gender cannot be assigned to a pregnant patient.');
+        }
+
+        if ($validatedData['category'] === 'Child') {
+            $birthDate = Carbon::parse($validatedData['birth_date']);
+            $maxDate = now()->subYears(15);
+
+            if ($birthDate->greaterThan($maxDate)) {
+                $age = $birthDate->diffInYears(now());
+                return $this->error(null, 'The birth date must be 15 years or more in the past for the "child" category. Current age: ' . $age);
+            }
+        }
 
         $existMedicalRecord = MedicalRecord::where([
             ['name', $request->input('name')],
@@ -59,14 +64,12 @@ class MedicalRecordController extends Controller
         ])->first();
 
         if ($existMedicalRecord) {
-            return $this->error(null, 'This patient already has a medical record');
+            return $this->error(null, 'This patient already has a medical record.');
         }
 
         $medicalRecord = new MedicalRecord($validatedData);
         $medicalRecord->employee()->associate($employee);
         $medicalRecord->save();
-
-        $recordId = $medicalRecord->id;
 
         $addressData = $request->get('address');
 
@@ -75,13 +78,8 @@ class MedicalRecordController extends Controller
             'subdistrict_id' => $addressData['subdistrict_id'],
         ]);
 
-
-        $recordId = $medicalRecord->id;
-
         return $this->created($medicalRecord, 'Medical record created successfully!');
     }
-
-
     public function update(Request $request, $id)
     {
         $medicalRecord = MedicalRecord::findOrFail($id);
@@ -93,10 +91,7 @@ class MedicalRecordController extends Controller
         $validator = Validator::make($request->all(), [
             'phone_number' => 'sometimes|required|string|min:10|max:20',
             'residence_status' => 'sometimes|required|in:Resident,Immigrant,Returnee',
-            // 'related_person' => 'nullable|string|max:255',
             'related_person_phone_number' => 'sometimes|required|string|min:10|max:20',
-            // 'address.governorate_id' => ['required', 'exists:governorates,id'],
-            // 'address.district_id' => ['required', 'exists:districts,id'],
             'address.subdistrict_id' => ['sometimes','required', 'exists:subdistricts,id'],
             'address.name' => ['sometimes','required', 'string', 'max:255'],
         ]);
@@ -193,26 +188,92 @@ class MedicalRecordController extends Controller
         $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
 
         return $this->success($medicalRecord);
-    }
+        }
+        public function showMyRecord()
+        {
+            $loggedInUser = auth('sanctum')->user();
 
-    public function showMyRecord()
-    {  $loggedInUser = auth('sanctum')->user();
+            $linkedAccount = $loggedInUser->account;
 
-        $linkedAccount = $loggedInUser->Account;
+            if (!$linkedAccount) {
+                return $this->error(null, 'User is not linked to any medical record');
+            }
 
-        if (!$linkedAccount) {
-            return $this->error(null, 'User is not linked to any medical record');
+            // Check for at least one linked record
+            if ($linkedAccount->medicalRecords->count() > 0) {
+                $medicalRecord = $linkedAccount->medicalRecords->first();
+                return $this->success($medicalRecord, 'Medical record retrieved successfully!');
+            } else {
+                return $this->notFound('User has no medical records');
+            }
         }
 
-        if (!$linkedAccount->hasMedicalRecord()) {
-            return $this->notFound('User has no medical records');
-        }
 
-        $medicalRecord = $linkedAccount->medicalRecords->first();
+        public function getCompletedTreatmentsByRecordId(Request $request, $id)
+{
+    $medicalRecord = MedicalRecord::find($id);
 
-        return $this->success($medicalRecord, 'Medical record retrieved successfully!');
+    if (!$medicalRecord) {
+        return $this->notFound('Medical record not found');
     }
 
+    // Check category for appropriate treatment program model
+    $isChild = $medicalRecord->category === 'child';
+    $isWoman = $medicalRecord->category === 'pregnant';
 
+    if ($isChild) {
+        $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
+    } else if ($isWoman) {
+        $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
+    } else {
+        return $this->notFound('No treatment programs found for this category');
+    }
 
+    // Validate that all completed treatments have end_date
+    foreach ($completedTreatments as $treatment) {
+        if (!$treatment->end_date) {
+            return $this->error(null, 'Incomplete treatment program found. All completed treatments must have an end_date.');
+        }
+    }
+
+    $data = [
+        'medical_record' => $medicalRecord->toArray(),
+        'completed_treatments' => $completedTreatments->toArray(),
+    ];
+
+    return $this->success($data, 'Completed treatment programs retrieved successfully!');
 }
+public function search(Request $request)
+{
+    $input = $request->input('input');
+
+    $query = MedicalRecord::with('addresses');
+
+    if (is_numeric($input)) {
+        $medicalRecords = $query->where('id', $input)->get();
+    } else {
+        $medicalRecords = $query->where(function ($q) use ($input) {
+            $q->where('name', 'LIKE', '%' . $input . '%')
+              ->orWhere('father_name', 'LIKE', '%' . $input . '%')
+              ->orWhere('last_name', 'LIKE', '%' . $input . '%');
+        })->get();
+    }
+
+    if ($medicalRecords->isEmpty()) {
+        return $this->notFound('Medical records not found');
+    }
+
+    $results = [];
+    foreach ($medicalRecords as $medicalRecord) {
+        $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
+        $birthDate = Carbon::parse($medicalRecord->birth_date);
+        $age = $birthDate->age;
+        $medicalRecord->full_name = $fullName;
+        $medicalRecord->age = $age;
+        $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
+        $results[] = $medicalRecord;
+    }
+
+    return $this->success($results, 'Medical records retrieved successfully!');
+}
+    }

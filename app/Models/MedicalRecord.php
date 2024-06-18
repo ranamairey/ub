@@ -30,10 +30,9 @@ class MedicalRecord extends Model
     {
         return $this->morphMany(Address::class, 'addressable');
     }
-
     public function account()
     {
-        return $this->belongsTo(Account::class , 'account_id');
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function employee()
