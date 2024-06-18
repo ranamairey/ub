@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 use App\Models\MedicalCenter;
 use App\Models\EmployeeChoise;
@@ -105,6 +106,15 @@ class MedicalCenterMedicineController extends Controller
             }
         }
         return $this->success($medicalCenterMedicines);
+    }
+
+    public function medicineInventory(Request $request){
+            $jsonData = $request->json()->all();
+            $newRecord = new Inventory;
+            $newRecord->data = json_encode($jsonData); 
+            $newRecord->save();
+            return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
+           
     }
     
 }

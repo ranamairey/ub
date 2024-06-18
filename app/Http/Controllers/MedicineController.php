@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Medicine;
 use Illuminate\Http\Request;
+use App\Models\EmployeeChoise;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalCenterMedicine;
@@ -50,8 +51,18 @@ class MedicineController extends Controller
         return $this->created($medicine);
     }
 
-    public function getMedicineById(){
-        
+    public function getMedicineById($id){
+        $medicine = Medicine::find($id);
+        $employee = auth('sanctum')->user();
+        $employee_choise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+        $medicalCenterId = $employee_choise->medical_center_id;
+        $medicalCenterMedicine = MedicalCenterMedicine::where([
+            ['medical_center_id', $medicalCenterId], 
+            ['medicine_id', $medicine->id]
+        ])->first();
+        $medicine->quantity = $medicalCenterMedicine->quantity;
+        return $medicine;
+
     }
 
     public function getAllmedicines(){

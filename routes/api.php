@@ -74,6 +74,7 @@ Route::get('/getCompletedTreatmentsByRecordId/{id}' , [MedicalRecordController::
 Route::get('/getGovernorate' , [GovernorateController::class ,  'index']);
 Route::get('/getDistrict' , [DistrictController::class ,  'index']);
 Route::get('/getSubdistrict' , [SubdistrictController::class ,  'index']);
+Route::post('/medicineInventory' , [MedicalCenterMedicineController::class ,  'medicineInventory']);
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);
@@ -212,6 +213,7 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
   Route::get('/acceptOrder/{id}', [MedicineOrderController::class , 'acceptOrder']);
   Route::get('/rejectOrder/{id}', [MedicineOrderController::class , 'rejectOrder']);
   Route::get('/getNotEmptyMedicalCenterMedicine', [MedicalCenterMedicineController::class , 'getNotEmptyMedicalCenterMedicine']);
+  Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
 
 
 

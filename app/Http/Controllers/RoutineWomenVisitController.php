@@ -53,8 +53,6 @@ class RoutineWomenVisitController extends Controller
 
 
             ]);
-
-
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
@@ -66,7 +64,7 @@ class RoutineWomenVisitController extends Controller
 
 
         $employee = auth('sanctum')->user();
-$employee_id = auth('sanctum')->user()->id;
+        $employee_id = auth('sanctum')->user()->id;
         $routineWomenVisit = RoutineWomenVisit::create([
             'employee_id' => $employee->id,
             'employee_choise_id' => EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id,
@@ -80,10 +78,6 @@ $employee_id = auth('sanctum')->user()->id;
             'high_energy_biscuits' => $request->input('high_energy_biscuits'),
             'health_education' => $request->input('health_education'),
             'weight' => $request->input('weight'),
-
-
-
-
         ]);
         return $this->created($routineWomenVisit);
 

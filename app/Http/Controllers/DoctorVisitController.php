@@ -21,9 +21,6 @@ class DoctorVisitController extends Controller
             'result' => ['required', 'string'],
             'health_education' => ['required', 'boolean'],
             'health_care' => ['required', 'boolean'],
-
-
-
             ]);
 
         if ($validator->fails()) {
