@@ -26,12 +26,12 @@ class HealthEducationLectureController extends Controller
             'program' => 'required|string',
             'program_category' => 'required|string',
             'date' => 'required|date',
-            'partner' => 'required|string',
-            'access' => 'required|string',
-            'agency' => 'required|string',
-            'activity' => 'required|string',
-            'office' => 'required|string',
-            'coverage' => 'required|string',
+            'partner_id' => 'required|string',
+            'access_id' => 'required|string',
+            'agency_id' => 'required|string',
+            'activity_id' => 'required|string',
+            'office_id' => 'required|string',
+            'coverage_id' => 'required|string',
             'address.subdistrict_id' => ['required', 'exists:subdistricts,id'],
             'address.name' => ['required', 'string', 'max:255'],
         ];
@@ -57,13 +57,12 @@ class HealthEducationLectureController extends Controller
             'program' => $request->get('program'),
             'program_category' => $request->get('program_category'),
             'date' => $request->get('date'),
-            'activity' => $request->get('activity'),
-            'partner' => $request->get('partner'),
-            'access' => $request->get('access'),
-            'agency' => $request->get('agency'),
-            'office' => $request->get('office'),
-            'coverage' => $request->get('coverage'),
-
+            'activity_id' => $request->get('activity_id'),
+            'partner_id' => $request->get('partner_id'),
+            'access_id' => $request->get('access_id'),
+            'agency_id' => $request->get('agency_id'),
+            'office_id' => $request->get('office_id'),
+            'coverage_id' => $request->get('coverage_id'),
         ]);
 
         $addressData = $request->get('address');

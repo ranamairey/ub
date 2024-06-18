@@ -24,12 +24,12 @@ class HealthEducationLecture extends Model
         'program',
         'program_category',
         'date',
-        'partner',
-        'access',
-        'agency',
-        'activity',
-        'office',
-        'coverage',
+        'partner_id',
+        'access_id',
+        'agency_id',
+        'activity_id',
+        'office_id',
+        'coverage_id',
 
     ];
 
