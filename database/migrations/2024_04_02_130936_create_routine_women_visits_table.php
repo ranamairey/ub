@@ -41,8 +41,6 @@ return new class extends Migration
 
             $table->enum('status_type', [ 'pregnant','lactating','non']);
 
-            $table->float('z_score')->nullable();
-
             $table->date('date')->format('Y-m-d');
 
             $table->timestamps();

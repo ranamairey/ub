@@ -14,6 +14,7 @@ class RoutineChildVisit extends Model
         'medical_record_id',
         'current_status',
         'z_score',
+        'muac',
         'date',
         'sam_acceptance',
         'high_energy_biscuits',

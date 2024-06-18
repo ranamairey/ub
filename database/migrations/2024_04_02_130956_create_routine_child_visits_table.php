@@ -46,6 +46,8 @@ return new class extends Migration
 
             $table->float('z_score');
 
+            $table->integer('muac');
+
             $table->date('date')->format('Y-m-d');
 
             $table->timestamps();

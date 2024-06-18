@@ -35,7 +35,6 @@ class RoutineWomenVisitController extends Controller
 
         $validator = Validator::make($request->all(), [
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
-            'z_score' => ['required', 'numeric'],
             'current_status' => [
                 'required',
                 Rule::in(['mam','normal']),
@@ -74,7 +73,6 @@ $employee_id = auth('sanctum')->user()->id;
             'medical_record_id' => $request->input('medical_record_id'),
             'current_status' =>  $request->input('current_status'),
             'status_type'  =>   $request->input('status_type'),
-            'z_score' =>  $request->input('z_score'),
             'date' => now()->format('Y-m-d'),
             'IYCF' => $request->input('IYCF'),
             'nutritional_survey' => $request->input('nutritional_survey'),
