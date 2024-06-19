@@ -79,15 +79,34 @@ class MedicalCenterMedicineController extends Controller
         $medicalCenter = MedicalCenter::find($medicalCenterId);
         $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines;
 
+        $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines()->with('medicine')->whereHas('medicine', function ($query) {
+            $query->where('type', 'Ordinary');
+          })->get();
+
         if (!$medicalCenterMedicines->count()) {
             return $this->notFound('No medicines found for this medical center');
         }
-        
+
         foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
             $medicalCenterMedicine->medicine=$medicalCenterMedicine->medicine;
         }
         return $this->success($medicalCenterMedicines);
     }
+    public function getMalnutritionMedicalCenterMedicine()
+{
+    $employee = auth('sanctum')->user();
+    $medicalCenterId = $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
+    $medicalCenter = MedicalCenter::find($medicalCenterId);
+    $medicalCenterMedicines = $medicalCenter->medicalCenterMedicines()->with('medicine')->whereHas('medicine', function ($query) {
+        $query->where('type', 'Nutrition');
+      })->get();
+
+    if (!$medicalCenterMedicines->count()) {
+        return $this->notFound('No nutritional medicines found for this medical center');
+    }
+
+    return $this->success($medicalCenterMedicines);
+}
 
     public function getNotEmptyMedicalCenterMedicine(){
         $employee = auth('sanctum')->user();
@@ -99,7 +118,7 @@ class MedicalCenterMedicineController extends Controller
         if (!$medicalCenterMedicines->count()) {
             return $this->notFound('No medicines found for this medical center');
         }
-        
+
         foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
             if(!($medicalCenterMedicine->quantity == 0)){
                 $medicalCenterMedicine->medicine=$medicalCenterMedicine->medicine;
@@ -111,10 +130,10 @@ class MedicalCenterMedicineController extends Controller
     public function medicineInventory(Request $request){
             $jsonData = $request->json()->all();
             $newRecord = new Inventory;
-            $newRecord->data = json_encode($jsonData); 
+            $newRecord->data = json_encode($jsonData);
             $newRecord->save();
             return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
-           
+
     }
-    
+
 }

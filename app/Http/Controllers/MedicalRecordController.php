@@ -208,41 +208,54 @@ class MedicalRecordController extends Controller
             }
         }
 
-
         public function getCompletedTreatmentsByRecordId(Request $request, $id)
-{
-    $medicalRecord = MedicalRecord::find($id);
+        {
+            $medicalRecord = MedicalRecord::find($id);
 
-    if (!$medicalRecord) {
-        return $this->notFound('Medical record not found');
-    }
+            if (!$medicalRecord) {
+                return $this->notFound('Medical record not found');
+            }
 
-    // Check category for appropriate treatment program model
-    $isChild = $medicalRecord->category === 'child';
-    $isWoman = $medicalRecord->category === 'pregnant';
+            // Check category for appropriate treatment program model
+            $isChild = $medicalRecord->category === 'child';
+            $isWoman = $medicalRecord->category === 'pregnant';
 
-    if ($isChild) {
-        $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
-    } else if ($isWoman) {
-        $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
-    } else {
-        return $this->notFound('No treatment programs found for this category');
-    }
+            if ($isChild) {
+                $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
 
-    // Validate that all completed treatments have end_date
-    foreach ($completedTreatments as $treatment) {
-        if (!$treatment->end_date) {
-            return $this->error(null, 'Incomplete treatment program found. All completed treatments must have an end_date.');
+                $data = [
+                    'medical_record' => $medicalRecord->toArray(),
+                    'treatments' => [],
+                ];
+
+                foreach ($completedTreatments as $treatment) {
+                    $visits = $treatment->malnutritionChildVisits()->get();
+                    $data['treatments'][] = [
+                        'treatment' => $treatment->toArray(),
+                        'visits' => $visits->toArray(),
+                    ];
+                }
+            } else if ($isWoman) {
+                $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
+
+                $data = [
+                    'medical_record' => $medicalRecord->toArray(),
+                    'treatments' => [],
+                ];
+
+                foreach ($completedTreatments as $treatment) {
+                    $visits = $treatment->malnutritionWomenVisits()->get();
+                    $data['treatments'][] = [
+                        'treatment' => $treatment->toArray(),
+                        'visits' => $visits->toArray(),
+                    ];
+                }
+            } else {
+                return $this->notFound('No treatment programs found for this category');
+            }
+
+            return $this->success($data, 'Completed treatment programs and visits retrieved successfully!');
         }
-    }
-
-    $data = [
-        'medical_record' => $medicalRecord->toArray(),
-        'completed_treatments' => $completedTreatments->toArray(),
-    ];
-
-    return $this->success($data, 'Completed treatment programs retrieved successfully!');
-}
 public function search(Request $request)
 {
     $input = $request->input('input');

@@ -124,6 +124,7 @@ Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getReco
 // عرض الأدوية من قبل الطبيب و الأخصائي من أجل طلبات صرف الأدوية
 Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
 
+Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
