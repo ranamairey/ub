@@ -128,11 +128,24 @@ class MedicalCenterMedicineController extends Controller
     }
 
     public function medicineInventory(Request $request){
-            $jsonData = $request->json()->all();
-            $newRecord = new Inventory;
-            $newRecord->data = json_encode($jsonData);
-            $newRecord->save();
-            return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
+        $jsonData = $request->json()->all();
+        $newRecord = new Inventory;
+        $newRecord->data = json_encode($jsonData, JSON_UNESCAPED_UNICODE);
+        $inventoryData = MedicalCenterMedicine::join('medicines', 'medical_center_medicines.medicine_id', '=', 'medicines.id')
+            ->select('medicines.name', 'medical_center_medicines.quantity')
+            ->get()
+            ->pluck('quantity', 'name')
+            ->toArray();
+        $newRecord->old_data = json_encode($inventoryData, JSON_UNESCAPED_UNICODE);
+        $newRecord->save();
+        return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
+
+
+
+        
+
+
+
 
     }
 

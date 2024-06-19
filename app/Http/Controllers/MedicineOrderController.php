@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\DoctorVisit;
 use Illuminate\Http\Request;
 use App\Models\MedicineOrder;
+use App\Models\EmployeeChoise;
 use App\Traits\ApiResponseTrait;
 use App\Models\RoutineChildVisit;
 use App\Models\RoutineWomenVisit;
@@ -26,7 +27,10 @@ class MedicineOrderController extends Controller
      */
     public function getAllMedicineOrders()
     {
-        $medicineOrders = MedicineOrder::where('is_aprroved', '=' , false)->get();
+        $employee = auth('sanctum')->user();
+        $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+        $medicalCenterId = $employeeChoise->medical_center_id;
+        $medicineOrders = MedicineOrder::where([['is_aprroved', '=' , false],['medical_center_id' , '=' , $medicalCenterId]])->get();
 
         if ($medicineOrders->isEmpty()) {
             return $this->notFound([],'No medicine order found' );
@@ -121,6 +125,8 @@ class MedicineOrderController extends Controller
             return $this->notFound($request->input('medical_center_medicine_id') , "Medicine with given id is not found");
         }
         $employee = auth('sanctum')->user();
+        $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+        $medicalCenterId = $employeeChoise->medical_center_id;
 
         if($request->input('quantity') > $medicalCenterMedicine->quantity){
             return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
@@ -128,6 +134,7 @@ class MedicineOrderController extends Controller
 
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
+            'medical_center_id' =>$medicalCenterId,
             'quantity'=> $request->input('quantity'),
             'activity_id' => $request->input('activity_id'),
             'medical_center_medicine_id' => $medicalCenterMedicine->id,
@@ -179,6 +186,8 @@ class MedicineOrderController extends Controller
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////////
         $employee = auth('sanctum')->user();
+        $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+        $medicalCenterId = $employeeChoise->medical_center_id;
 
         if($request->input('quantity') > $medicalCenterMedicine->quantity){
             return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
@@ -186,6 +195,7 @@ class MedicineOrderController extends Controller
 
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
+            'medical_center_id' =>$medicalCenterId,
             'quantity'=> $request->input('quantity'),
             'activity_id' => $request->input('activity_id'),
             'medical_center_medicine_id' => $medicalCenterMedicine->id,
@@ -238,6 +248,8 @@ class MedicineOrderController extends Controller
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////////
         $employee = auth('sanctum')->user();
+        $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+        $medicalCenterId = $employeeChoise->medical_center_id;
 
         if($request->input('quantity') > $medicalCenterMedicine->quantity){
             return $this->error( $request->input('quantity'),"The quantity you entered is greater than the quantity that is available in the pharmacy.");
@@ -245,6 +257,7 @@ class MedicineOrderController extends Controller
 
         $medicineOrder =$visit->medicineOrders()->create([
             'employee_id' => $employee->id,
+            'medical_center_id' =>$medicalCenterId,
             'quantity'=> $request->input('quantity'),
             'activity_id' => $request->input('activity_id'),
             'medical_center_medicine_id' => $medicalCenterMedicine->id,

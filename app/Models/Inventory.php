@@ -10,6 +10,7 @@ class Inventory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'data'
+        'data' ,
+        'old_data'
     ];
 }

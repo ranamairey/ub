@@ -32,6 +32,7 @@ class MedicineOrderSeeder extends Seeder
                 'medicine_orderable_id' => rand(1, 10), // assuming you have 10 orderable medicines
                 'medicine_orderable_type' => $medicineOrderableTypes[array_rand($medicineOrderableTypes)],
                 'quantity' => rand(1, 100),
+                'medical_center_id' => rand(1,2),
                 'activity_id' => rand(1, $activityCount),
                 'medical_center_medicine_id' => rand(1, $medicalCenterMedicineCount),
                 'is_aprroved' => 0,

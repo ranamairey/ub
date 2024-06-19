@@ -24,7 +24,9 @@ class AppointmentController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-        $employeeId = $request->input('employee_id');
+        $employee = auth('sanctum')->user();
+        $employeeId = $employee->id;
+
         $employee = Employee::find($employeeId);
 
         if (!$employee) {
