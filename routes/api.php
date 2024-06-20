@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Employee;
 use Silber\Bouncer\Bouncer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\test;
@@ -13,16 +14,16 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CoverageController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\SubdistrictController;
-use App\Http\Controllers\GovernorateController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorVisitController;
+use App\Http\Controllers\GovernorateController;
+use App\Http\Controllers\SubdistrictController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\MedicineOrderController;
-use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\RoutineChildVisitController;
 use App\Http\Controllers\RoutineWomenVisitController;
 use App\Http\Controllers\ChildTreatmentProgramController;
@@ -56,7 +57,11 @@ Route::group(['middleware' => 'auth:api'], function () {
   });
 Route::post('/login', [test::class, 'login']);
 */
-Route::get('/test' , [Controller::class ,  'test']);
+// Route::get('/test' , [Controller::class ,  'test']);
+
+
+
+Route::get('/toto' , [AppointmentController::class, 'toto'] );
 
 
 
@@ -75,6 +80,8 @@ Route::get('/getGovernorate' , [GovernorateController::class ,  'index']);
 Route::get('/getDistrict' , [DistrictController::class ,  'index']);
 Route::get('/getSubdistrict' , [SubdistrictController::class ,  'index']);
 Route::post('/medicineInventory' , [MedicalCenterMedicineController::class ,  'medicineInventory']);
+
+
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);

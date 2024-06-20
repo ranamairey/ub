@@ -23,6 +23,7 @@ class EmployeeController extends Controller
 {
     use ApiResponseTrait;
 
+    
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -627,7 +628,4 @@ public function getEmployeesByLastChoiceMedicalCenter($medicalCenterId)
     return $this->success(['employees' => $employees]);
 }
 }
-
-
-
 
