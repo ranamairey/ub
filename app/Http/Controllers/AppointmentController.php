@@ -24,20 +24,24 @@ class AppointmentController extends Controller
             //
         ]);
 
+        echo "1 ";
+
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
-
+        echo "2 ";
         // $employeeId = $request->input('employee_id');
         $type = $request->input('type');
+        echo "3 ";
         $employee = $this->malak($type);
+        echo "4 ";
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
 
         if (!$medicalRecord) {
           return $this->notFound('Medical record not found');
         }
-
+        echo "5 ";
         if (
             ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
             ||
@@ -45,11 +49,14 @@ class AppointmentController extends Controller
           return $this->error( "السجل غير متوافق مع أخصائي التغذية");
         }
         try{
+            echo "6 ";
             $employee = Employee::find($employee->id);
             if (!$employee) {
                 return $this->notFound($employee, 'Employee not found');
             }
+            echo "7 ";
         }catch(\Exception $ex ){
+            echo "8 ";
             return  $this->notFound($ex) ;
         }
 
@@ -103,21 +110,30 @@ class AppointmentController extends Controller
 
 
     public function malak($type){
+        echo " 31 ";
         $authEmployee = auth('sanctum')->user();
         $employeeChoice = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
+        echo " 32 ";
         $medicalCenterIdReciptionist = $employeeChoice->medical_center_id;
+        echo $medicalCenterIdReciptionist;
         $matchingEmployees = null;
         $bouncer = app(Bouncer::class);
         $employees = Employee::all();
+        echo " 33 ";
         foreach ($employees as $loopEmployee) {
+            echo " 34 ";
             $employeeChoice = EmployeeChoise::where('employee_id', $loopEmployee->id)->latest('created_at')->first();
+            echo $employeeChoice->medical_center_id;
             if ($employeeChoice && $employeeChoice->medical_center_id == $medicalCenterIdReciptionist ) {
+                echo " 35 ";
                 if( $bouncer->is($loopEmployee)->an($type) ){
+                    echo " 36 ";
                     $matchingEmployees = $loopEmployee;
                     return $matchingEmployees ;
                 }
             }
             else if ($matchingEmployees == null){
+                echo " 9999 ";
                 return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
             }
         }
