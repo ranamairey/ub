@@ -132,10 +132,10 @@ class AppointmentController extends Controller
                     return $matchingEmployees ;
                 }
             }
-            else if ($matchingEmployees == null){
-                echo " 9999 ";
-                return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
-            }
+        }
+        if ($matchingEmployees == null){
+            echo " 9999 ";
+            return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
         }
     }
 
