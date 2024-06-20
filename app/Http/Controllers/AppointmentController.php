@@ -21,6 +21,7 @@ class AppointmentController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => ['required', 'string'],
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
+            //
         ]);
 
         if ($validator->fails()) {
@@ -28,7 +29,7 @@ class AppointmentController extends Controller
         }
 
         // $employeeId = $request->input('employee_id');
-       
+
 
         $type = $request->input('type');
         $employee = $this->malak($type);
@@ -42,7 +43,7 @@ class AppointmentController extends Controller
             return  $this->notFound($ex) ;
         }
 
-        
+
 
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
@@ -58,7 +59,7 @@ class AppointmentController extends Controller
         else if($type == "child-doctor" || $type == "women-doctor"){
             $employeeType = 'Doctor';
         }
-        
+
 
         // if (($employee->isA('women-doctor') && $medicalRecord->category === 'pregnant') ||
         // ($employee->isA('child-doctor') && $medicalRecord->category === 'child')) {
@@ -89,14 +90,14 @@ class AppointmentController extends Controller
         return $this->success($appointment);
     }
 
-  
+
 
     public function malak($type){
         $authEmployee = auth('sanctum')->user();
         $employeeChoice = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
         $medicalCenterIdReciptionist = $employeeChoice->medical_center_id;
         $matchingEmployees = null;
-        $bouncer = app(Bouncer::class); 
+        $bouncer = app(Bouncer::class);
         $employees = Employee::all();
         foreach ($employees as $loopEmployee) {
             $employeeChoice = EmployeeChoise::where('employee_id', $loopEmployee->id)->latest('created_at')->first();
@@ -112,7 +113,7 @@ class AppointmentController extends Controller
         }
     }
 
-   
+
 
 
     /**
