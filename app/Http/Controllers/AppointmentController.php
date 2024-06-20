@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Appointment;
 use Silber\Bouncer\Bouncer;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Models\EmployeeChoise;
@@ -29,11 +29,21 @@ class AppointmentController extends Controller
         }
 
         // $employeeId = $request->input('employee_id');
-
-
         $type = $request->input('type');
         $employee = $this->malak($type);
+        $medicalRecordId = $request->input('medical_record_id');
+        $medicalRecord = MedicalRecord::find($medicalRecordId);
 
+        if (!$medicalRecord) {
+          return $this->notFound('Medical record not found');
+        }
+
+        if (
+            ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
+            ||
+            ($type === "child-nutritionist" && $medicalRecord->category !== 'child')) {
+          return $this->error( "السجل غير متوافق مع أخصائي التغذية");
+        }
         try{
             $employee = Employee::find($employee->id);
             if (!$employee) {
