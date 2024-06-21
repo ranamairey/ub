@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Bouncer;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Contract;
@@ -16,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Aspects\Logger;
+use Silber\Bouncer\Bouncer;
 use App\Aspects\transaction;
 use Illuminate\Support\Facades\Log;
 
@@ -602,12 +602,23 @@ public function getEmployeesInfo(){
     ];
 
     return $this->success($info);
+}
+
+public function getActiveEmployeesInMedicalCenter(){
+    $authEmployee = auth('sanctum')->user();
+    $employeeChoiceId = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first()->id;
+
+
 
 }
 
 
-public function getEmployeesByLastChoiceMedicalCenter($medicalCenterId)
+
+public function getEmployeesByLastChoiceMedicalCenter()
 {
+    $authEmployee = auth('sanctum')->user();
+    $employeeChoise = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
+    $medicalCenterId = $employeeChoise->medical_center_id;
     $latestChoices = EmployeeChoise::select('employee_id')
         ->where('medical_center_id', $medicalCenterId)
         ->groupBy('employee_id')
@@ -623,9 +634,21 @@ public function getEmployeesByLastChoiceMedicalCenter($medicalCenterId)
     $employees = Employee::whereIn('id', $employeeIds)
         ->where('active', 1)
         ->where('is_logged', 1)
+        ->whereIs('child-doctor', 'women-doctor' , 'women-nutritionist' ,'child-nutritionist' )
         ->get();
 
-    return $this->success(['employees' => $employees]);
+    $bouncer = app(Bouncer::class);
+    $finalEmployee = [];
+
+    foreach ($employees as $employee) {
+        $finalEmployee[] = [
+            'id' => $employee->id,
+            'type' => $employee->getRoles()->first(), // Get the first role
+        ];
+    }
+
+
+    return $this->success(['employees' => $finalEmployee]);
 }
 }
 

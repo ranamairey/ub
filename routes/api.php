@@ -66,7 +66,7 @@ Route::get('/toto' , [AppointmentController::class, 'toto'] );
 
 
 Route::post('/login', [EmployeeController::class, 'login']);
-Route::get('/getEmployeesByLastChoiceMedicalCenter/{id}', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
+
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);
 Route::get('/getOffices' ,  [OfficeController::class ,  'index']);
 Route::get('/getActivities' , [ActivityController::class ,  'index']);
@@ -130,7 +130,7 @@ Route::get('/seachAboutMedicalRecordId/{id}', [MedicalRecordController::class , 
 Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getRecordDetails']);
 // عرض الأدوية من قبل الطبيب و الأخصائي من أجل طلبات صرف الأدوية
 Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
-
+Route::get('/getEmployeesByLastChoiceMedicalCenter', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
 Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
 });
 

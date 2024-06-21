@@ -19,40 +19,34 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'type' => ['required', 'string'],
+            'employee_id' => ['required', 'integer' , 'exists:employees,id'],
             'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
             //
         ]);
         if ($validator->fails()) {
             return $this->unprocessable($validator->errors());
         }
-        // $employeeId = $request->input('employee_id');
-        $type = $request->input('type');
-        $employee = $this->malak($type);
+        $employeeId = $request->input('employee_id');
+        $employee = Employee::find($employee->id);
+            if (!$employee) {
+                return $this->notFound($employee, 'Employee not found');
+            }
+       
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
+        $type = "";
 
         if (!$medicalRecord) {
           return $this->notFound('Medical record not found');
         }
-        if (
-            ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
-            ||
-            ($type === "child-nutritionist" && $medicalRecord->category !== 'child')) {
-          return $this->error( "السجل غير متوافق مع أخصائي التغذية");
-        }
-        try{
-            $employee = Employee::find($employee->id);
-            if (!$employee) {
-                return $this->notFound($employee, 'Employee not found');
-            }
-
-        }catch(\Exception $ex ){
-            return  $this->notFound($ex) ;
-        }
-
-
-
+        // if (
+        //     ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
+        //     ||
+        //     ($type === "child-nutritionist" && $medicalRecord->category !== 'child')) {
+        //   return $this->error( "السجل غير متوافق مع أخصائي التغذية");
+        // }
+       
+           
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
 
@@ -60,31 +54,21 @@ class AppointmentController extends Controller
             return $this->notFound('Medical record not found');
         }
 
-        if ($type == "child-nutritionist" || $type == "women-nutritionist")
-        {
-            $employeeType = 'Nutritionist';
+        if (($employee->isA('women-doctor') && $medicalRecord->category === 'pregnant') ||
+        ($employee->isA('child-doctor') && $medicalRecord->category === 'child')) {
+        $type = "doctor";
+        } else if (($employee->isA('women-nutritionist') && $medicalRecord->category === 'pregnant') ||
+                   ($employee->isA('child-nutritionist') && $medicalRecord->category === 'child')) {
+            $type = "Nutritionist";
+        } else if (($employee->isA('women-nutritionist') || $employee->isA('nutritionist')) &&
+                   $medicalRecord->category !== 'child') {
+            $type = "Nutritionist";
+        } else if ($employee->isA('child-doctor') && $medicalRecord->category !== 'child') {
+
+            return $this->error($employeeId, "Employee is a child doctor but patient is not a child. Consider a different doctor.");
+        } else {
+            return $this->error($employeeId, "Error in employee type");
         }
-        else if($type == "child-doctor" || $type == "women-doctor"){
-            $employeeType = 'Doctor';
-        }
-
-
-        // if (($employee->isA('women-doctor') && $medicalRecord->category === 'pregnant') ||
-        // ($employee->isA('child-doctor') && $medicalRecord->category === 'child')) {
-        // $type = "doctor";
-        // } else if (($employee->isA('women-nutritionist') && $medicalRecord->category === 'pregnant') ||
-        //            ($employee->isA('child-nutritionist') && $medicalRecord->category === 'child')) {
-        //     $type = "Nutritionist";
-        // } else if (($employee->isA('women-nutritionist') || $employee->isA('nutritionist')) &&
-        //            $medicalRecord->category !== 'child') {
-        //     $type = "Nutritionist";
-        // } else if ($employee->isA('child-doctor') && $medicalRecord->category !== 'child') {
-
-        //     return $this->error($employeeId, "Employee is a child doctor but patient is not a child. Consider a different doctor.");
-        // } else {
-        //     return $this->error($employeeId, "Error in employee type");
-        // }
-
 
         $receptionistId = auth('sanctum')->user()->id;
 
@@ -92,7 +76,7 @@ class AppointmentController extends Controller
             'employee_id' => $employee->id,
             'receptionist_id' => $receptionistId,
             'medical_record_id' => $medicalRecordId,
-            'employee_type' => $employeeType
+            'employee_type' => $type
         ]);
 
         return $this->success($appointment);
@@ -100,28 +84,7 @@ class AppointmentController extends Controller
 
 
 
-    public function malak($type){
-        $authEmployee = auth('sanctum')->user();
-        $employeeChoice = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
-        $medicalCenterIdReciptionist = $employeeChoice->medical_center_id;
-        echo $medicalCenterIdReciptionist;
-        $matchingEmployees = null;
-        $bouncer = app(Bouncer::class);
-        $employees = Employee::all();
-        foreach ($employees as $loopEmployee) {
-            $employeeChoice = EmployeeChoise::where('employee_id', $loopEmployee->id)->latest('created_at')->first();
-            echo $employeeChoice->medical_center_id;
-            if ($employeeChoice && $employeeChoice->medical_center_id == $medicalCenterIdReciptionist ) {
-                if( $bouncer->is($loopEmployee)->an($type) ){
-                    $matchingEmployees = $loopEmployee;
-                    return $matchingEmployees ;
-                }
-            }
-        }
-        if ($matchingEmployees == null){
-            return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
-        }
-    }
+
 
 
 
@@ -209,3 +172,32 @@ class AppointmentController extends Controller
 
     }
 }
+
+
+
+
+
+
+    // public function malak($type){
+    //     $authEmployee = auth('sanctum')->user();
+    //     $employeeChoice = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
+    //     $medicalCenterIdReciptionist = $employeeChoice->medical_center_id;
+    //     echo $medicalCenterIdReciptionist;
+    //     $matchingEmployees = null;
+    //     $bouncer = app(Bouncer::class);
+    //     $employees = Employee::all();
+    //     foreach ($employees as $loopEmployee) {
+    //         $employeeChoice = EmployeeChoise::where('employee_id', $loopEmployee->id)->latest('created_at')->first();
+    //         echo $employeeChoice->medical_center_id;
+    //         if ($employeeChoice && $employeeChoice->medical_center_id == $medicalCenterIdReciptionist ) {
+    //             if( $bouncer->is($loopEmployee)->an($type) ){
+    //                 $matchingEmployees = $loopEmployee;
+    //                 return $matchingEmployees ;
+    //             }
+    //         }
+    //     }
+    //     if ($matchingEmployees == null){
+    //         return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
+    //     }
+    // }
+

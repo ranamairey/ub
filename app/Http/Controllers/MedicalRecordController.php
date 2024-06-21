@@ -175,20 +175,28 @@ class MedicalRecordController extends Controller
     }
 
     //  Also for search
-    public function getRecordDetails($id){
+    public function getRecordDetails($id)
+    {
         $medicalRecord = MedicalRecord::find($id);
-        if(!$medicalRecord){
-            return $this->notFound($id , "The medical record with given id not found.");
+        if (!$medicalRecord) {
+            return $this->notFound($id, "The medical record with the given ID was not found.");
         }
-        $fullName =$medicalRecord->name . " "  .$medicalRecord->father_name . " " . $medicalRecord->last_name;
+
+        $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
         $birthDate = Carbon::parse($medicalRecord->birth_date);
-        $age =$birthDate->age;
-        $medicalRecord->full_name= $fullName;
-        $medicalRecord->age = $age;
+        $age = $birthDate->age;
+
+        $ageDescription = ($age < 12) ? "$age years" : "$age months";
+
+        $medicalRecord->full_name = $fullName;
+        $medicalRecord->age = $ageDescription;
         $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
 
         return $this->success($medicalRecord);
-        }
+    }
+
+
+
         public function showMyRecord()
         {
             $loggedInUser = auth('sanctum')->user();
@@ -256,37 +264,44 @@ class MedicalRecordController extends Controller
 
             return $this->success($data, 'Completed treatment programs and visits retrieved successfully!');
         }
-public function search(Request $request)
-{
-    $input = $request->input('input');
 
-    $query = MedicalRecord::with('addresses');
+        public function search(Request $request)
+        {
+            $input = $request->input('input');
+        
+            $query = MedicalRecord::with('addresses');
+        
+            if (is_numeric($input)) {
+                $medicalRecords = $query->where('id', $input)->get();
+            } else {
+                $medicalRecords = $query->where(function ($q) use ($input) {
+                    $q->where('name', 'LIKE', '%' . $input . '%')
+                      ->orWhere('father_name', 'LIKE', '%' . $input . '%')
+                      ->orWhere('last_name', 'LIKE', '%' . $input . '%');
+                })->get();
+            }
+        
+            if ($medicalRecords->isEmpty()) {
+                return $this->notFound('Medical records not found');
+            }
+        
+            $results = [];
+            foreach ($medicalRecords as $medicalRecord) {
+                $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
+                $birthDate = Carbon::parse($medicalRecord->birth_date);
+                $ageInYears = $birthDate->age;
+                $ageInMonths = $birthDate->diffInMonths(Carbon::now());
 
-    if (is_numeric($input)) {
-        $medicalRecords = $query->where('id', $input)->get();
-    } else {
-        $medicalRecords = $query->where(function ($q) use ($input) {
-            $q->where('name', 'LIKE', '%' . $input . '%')
-              ->orWhere('father_name', 'LIKE', '%' . $input . '%')
-              ->orWhere('last_name', 'LIKE', '%' . $input . '%');
-        })->get();
-    }
-
-    if ($medicalRecords->isEmpty()) {
-        return $this->notFound('Medical records not found');
-    }
-
-    $results = [];
-    foreach ($medicalRecords as $medicalRecord) {
-        $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
-        $birthDate = Carbon::parse($medicalRecord->birth_date);
-        $age = $birthDate->age;
-        $medicalRecord->full_name = $fullName;
-        $medicalRecord->age = $age;
-        $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
-        $results[] = $medicalRecord;
-    }
-
-    return $this->success($results, 'Medical records retrieved successfully!');
+                $ageDescription = ($ageInMonths < 12) ? "$ageInMonths months" : "$ageInYears years";
+            
+                $medicalRecord->full_name = $fullName;
+                $medicalRecord->age = $ageDescription;
+                $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
+                $results[] = $medicalRecord;
+            }
+        
+            return $this->success($results, 'Medical records retrieved successfully!');
+        }
+    
 }
-    }
+    
