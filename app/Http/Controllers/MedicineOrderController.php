@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\DoctorVisit;
 use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
 use App\Models\MedicineOrder;
 use App\Models\EmployeeChoise;
 use App\Traits\ApiResponseTrait;
@@ -37,29 +38,47 @@ class MedicineOrderController extends Controller
         ->get();
 
       if ($medicineOrders->isEmpty()) {
-        return $this->notFound([], 'No medicine order found');
+        return $this->notFound([], 'لا يوجد طلبات أدوية');
       }
 
       $prescribedMedicines = [];
       foreach ($medicineOrders as $medicineOrder) {
-        $visit = $medicineOrder->orderable; // Assuming orderable relationship
+        $patientName = "";
+        $medicalRecord = null;
+        $visitRecord = null;
 
-        $visitId = null; // Initialize to null by default
-
-        // Retrieve visit ID based on medicine_orderable_type and join tables
-        if ($visit) {
-          if ($visit->getTable() === 'routine_child_visits') { // Check for RoutineChildVisit
-            $visitId = RoutineChildVisit::where('id', $visit->id)->first()->visit_id;
-          } else if ($visit->getTable() === 'routine_women_visits') { // Check for RoutineWomenVisit
-            // Implement logic to retrieve visit ID from RoutineWomenVisit table (if applicable)
+        // if ($visit) {
+          if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineChildVisit') { 
+            echo 1;
+            $visitRecord = RoutineChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+            
+          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineWomenVisit') { 
+            echo 2;
+            $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id);
+           
+          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\DoctorVisit'){
+            echo 3;
+            $visitRecord = DoctorVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+           
+          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionWomenVisit'){
+            echo 4;
+            $visitRecord = MalnutritionWomenVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+          
+          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionChildVisit'){
+            echo 5;
+            $visitRecord = MalnutritionChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
           }
-        }
+        // }
+        $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id)->first();
+        $patientName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
 
         $prescribedMedicines[] = [
-          'id' => $medicineOrder->id, // Medicine order ID
+          'id' => $medicineOrder->id,
           'medicine_name' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->name, // Access medicine name through relationships
           'quantity' => $medicineOrder->quantity,
-          'visit_id' => $visitId, // Visit ID instead of visit object
+          'visit_id' => $visitRecord->id, // Visit ID instead of visit object
+          'visit_type' => $medicineOrder->medicine_orderable_type,
+          'patient_name' => $patientName
         ];
       }
 
