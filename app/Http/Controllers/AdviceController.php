@@ -1,85 +1,44 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\ApiResponseTrait;
 use App\Models\Advice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AdviceController extends Controller
+
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ApiResponseTrait;
+
+    public function createAdvice(Request $request)
     {
-        //
+      $validator = Validator::make($request->all(), [
+        'subject' => 'required|max:255|unique:advice,subject',
+        'relative_activity' => 'required|max:255',
+        'target_group' => 'required|in:child,pregnant|max:255',
+      ]);
+
+      if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+      }
+
+      $subject = $request->input('subject');
+      $relativeActivity = $request->input('relative_activity');
+      $targetGroup = $request->input('target_group');
+
+      $employee = auth('sanctum')->user();
+
+      $advice = Advice::create([
+        'employee_id' => $employee->id,
+        'subject' => $subject,
+        'relative_activity' => $relativeActivity,
+        'target_group' => $targetGroup,
+      ]);
+
+      return $this->success($advice);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Advice  $advice
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Advice $advice)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Advice  $advice
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Advice $advice)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Advice  $advice
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Advice $advice)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Advice  $advice
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Advice $advice)
-    {
-        //
-    }
 }

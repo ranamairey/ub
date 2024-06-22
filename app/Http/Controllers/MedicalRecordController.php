@@ -47,7 +47,7 @@ class MedicalRecordController extends Controller
             return $this->error(null, 'A male gender cannot be assigned to a pregnant patient.');
         }
 
-        if ($validatedData['category'] === 'Child') {
+        if ($validatedData['category'] === 'child') {
             $birthDate = Carbon::parse($validatedData['birth_date']);
             $maxDate = now()->subYears(15);
 
@@ -268,9 +268,9 @@ class MedicalRecordController extends Controller
         public function search(Request $request)
         {
             $input = $request->input('input');
-        
+
             $query = MedicalRecord::with('addresses');
-        
+
             if (is_numeric($input)) {
                 $medicalRecords = $query->where('id', $input)->get();
             } else {
@@ -280,11 +280,11 @@ class MedicalRecordController extends Controller
                       ->orWhere('last_name', 'LIKE', '%' . $input . '%');
                 })->get();
             }
-        
+
             if ($medicalRecords->isEmpty()) {
                 return $this->notFound('Medical records not found');
             }
-        
+
             $results = [];
             foreach ($medicalRecords as $medicalRecord) {
                 $fullName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
@@ -293,15 +293,14 @@ class MedicalRecordController extends Controller
                 $ageInMonths = $birthDate->diffInMonths(Carbon::now());
 
                 $ageDescription = ($ageInMonths < 12) ? "$ageInMonths months" : "$ageInYears years";
-            
+
                 $medicalRecord->full_name = $fullName;
                 $medicalRecord->age = $ageDescription;
                 $medicalRecord->address_name = $medicalRecord->addresses()->latest('created_at')->first()->name;
                 $results[] = $medicalRecord;
             }
-        
+
             return $this->success($results, 'Medical records retrieved successfully!');
         }
-    
+
 }
-    

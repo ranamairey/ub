@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 
+#[\App\Aspects\Logger]
 class MedicineOrderController extends Controller
 {
     use ApiResponseTrait;
@@ -27,22 +28,44 @@ class MedicineOrderController extends Controller
      */
     public function getAllMedicineOrders()
     {
-        $employee = auth('sanctum')->user();
-        $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
-        $medicalCenterId = $employeeChoise->medical_center_id;
-        $medicineOrders = MedicineOrder::where([['is_aprroved', '=' , false],['medical_center_id' , '=' , $medicalCenterId]])->get();
+      $employee = auth('sanctum')->user();
+      $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
+      $medicalCenterId = $employeeChoise->medical_center_id;
 
-        if ($medicineOrders->isEmpty()) {
-            return $this->notFound([],'No medicine order found' );
+      $medicineOrders = MedicineOrder::with('orderable')
+        ->where([['is_aprroved', '=', false], ['medical_center_id', '=', $medicalCenterId]])
+        ->get();
+
+      if ($medicineOrders->isEmpty()) {
+        return $this->notFound([], 'No medicine order found');
+      }
+
+      $prescribedMedicines = [];
+      foreach ($medicineOrders as $medicineOrder) {
+        $visit = $medicineOrder->orderable; // Assuming orderable relationship
+
+        $visitId = null; // Initialize to null by default
+
+        // Retrieve visit ID based on medicine_orderable_type and join tables
+        if ($visit) {
+          if ($visit->getTable() === 'routine_child_visits') { // Check for RoutineChildVisit
+            $visitId = RoutineChildVisit::where('id', $visit->id)->first()->visit_id;
+          } else if ($visit->getTable() === 'routine_women_visits') { // Check for RoutineWomenVisit
+            // Implement logic to retrieve visit ID from RoutineWomenVisit table (if applicable)
+          }
         }
-        foreach ($medicineOrders as $medicineOrder) {
-                $medicalCenterMedicine =$medicineOrder->medicalCenterMedicine()->first();
-                $medicine =$medicalCenterMedicine->medicine()->first();
-                $medicineOrder->medicine = $medicine;
-            // $medicineOrders->makeHidden('medical_center_medicine');
-        }
-        return $this->success($medicineOrders);
+
+        $prescribedMedicines[] = [
+          'id' => $medicineOrder->id, // Medicine order ID
+          'medicine_name' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->name, // Access medicine name through relationships
+          'quantity' => $medicineOrder->quantity,
+          'visit_id' => $visitId, // Visit ID instead of visit object
+        ];
+      }
+
+      return $this->success($prescribedMedicines);
     }
+
 
     public function acceptOrder($orderId){
         $medicineOrder = MedicineOrder::find($orderId);
@@ -317,7 +340,7 @@ class MedicineOrderController extends Controller
 
       return response()->json(['prescribed_medicines' => $prescribedMedicines], 200);
     }
-    
+
     public function getchildtretmentMedicinesForVisit($visitId)
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)

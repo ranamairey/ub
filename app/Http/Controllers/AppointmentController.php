@@ -18,22 +18,25 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'employee_id' => ['required', 'integer' , 'exists:employees,id'],
-            'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
-            //
-        ]);
-        if ($validator->fails()) {
-            return $this->unprocessable($validator->errors());
-        }
-        $employeeId = $request->input('employee_id');
-        $employee = Employee::find($employee->id);
-            if (!$employee) {
-                return $this->notFound($employee, 'Employee not found');
-            }
-       
-        $medicalRecordId = $request->input('medical_record_id');
-        $medicalRecord = MedicalRecord::find($medicalRecordId);
+      $validator = Validator::make($request->all(), [
+        'employee_id' => ['required', 'integer', 'exists:employees,id'],
+        'medical_record_id' => ['required', 'integer', 'exists:medical_records,id'],
+      ]);
+
+      if ($validator->fails()) {
+        return $this->unprocessable($validator->errors());
+      }
+
+      $employeeId = $request->input('employee_id');
+      $employee = Employee::find($employeeId); 
+
+      if (!$employee) {
+        return $this->notFound($employee, 'Employee not found');
+      }
+
+      $medicalRecordId = $request->input('medical_record_id');
+      $medicalRecord = MedicalRecord::find($medicalRecordId);
+
         $type = "";
 
         if (!$medicalRecord) {
@@ -45,8 +48,8 @@ class AppointmentController extends Controller
         //     ($type === "child-nutritionist" && $medicalRecord->category !== 'child')) {
         //   return $this->error( "السجل غير متوافق مع أخصائي التغذية");
         // }
-       
-           
+
+
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
 

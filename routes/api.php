@@ -21,6 +21,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorVisitController;
 use App\Http\Controllers\GovernorateController;
 use App\Http\Controllers\SubdistrictController;
+use App\Http\Controllers\AdviceController;
 use App\Http\Controllers\MedicalCenterController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\MedicineOrderController;
@@ -85,7 +86,7 @@ Route::post('/medicineInventory' , [MedicalCenterMedicineController::class ,  'm
 
 
 Route::post('/loginUser', [AccountController::class, 'login']);
-
+Route::get('/showLinkedAdvices', [AccountController::class, 'showLinkedAdvices']);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 Route::get('/getAccount/{id}' , [AccountController::class , 'show']);
@@ -132,6 +133,7 @@ Route::get('/getRecordDetails/{id}' , [MedicalRecordController::class , 'getReco
 Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMedicalCenterMedicine']);
 Route::get('/getEmployeesByLastChoiceMedicalCenter', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
 Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
+Route::post('/createAdvice', [AdviceController::class , 'createAdvice']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
