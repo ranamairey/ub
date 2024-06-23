@@ -49,31 +49,29 @@ class MedicineOrderController extends Controller
 
         // if ($visit) {
           if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineChildVisit') {
-            echo 1;
             $visitRecord = RoutineChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineWomenVisit') {
-            echo 2;
-            $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id);
+            $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id)->first();
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\DoctorVisit'){
-            echo 3;
             $visitRecord = DoctorVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionWomenVisit'){
-            echo 4;
             $visitRecord = MalnutritionWomenVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionChildVisit'){
-            echo 5;
             $visitRecord = MalnutritionChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
           }
         // }
+        
         $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id)->first();
+        // echo $medicalRecord->name ;
         $patientName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
 
         $prescribedMedicines[] = [
           'id' => $medicineOrder->id,
+          'medicine_id' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->id,
           'medicine_name' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->name, // Access medicine name through relationships
           'quantity' => $medicineOrder->quantity,
           'visit_id' => $visitRecord->id, // Visit ID instead of visit object
