@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\Sanctum;
 use App\Models\Contract;
 use App\Models\Employee;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class EmployeeController extends Controller
 {
     use ApiResponseTrait;
 
-    
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -139,7 +140,6 @@ class EmployeeController extends Controller
             return $this->notFound($employee ,'Employee not found');
         }
     }
-    #[\App\Aspects\transaction]
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
             'user_name' => ['required', 'string', 'max:255'],
@@ -650,5 +650,14 @@ public function getEmployeesByLastChoiceMedicalCenter()
 
     return $this->success(['employees' => $finalEmployee]);
 }
+
+public function logout(Request $request)
+{
+    $user = Auth::user();
+    $user->tokens()->delete();
+    return response()->json(['message' => 'Successfully logged out!']);
+}
+
+
 }
 

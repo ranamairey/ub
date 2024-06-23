@@ -15,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Employee extends Model
 {
-    use  HasApiTokens, HasFactory,HasRolesAndAbilities;
+    use HasApiTokens, HasFactory, HasRolesAndAbilities;
 
     protected $fillable = [
         'name',

@@ -48,22 +48,22 @@ class MedicineOrderController extends Controller
         $visitRecord = null;
 
         // if ($visit) {
-          if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineChildVisit') { 
+          if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineChildVisit') {
             echo 1;
             $visitRecord = RoutineChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
-            
-          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineWomenVisit') { 
+
+          } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineWomenVisit') {
             echo 2;
             $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id);
-           
+
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\DoctorVisit'){
             echo 3;
             $visitRecord = DoctorVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
-           
+
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionWomenVisit'){
             echo 4;
             $visitRecord = MalnutritionWomenVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
-          
+
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionChildVisit'){
             echo 5;
             $visitRecord = MalnutritionChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
@@ -310,10 +310,10 @@ class MedicineOrderController extends Controller
     }
     public function getRoutineMedicinesForVisit($visitId)
     {
-      $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
-        ->where('medicine_orderable_type', 'App\Models\RoutineWomenVisit') // Update model name if needed
+        $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
+        ->where('medicine_orderable_type', 'App\Models\RoutineWomenVisit')
+        ->where('is_aprroved', true)
         ->get();
-
       if ($medicineOrders->isEmpty()) {
         return response()->json(['message' => 'No prescribed medicines found for the given visit ID'], 404);
       }
@@ -338,6 +338,7 @@ class MedicineOrderController extends Controller
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
         ->where('medicine_orderable_type', 'App\Models\MalnutritionWomenVisit') // Update model name if needed
+        ->where('is_aprroved', true)
         ->get();
 
       if ($medicineOrders->isEmpty()) {
@@ -352,6 +353,7 @@ class MedicineOrderController extends Controller
 
         $prescribedMedicines[] = [
           'medicine_order_id' => $medicineOrder->id, // Added medicine order ID
+
           'medicine_name' => $medicine->name,
           'quantity' => $medicineOrder->quantity,
         ];
@@ -364,6 +366,7 @@ class MedicineOrderController extends Controller
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
         ->where('medicine_orderable_type', 'App\Models\MalnutritionChildVisit') // Update model name if needed
+        ->where('is_aprroved', true)
         ->get();
 
       if ($medicineOrders->isEmpty()) {
@@ -390,6 +393,7 @@ class MedicineOrderController extends Controller
     {
       $medicineOrders = MedicineOrder::where('medicine_orderable_id', $visitId)
         ->where('medicine_orderable_type', 'App\Models\RoutineChildVisit') // Update model name if needed
+        ->where('is_aprroved', true)
         ->get();
 
       if ($medicineOrders->isEmpty()) {

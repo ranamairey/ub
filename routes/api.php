@@ -67,6 +67,7 @@ Route::get('/toto' , [AppointmentController::class, 'toto'] );
 
 
 Route::post('/login', [EmployeeController::class, 'login']);
+Route::post('/logout', [EmployeeController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);
 Route::get('/getOffices' ,  [OfficeController::class ,  'index']);
