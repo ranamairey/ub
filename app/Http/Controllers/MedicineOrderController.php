@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 
 
 
+
+#[\App\Aspects\transaction]
 #[\App\Aspects\Logger]
 class MedicineOrderController extends Controller
 {
@@ -64,7 +66,7 @@ class MedicineOrderController extends Controller
             $visitRecord = MalnutritionChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
           }
         // }
-        
+
         $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id)->first();
         // echo $medicalRecord->name ;
         $patientName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;

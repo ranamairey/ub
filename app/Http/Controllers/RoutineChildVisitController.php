@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Traits\ApiResponseTrait;
 use App\Models\EmployeeChoise;
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class RoutineChildVisitController extends Controller
 {
     use ApiResponseTrait;

@@ -20,6 +20,9 @@ use Silber\Bouncer\Bouncer;
 use App\Aspects\transaction;
 use Illuminate\Support\Facades\Log;
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class EmployeeController extends Controller
 {
     use ApiResponseTrait;

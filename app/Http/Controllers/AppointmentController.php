@@ -12,6 +12,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class AppointmentController extends Controller
 {
     use ApiResponseTrait;
@@ -28,7 +31,7 @@ class AppointmentController extends Controller
       }
 
       $employeeId = $request->input('employee_id');
-      $employee = Employee::find($employeeId); 
+      $employee = Employee::find($employeeId);
 
       if (!$employee) {
         return $this->notFound($employee, 'Employee not found');

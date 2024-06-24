@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 
 
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class ChildTreatmentProgramController extends Controller
 {
 
@@ -96,7 +98,7 @@ public function getChildTreatmentProgramByMedicalRecordId(Request $request, $med
     if ($validator->fails()) {
         return $this->unprocessable($validator->errors());
     }
-    
+
     $treatmentProgram = ChildTreatmentProgram::where('medical_record_id', $medicalRecordId)
     ->orderByDesc('created_at')
     ->with('MedicalRecord')

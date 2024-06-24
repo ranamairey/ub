@@ -11,6 +11,9 @@ use App\Models\RoutineWomenVisit;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class RoutineWomenVisitController extends Controller
 {
     use ApiResponseTrait;

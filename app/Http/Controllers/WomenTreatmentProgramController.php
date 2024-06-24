@@ -9,6 +9,9 @@ use App\Models\MedicalRecord;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class WomenTreatmentProgramController extends Controller
 {
 

@@ -12,6 +12,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class MedicalRecordController extends Controller
 {
     use ApiResponseTrait;
@@ -216,6 +219,7 @@ class MedicalRecordController extends Controller
             }
         }
 
+
         public function getCompletedTreatmentsByRecordId(Request $request, $id)
         {
             $medicalRecord = MedicalRecord::find($id);
@@ -224,13 +228,11 @@ class MedicalRecordController extends Controller
                 return $this->notFound('Medical record not found');
             }
 
-            // Check category for appropriate treatment program model
             $isChild = $medicalRecord->category === 'child';
             $isWoman = $medicalRecord->category === 'pregnant';
 
             if ($isChild) {
                 $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
-
                 $data = [
                     'medical_record' => $medicalRecord->toArray(),
                     'treatments' => [],
@@ -241,11 +243,9 @@ class MedicalRecordController extends Controller
                     $data['treatments'][] = [
                         'treatment' => $treatment->toArray(),
                         'visits' => $visits->toArray(),
-                    ];
-                }
+                    ];}
             } else if ($isWoman) {
                 $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
-
                 $data = [
                     'medical_record' => $medicalRecord->toArray(),
                     'treatments' => [],
@@ -257,13 +257,16 @@ class MedicalRecordController extends Controller
                         'treatment' => $treatment->toArray(),
                         'visits' => $visits->toArray(),
                     ];
-                }
-            } else {
+            }
+
+            if ($completedTreatments->isEmpty()) {
                 return $this->notFound('No treatment programs found for this category');
             }
 
+
             return $this->success($data, 'Completed treatment programs and visits retrieved successfully!');
-        }
+        }}
+
 
         public function search(Request $request)
         {

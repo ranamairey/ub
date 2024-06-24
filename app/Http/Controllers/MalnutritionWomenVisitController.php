@@ -11,6 +11,9 @@ use App\Models\MalnutritionChildVisit;
 use App\Models\MalnutritionWomenVisit;
 use Illuminate\Support\Facades\Validator;
 
+
+#[\App\Aspects\transaction]
+#[\App\Aspects\Logger]
 class MalnutritionWomenVisitController extends Controller
 {
     use ApiResponseTrait;

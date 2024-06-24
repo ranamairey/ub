@@ -19,7 +19,8 @@ class transaction implements Aspect
     public function executeBefore($request, $controller, $method)
     {
         DB::beginTransaction();
-        Log::info("Begin transaction.");
+        Log::info("Begin transaction for method:  ". $method);
+
 
     }
 
