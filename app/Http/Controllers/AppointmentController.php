@@ -34,7 +34,7 @@ class AppointmentController extends Controller
       $employee = Employee::find($employeeId);
 
       if (!$employee) {
-        return $this->notFound($employee, 'Employee not found');
+        return $this->notFound($employee, ' الموظف غير موجود');
       }
 
       $medicalRecordId = $request->input('medical_record_id');
@@ -43,7 +43,7 @@ class AppointmentController extends Controller
         $type = "";
 
         if (!$medicalRecord) {
-          return $this->notFound('Medical record not found');
+          return $this->notFound('السجل غير موجود');
         }
         // if (
         //     ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
@@ -57,7 +57,7 @@ class AppointmentController extends Controller
         $medicalRecord = MedicalRecord::find($medicalRecordId);
 
         if (!$medicalRecord) {
-            return $this->notFound('Medical record not found');
+            return $this->notFound('السجل غير موجود');
         }
 
         if (($employee->isA('women-doctor') && $medicalRecord->category === 'pregnant') ||
@@ -71,9 +71,9 @@ class AppointmentController extends Controller
             $type = "Nutritionist";
         } else if ($employee->isA('child-doctor') && $medicalRecord->category !== 'child') {
 
-            return $this->error($employeeId, "Employee is a child doctor but patient is not a child. Consider a different doctor.");
+            return $this->error($employeeId, "اختصاص الطبيب والسجل لا يتوافقان");
         } else {
-            return $this->error($employeeId, "Error in employee type");
+            return $this->error($employeeId, "خطأ في نوع الموظف");
         }
 
         $receptionistId = auth('sanctum')->user()->id;
@@ -105,7 +105,7 @@ class AppointmentController extends Controller
 
         $employee = auth('sanctum')->user();
         if (!$employee) {
-            return $this->notFound($employee , 'Employee not found');
+            return $this->notFound($employee , 'الموظف غير موجود');
         }
 
 

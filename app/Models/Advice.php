@@ -13,7 +13,8 @@ class Advice extends Model
         'employee_id',
         'subject',
         'relative_activity',
-        'target_group'
+        'main_img_url',
+        'target_group',
     ];
 
     public function medicalCenter()

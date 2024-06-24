@@ -50,15 +50,8 @@ class MedicalRecordController extends Controller
             return $this->error(null, 'A male gender cannot be assigned to a pregnant patient.');
         }
 
-        if ($validatedData['category'] === 'child') {
-            $birthDate = Carbon::parse($validatedData['birth_date']);
-            $maxDate = now()->subYears(15);
 
-            if ($birthDate->greaterThan($maxDate)) {
-                $age = $birthDate->diffInYears(now());
-                return $this->error(null, 'The birth date must be 15 years or more in the past for the "child" category. Current age: ' . $age);
-            }
-        }
+
 
         $existMedicalRecord = MedicalRecord::where([
             ['name', $request->input('name')],
@@ -67,7 +60,7 @@ class MedicalRecordController extends Controller
         ])->first();
 
         if ($existMedicalRecord) {
-            return $this->error(null, 'This patient already has a medical record.');
+            return $this->error(null, 'المريض له سجل طبي');
         }
 
         $medicalRecord = new MedicalRecord($validatedData);
@@ -88,7 +81,7 @@ class MedicalRecordController extends Controller
         $medicalRecord = MedicalRecord::findOrFail($id);
 
         if (!$medicalRecord) {
-            return $this->notFound('Medical record not found');
+            return $this->notFound('السجل غير موجود');
         }
 
         $validator = Validator::make($request->all(), [
@@ -122,7 +115,7 @@ class MedicalRecordController extends Controller
         $responseData = $medicalRecord->fresh()->toArray();
         $address = $medicalRecord->addresses()->first();
 
-        $responseData['address'] = $address ? $address->fresh()->toArray() : null;
+        $responseData['addresses'] = $address ? $address->fresh()->toArray() : null;
 
         return $this->success($responseData, 'Medical record updated successfully!');
     }
@@ -285,7 +278,7 @@ class MedicalRecordController extends Controller
             }
 
             if ($medicalRecords->isEmpty()) {
-                return $this->notFound('Medical records not found');
+                return $this->notFound('السجل الطبي غير موجود');
             }
 
             $results = [];

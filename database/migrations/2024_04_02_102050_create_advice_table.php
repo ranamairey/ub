@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('subject');
             $table->string('relative_activity');
             $table->string('target_group');
+            $table->string('main_img_url')->nullable();
             $table->timestamps();
         });
     }
