@@ -34,14 +34,5 @@ class Controller extends BaseController
 
 //     }
 
-public function testRecord(){
-    $medicinOrder = MedicineOrder::find(60);
-    // $visit =$medicinOrder->orderable();
-    $childVisit = MalnutritionChildVisit::where('id' , $medicinOrder->medicine_orderable_id)->first();
-    $program = ChildTreatmentProgram::where('id' , $childVisit->programs_id)->first();
-    $medicalRecord =$program->medicalRecord;
-    echo  $medicalRecord;
-}
-    
     
 }

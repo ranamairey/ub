@@ -62,9 +62,6 @@ Route::post('/login', [test::class, 'login']);
 
 
 
-Route::get('/testRecord' , [Controller::class, 'testRecord'] );
-
-
 
 Route::post('/login', [EmployeeController::class, 'login']);
 Route::post('/logout', [EmployeeController::class, 'logout'])->middleware('auth:sanctum');
