@@ -100,7 +100,7 @@ class MedicalRecordController extends Controller
 
         $medicalRecord->update($validatedData);
 
-        $addressData = $request->get('address');
+        $addressData = $request->get('addresses');
 
         if ($addressData) {
             $existingAddress = $medicalRecord->addresses()->first();
