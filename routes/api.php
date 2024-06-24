@@ -62,7 +62,7 @@ Route::post('/login', [test::class, 'login']);
 
 
 
-Route::get('/toto' , [AppointmentController::class, 'toto'] );
+Route::get('/testRecord' , [Controller::class, 'testRecord'] );
 
 
 

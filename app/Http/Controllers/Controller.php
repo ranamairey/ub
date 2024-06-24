@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\MedicineOrder;
+use App\Models\ChildTreatmentProgram;
+use App\Models\MalnutritionChildVisit;
+// use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-// use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
@@ -30,6 +33,15 @@ class Controller extends BaseController
 // return true;
 
 //     }
+
+public function testRecord(){
+    $medicinOrder = MedicineOrder::find(60);
+    // $visit =$medicinOrder->orderable();
+    $childVisit = MalnutritionChildVisit::where('id' , $medicinOrder->medicine_orderable_id)->first();
+    $program = ChildTreatmentProgram::where('id' , $childVisit->programs_id)->first();
+    $medicalRecord =$program->medicalRecord;
+    echo  $medicalRecord;
+}
     
     
 }

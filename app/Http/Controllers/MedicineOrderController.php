@@ -11,6 +11,7 @@ use App\Models\RoutineChildVisit;
 use App\Models\RoutineWomenVisit;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalCenterMedicine;
+use App\Models\WomenTreatmentProgram;
 use App\Models\MalnutritionChildVisit;
 use App\Models\MalnutritionWomenVisit;
 use Illuminate\Support\Facades\Validator;
@@ -35,39 +36,56 @@ class MedicineOrderController extends Controller
       $employeeChoise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
       $medicalCenterId = $employeeChoise->medical_center_id;
 
-      $medicineOrders = MedicineOrder::with('orderable')
-        ->where([['is_aprroved', '=', false], ['medical_center_id', '=', $medicalCenterId]])
-        ->get();
+      $medicineOrders = MedicineOrder::where([['is_aprroved', '=', false], ['medical_center_id', '=', $medicalCenterId]])->get();
 
       if ($medicineOrders->isEmpty()) {
         return $this->notFound([], 'لا يوجد طلبات أدوية');
       }
-
+      $medicalRecord = null;
+      $visitRecord = null;
+      $patientName = "";
       $prescribedMedicines = [];
       foreach ($medicineOrders as $medicineOrder) {
-        $patientName = "";
-        $medicalRecord = null;
-        $visitRecord = null;
+        
+        // $medicalRecord = null;
+        // $visitRecord = null;
 
         // if ($visit) {
           if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineChildVisit') {
             $visitRecord = RoutineChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+            $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id);
+            // echo $medicalRecord;
+            // echo "\n";
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\RoutineWomenVisit') {
-            $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id)->first();
+            $visitRecord = RoutineWomenVisit::find($medicineOrder->medicine_orderable_id);
+            $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id);
+            // echo $medicalRecord;
+            // echo "\n";
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\DoctorVisit'){
             $visitRecord = DoctorVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+            $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id);
+            // echo $medicalRecord;
+            // echo "\n";
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionWomenVisit'){
-            $visitRecord = MalnutritionWomenVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+            $visitRecord = MalnutritionWomenVisit::where('id' , $medicineOrder->medicine_orderable_id)->first();
+            $program = WomenTreatmentProgram::where('id' , $visitRecord->programs_id)->first();
+            $medicalRecord =$program->medicalRecord;
+            // echo $medicalRecord;
+            // echo "\n";
 
           } else if ($medicineOrder->medicine_orderable_type  === 'App\Models\MalnutritionChildVisit'){
-            $visitRecord = MalnutritionChildVisit::where('id', $medicineOrder->medicine_orderable_id)->first();
+            $visitRecord = MalnutritionChildVisit::where('id' , $medicineOrder->medicine_orderable_id)->first();
+            $program = ChildTreatmentProgram::where('id' , $visitRecord->programs_id)->first();
+            $medicalRecord =$program->medicalRecord;
+            // echo $medicalRecord;
+            // echo "\n";
           }
         // }
 
-        $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id)->first();
+        // $medicalRecord = MedicalRecord::find($visitRecord->medical_record_id)->first();
         // echo $medicalRecord->name ;
         $patientName = $medicalRecord->name . " " . $medicalRecord->father_name . " " . $medicalRecord->last_name;
 
@@ -76,7 +94,7 @@ class MedicineOrderController extends Controller
           'medicine_id' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->id,
           'medicine_name' => $medicineOrder->medicalCenterMedicine()->first()->medicine()->first()->name, // Access medicine name through relationships
           'quantity' => $medicineOrder->quantity,
-          'visit_id' => $visitRecord->id, // Visit ID instead of visit object
+          'visit_id' => $visitRecord->id, 
           'visit_type' => $medicineOrder->medicine_orderable_type,
           'patient_name' => $patientName
         ];
