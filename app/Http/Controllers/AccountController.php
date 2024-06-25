@@ -153,56 +153,60 @@ class AccountController extends Controller
             return $this->notFound('No linked medical records found for the account');
         }
         }
-
         public function showLinkedAdvices(Request $request)
         {
-          $validator = Validator::make($request->all(), [
-            'account_id' => 'required|exists:accounts,id',
-          ]);
+            $validator = Validator::make($request->all(), [
+                'account_id' => 'required|exists:accounts,id',
+            ]);
 
-          if ($validator->fails()) {
-            return $this->unprocessable($validator->errors());
-          }
-
-          $accountId = $request->input('account_id');
-          $account = Account::find($accountId);
-
-          if (!$account) {
-            return $this->notFound($accountId, "Account not found");
-          }
-
-          // Eager load linked medical records
-          $account->load(['medicalRecords']);
-
-          $linkedRecords = $account->medicalRecords;
-
-          if ($linkedRecords->isEmpty()) {
-            return $this->notFound('No linked medical records found for the account');
-          }
-
-          $patientTypes = [];
-          $allAdvices = [];
-
-          foreach ($linkedRecords as $record) {
-            // Check and categorize patient type based on record field (assuming 'patient_type' field)
-            if (in_array($record->category, ['child', 'pregnant'])) {
-              $patientTypes[] = $record->category;
-
-              // Filter advice based on patient type
-              $filteredAdvices = Advice::where('target_group', 'like', "%$record->category%")->get();
-              $allAdvices = array_merge($allAdvices, $filteredAdvices->toArray());
+            if ($validator->fails()) {
+                return $this->unprocessable($validator->errors());
             }
-          }
 
-          $patientTypes = array_unique($patientTypes); // Remove duplicates
+            $accountId = $request->input('account_id');
+            $account = Account::find($accountId);
 
-          $responseData = [
-            'account_id' => $account->id,
-            'medical_records' => $linkedRecords->toArray(),
-            'patient_types' => $patientTypes,
-            'all_advices' => $allAdvices,
-          ];
+            if (!$account) {
+                return $this->notFound($accountId, "Account not found");
+            }
 
-          return $this->success($responseData, 'Linked advices retrieved successfully!');
+            // Eager load linked medical records
+            $account->load(['medicalRecords']);
+
+            $linkedRecords = $account->medicalRecords;
+
+            if ($linkedRecords->isEmpty()) {
+                return $this->notFound('No linked medical records found for the account');
+            }
+
+            $patientTypes = [];
+            $allAdvices = [];
+
+            foreach ($linkedRecords as $record) {
+                // Check and categorize patient type based on record field (assuming 'patient_type' field)
+                if (in_array($record->category, ['child', 'pregnant'])) {
+                    $patientTypes[] = $record->category;
+
+                    // Filter advice based on patient type and both category
+                    $filteredAdvices = Advice::where(function ($query) use ($record) {
+                        $query->where('target_group', 'like', "%$record->category%")
+                              ->orWhere('target_group', 'like', "%both%");
+                    })->get();
+
+                    $allAdvices = array_merge($allAdvices, $filteredAdvices->toArray());
+                }
+            }
+
+            $patientTypes = array_unique($patientTypes); // Remove duplicates
+
+            $responseData = [
+                'account_id' => $account->id,
+                'medical_records' => $linkedRecords->toArray(),
+                'patient_types' => $patientTypes,
+                'all_advices' => $allAdvices,
+            ];
+
+            return $this->success($responseData, 'Linked advices retrieved successfully!');
         }
+
     }
