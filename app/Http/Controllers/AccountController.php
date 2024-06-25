@@ -183,11 +183,10 @@ class AccountController extends Controller
             $allAdvices = [];
 
             foreach ($linkedRecords as $record) {
-                // Check and categorize patient type based on record field (assuming 'patient_type' field)
+
                 if (in_array($record->category, ['child', 'pregnant'])) {
                     $patientTypes[] = $record->category;
 
-                    // Filter advice based on patient type and both category
                     $filteredAdvices = Advice::where(function ($query) use ($record) {
                         $query->where('target_group', 'like', "%$record->category%")
                               ->orWhere('target_group', 'like', "%both%");

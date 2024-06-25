@@ -68,7 +68,7 @@ class MedicalCenterMedicineController extends Controller
             return $this->success( 'Medicine stock updated successfully.');
         } catch (Exception $e) {
             Log::error('Error updating medicine stock: ' . $e->getMessage());
-            return $this->error(null, 'Error updating medicine stock.');
+            return $this->error(null, 'خطأ في التحديث');
         }
 
     }
@@ -84,7 +84,7 @@ class MedicalCenterMedicineController extends Controller
           })->get();
 
         if (!$medicalCenterMedicines->count()) {
-            return $this->notFound('No medicines found for this medical center');
+            return $this->notFound('لا يوجد دواء في هذا المركز');
         }
 
         foreach ($medicalCenterMedicines as $medicalCenterMedicine) {
@@ -142,7 +142,7 @@ class MedicalCenterMedicineController extends Controller
 
 
 
-        
+
 
 
 

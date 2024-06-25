@@ -23,9 +23,9 @@ class MedicineController extends Controller
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255|in:Nutrition,Ordinary',
             'scientific_name' => 'required|string|max:255',
-            'titer' => 'required|integer',
+            'titer' => 'required|string',
             'code' => 'required|integer',
-            'unit' => 'required|integer',
+            'unit' => 'required|string',
 
         ]);
         if ($validator->fails()) {
@@ -57,7 +57,7 @@ class MedicineController extends Controller
         $employee_choise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
         $medicalCenterId = $employee_choise->medical_center_id;
         $medicalCenterMedicine = MedicalCenterMedicine::where([
-            ['medical_center_id', $medicalCenterId], 
+            ['medical_center_id', $medicalCenterId],
             ['medicine_id', $medicine->id]
         ])->first();
         $medicine->quantity = $medicalCenterMedicine->quantity;
@@ -70,7 +70,7 @@ class MedicineController extends Controller
         $medicines = Medicine::all();
 
         if ($medicines->isEmpty()) {
-            return $this->notFound([],'No medicine found' );
+            return $this->notFound([],'لايوجد دواء' );
         }
 
         return $this->success($medicines);
@@ -89,10 +89,10 @@ class MedicineController extends Controller
         $medicalCenterMedicineId = $request->input('medical_center_medicine_id');
         $medicalCenterMedicine =MedicalCenterMedicine::find($medicalCenterMedicineId);
         if(!$medicalCenterMedicine){
-            return $this->notFound($medicalCenterMedicineId , "Medical Center Medicine not found with given id");
+            return $this->notFound($medicalCenterMedicineId , "لا يوجد مركز موافق للمعرف المعطى");
         }
         if($quantity > $medicalCenterMedicine->quantity){
-            return $this->error($quantity , "The quantity you entered is greater than the quantity that is available in the pharmacy.");
+            return $this->error($quantity , "الكمية المطلوبة أكبر من الكمية المتوفرة");
         }
         $medicalCenterMedicine->quantity -= $quantity;
         $medicalCenterMedicine->save();
