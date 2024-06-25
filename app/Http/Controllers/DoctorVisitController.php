@@ -27,12 +27,21 @@ class DoctorVisitController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-
-        if (! MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
+        $medicalRecord = MedicalRecord::where('id', $request->input('medical_record_id'))->first();
+        if (!$medicalRecord) {
             return $this->unprocessable($DoctorVisit , 'The specified medical record does not exist.');
         }
 
+       
+
         $employee = auth('sanctum')->user();
+
+        if($employee->isA('women-doctor') && $medicalRecord->category == "child" || $employee->isA('child-doctor') && $medicalRecord->category == "pregnant"){
+            return $this->error($medicalRecord->id , "اختصاص الطبيب لا يتوافق مع نوع سجل المريض");
+        }
+
+
+
         $DoctorVisit = DoctorVisit::create([
             'employee_id' => $employee->id,
             'employee_choise_id' => $employee->employeeChoises()->latest('created_at')->first()->id,
@@ -61,9 +70,9 @@ class DoctorVisitController extends Controller
         $visits = DoctorVisit::where('medical_record_id', $medicalRecordId)->get();
 
         if (!$visits->count()) {
-            return $this->notFound('No doctor visits found for the specified medical record ID.');
+            return $this->notFound('لا يوجد زيارات للطبيب من أجل السجل الطبي المعطى.');
         }
-
+        $activity =null;
         foreach ($visits as $visit) {
             $health_care = $visit->health_care;
             $health_education = $visit->health_education;
@@ -73,7 +82,7 @@ class DoctorVisitController extends Controller
             if(!$health_education){
                 $activity  = "رعاية صحية" ;
             }
-            $visit->activity = $activity;
+           $visit->activity =  $activity;
         }
         return $this->success($visits);
         

@@ -68,6 +68,8 @@ Route::post('/medicineInventory' , [MedicalCenterMedicineController::class ,  'm
 Route::post('/loginUser', [AccountController::class, 'login']);
 Route::get('/showLinkedAdvices', [AccountController::class, 'showLinkedAdvices']);
 Route::get('/getAccount/{id}' , [AccountController::class , 'show']);
+
+
 Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
@@ -103,6 +105,7 @@ Route::get('/getMedicalCenterMedicine',  [MedicalCenterMedicineController::class
 Route::get('/getEmployeesByLastChoiceMedicalCenter', [EmployeeController::class, 'getEmployeesByLastChoiceMedicalCenter']);
 Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
 Route::post('/createAdvice', [AdviceController::class , 'createAdvice']);
+Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
@@ -141,13 +144,13 @@ Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
   Route::post('/createWomenDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
-  Route::get('/getDoctorAppointments' , [AppointmentController::class , 'show']);
+  Route::get('/getWomenDoctorAppointments' , [AppointmentController::class , 'show']);
 });
 
 Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
   Route::post('/createChildDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getChildDoctorAppointments' , [AppointmentController::class , 'show']);
-  Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
+  
   });
 
 
