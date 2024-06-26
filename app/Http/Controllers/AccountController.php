@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
 use App\Models\Advice;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
+use Illuminate\Validation\Rule;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\AccountRepositoryInterface;
 
 
 class AccountController extends Controller
 {
     use ApiResponseTrait;
+    private AccountRepositoryInterface $accountRepository;
+
+    public function __construct(AccountRepositoryInterface $accountRepository) 
+    {
+        $this->accountRepository = $accountRepository;
+    }
 
     public function create(Request $request)
     {
@@ -34,11 +41,13 @@ class AccountController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-        $account= Account::create([
-            'type' => $request->input('type'),
-            'user_name' => $request->input('user_name' ),
-            'password' => Hash::make($request->input('password'))
-        ]);
+        $account = $this->accountRepository->createAccount($request);
+        
+        // = Account::create([
+        //     'type' => $request->input('type'),
+        //     'user_name' => $request->input('user_name' ),
+        //     'password' => Hash::make($request->input('password'))
+        // ]);
 
         return $this->created($account);
 
@@ -46,12 +55,6 @@ class AccountController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function linkAccountToRecord(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -94,6 +97,7 @@ class AccountController extends Controller
 
         return $this->success($responseData, "Account linked successfully!");
     }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
