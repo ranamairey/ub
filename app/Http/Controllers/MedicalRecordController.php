@@ -212,7 +212,6 @@ class MedicalRecordController extends Controller
             }
         }
 
-
         public function getCompletedTreatmentsByRecordId(Request $request, $id)
         {
             $medicalRecord = MedicalRecord::find($id);
@@ -224,41 +223,33 @@ class MedicalRecordController extends Controller
             $isChild = $medicalRecord->category === 'child';
             $isWoman = $medicalRecord->category === 'pregnant';
 
+            $completedTreatments = null;
+
             if ($isChild) {
                 $completedTreatments = $medicalRecord->childTreatmentPrograms()->whereNotNull('end_date')->get();
-                $data = [
-                    'medical_record' => $medicalRecord->toArray(),
-                    'treatments' => [],
-                ];
-
-                foreach ($completedTreatments as $treatment) {
-                    $visits = $treatment->malnutritionChildVisits()->get();
-                    $data['treatments'][] = [
-                        'treatment' => $treatment->toArray(),
-                        'visits' => $visits->toArray(),
-                    ];}
-            } else if ($isWoman) {
+            } elseif ($isWoman) {
                 $completedTreatments = $medicalRecord->womenTreatmentPrograms()->whereNotNull('end_date')->get();
-                $data = [
-                    'medical_record' => $medicalRecord->toArray(),
-                    'treatments' => [],
-                ];
-
-                foreach ($completedTreatments as $treatment) {
-                    $visits = $treatment->malnutritionWomenVisits()->get();
-                    $data['treatments'][] = [
-                        'treatment' => $treatment->toArray(),
-                        'visits' => $visits->toArray(),
-                    ];
             }
 
             if ($completedTreatments->isEmpty()) {
-                return $this->notFound('No treatment programs found for this category');
+                return $this->notFound('No completed treatment programs found for this medical record.');
             }
 
+            $data = [
+                'medical_record' => $medicalRecord->toArray(),
+                'treatments' => [],
+            ];
+
+            foreach ($completedTreatments as $treatment) {
+                $visits = $treatment->{$isChild ? 'malnutritionChildVisits' : 'malnutritionWomenVisits'}()->get();
+                $data['treatments'][] = [
+                    'treatment' => $treatment->toArray(),
+                    'visits' => $visits->toArray(),
+                ];
+            }
 
             return $this->success($data, 'Completed treatment programs and visits retrieved successfully!');
-        }}
+        }
 
 
         public function search(Request $request)

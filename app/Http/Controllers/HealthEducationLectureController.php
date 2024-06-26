@@ -21,7 +21,7 @@ class HealthEducationLectureController extends Controller
             'adult_women_number' => 'required|integer|min:0',
             'total' => 'required|integer|min:0',
             'is_beneficiaries' => 'required|boolean',
-            'beneficiary_type' => ['required', 'in:returnees,internally_displaced,host_community'],
+            'beneficiary_type' => 'required|string',
             'material_name' => 'required|string',
             'program' => 'required|string',
             'program_category' => 'required|string',
