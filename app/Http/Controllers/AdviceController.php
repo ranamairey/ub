@@ -16,7 +16,7 @@ class AdviceController extends Controller
     public function createAdvice(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'subject' => 'required|max:255|unique:advice,subject',
+            'subject' => 'required|max:255',
             'relative_activity' => 'required|max:255',
             'target_group' => 'required|in:child,pregnant,both|max:255',
             'main_img_url' => 'nullable|string',

@@ -76,7 +76,7 @@ Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
 ////////////////////////////
 Route::post('/HealthEducationLecture', [HealthEducationLectureController::class, 'createLecture']);
 ///////////////////////////
-Route::get('/showAdvicesByInput', [AdviceController::class, 'showAdvicesByInput']);
+Route::post('/showAdvicesByInput', [AdviceController::class, 'showAdvicesByInput']);
 Route::get('/adviceById', [AdviceController::class, 'adviceById']);
 Route::post('createAccount' , [AccountController::class , 'create']);
 Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRecord']);
@@ -150,7 +150,7 @@ Route::middleware(['auth:sanctum', 'women-doctor'])->group(function () {
 Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
   Route::post('/createChildDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
   Route::get('/getChildDoctorAppointments' , [AppointmentController::class , 'show']);
-  
+
   });
 
 
