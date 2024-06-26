@@ -85,6 +85,7 @@ class Kernel extends HttpKernel
         'women-nutritionist' => \App\Http\Middleware\WomenNutritionistMiddleware::class,
         'child-nutritionist' => \App\Http\Middleware\ChildNutritionistMiddleware::class,
         'pharmacist' => \App\Http\Middleware\PharmacistMiddleware::class,
+        'health-education' => \App\Http\Middleware\HealthEducationMiddleware::class,
 
 
 

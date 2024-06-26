@@ -1,17 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Traits\ApiResponseTrait;
-use App\Models\Advice;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Models\Advice;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Support\Facades\Validator;
+use App\Interfaces\AdviceRepositoryInterface;
 
 class AdviceController extends Controller
 
 {
     use ApiResponseTrait;
+
+    private AdviceRepositoryInterface $adviceRepository;
+
+    public function __construct(AdviceRepositoryInterface $adviceRepository) 
+    {
+        $this->adviceRepository = $adviceRepository;
+    }
 
     public function createAdvice(Request $request)
     {
@@ -27,21 +35,14 @@ class AdviceController extends Controller
             return $this->unprocessable($validator->errors());
         }
 
-        $subject = $request->input('subject');
-        $relativeActivity = $request->input('relative_activity');
-        $targetGroup = $request->input('target_group');
-        $image = $request->file('image');
 
 
         $employee = auth('sanctum')->user();
 
-        $advice = Advice::create([
-            'employee_id' => $employee->id,
-            'subject' => $subject,
-            'relative_activity' => $relativeActivity,
-            'target_group' => $targetGroup,
-            'image' => $image ? $image->store('advice_images') : null,
-        ]);
+        $request->employee_id =$employee->id; 
+        $advice = $this->adviceRepository->createAdvice($request);
+        
+
 
         return $this->success($advice);
     }

@@ -74,10 +74,7 @@ Route::middleware(['auth:sanctum', 'receptionist'])->group(function () {
 Route::post('/storeRecord', [MedicalRecordController::class, 'store']);
 Route::post('/update/{id}', [MedicalRecordController::class, 'update']);
 ////////////////////////////
-Route::post('/HealthEducationLecture', [HealthEducationLectureController::class, 'createLecture']);
-///////////////////////////
-Route::post('/showAdvicesByInput', [AdviceController::class, 'showAdvicesByInput']);
-Route::get('/adviceById', [AdviceController::class, 'adviceById']);
+
 Route::post('createAccount' , [AccountController::class , 'create']);
 Route::post('linkAccountToRecord' , [AccountController::class , 'linkAccountToRecord']);
 Route::post('/createAppointment' , [AppointmentController::class , 'store']);
@@ -85,7 +82,13 @@ Route::delete('/deleteAppointment/{id}' , [AppointmentController::class , 'destr
 Route::post('/createDoctorVisit', [DoctorVisitController::class, 'createDoctorVisit']);
 Route::get('/showAppointment', [AppointmentController::class, 'index']);
 Route::post('/search', [MedicalRecordController::class, 'search']);
+});
 
+Route::middleware(['auth:sanctum', 'health-education'])->group(function () {
+  Route::post('/HealthEducationLecture', [HealthEducationLectureController::class, 'createLecture']);
+  ///////////////////////////
+  Route::post('/showAdvicesByInput', [AdviceController::class, 'showAdvicesByInput']);
+  Route::get('/adviceById', [AdviceController::class, 'adviceById']);
 
 
 });
