@@ -1,15 +1,16 @@
 <?php
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\Appointment;
 use Silber\Bouncer\Bouncer;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Models\EmployeeChoise;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\AppointmentRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -18,6 +19,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AppointmentController extends Controller
 {
     use ApiResponseTrait;
+    private AppointmentRepositoryInterface $appointmentRepository;
+
+    public function __construct(AppointmentRepositoryInterface $appointmentRepository) 
+    {
+        $this->appointmentRepository = $appointmentRepository;
+    }
 
     public function store(Request $request)
     {
@@ -45,14 +52,7 @@ class AppointmentController extends Controller
         if (!$medicalRecord) {
           return $this->notFound('السجل غير موجود');
         }
-        // if (
-        //     ($type === "women-nutritionist" && $medicalRecord->category !== 'pregnant')
-        //     ||
-        //     ($type === "child-nutritionist" && $medicalRecord->category !== 'child')) {
-        //   return $this->error( "السجل غير متوافق مع أخصائي التغذية");
-        // }
-
-
+       
         $medicalRecordId = $request->input('medical_record_id');
         $medicalRecord = MedicalRecord::find($medicalRecordId);
 
@@ -78,29 +78,17 @@ class AppointmentController extends Controller
 
         $receptionistId = auth('sanctum')->user()->id;
 
-        $appointment = Appointment::create([
-            'employee_id' => $employee->id,
-            'receptionist_id' => $receptionistId,
-            'medical_record_id' => $medicalRecordId,
-            'employee_type' => $type
-        ]);
+        $request-> employee_id = $employee->id;
+        $request->receptionist_id =$receptionistId;
+        $request ->medical_record_id = $medicalRecordId;
+        $request ->employee_type = $type;
+
+
+        $appointment =$this->appointmentRepository->createAppointment($request);
 
         return $this->success($appointment);
     }
 
-
-
-
-
-
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
     public function show(){
 
         $employee = auth('sanctum')->user();
@@ -151,6 +139,7 @@ class AppointmentController extends Controller
         return $this->success($appointments);
 
     }
+
     public function index()
     {
         $appointments = Appointment::all();
@@ -167,6 +156,7 @@ class AppointmentController extends Controller
 
         return $this->success($appointments);
     }
+
     public function destroy($id)
     {
         $appointment = Appointment::find($id);
@@ -178,32 +168,3 @@ class AppointmentController extends Controller
 
     }
 }
-
-
-
-
-
-
-    // public function malak($type){
-    //     $authEmployee = auth('sanctum')->user();
-    //     $employeeChoice = EmployeeChoise::where('employee_id', $authEmployee->id)->latest('created_at')->first();
-    //     $medicalCenterIdReciptionist = $employeeChoice->medical_center_id;
-    //     echo $medicalCenterIdReciptionist;
-    //     $matchingEmployees = null;
-    //     $bouncer = app(Bouncer::class);
-    //     $employees = Employee::all();
-    //     foreach ($employees as $loopEmployee) {
-    //         $employeeChoice = EmployeeChoise::where('employee_id', $loopEmployee->id)->latest('created_at')->first();
-    //         echo $employeeChoice->medical_center_id;
-    //         if ($employeeChoice && $employeeChoice->medical_center_id == $medicalCenterIdReciptionist ) {
-    //             if( $bouncer->is($loopEmployee)->an($type) ){
-    //                 $matchingEmployees = $loopEmployee;
-    //                 return $matchingEmployees ;
-    //             }
-    //         }
-    //     }
-    //     if ($matchingEmployees == null){
-    //         return $this->error($type , "لا يوجد موظف يوافق النوع المرسل");
-    //     }
-    // }
-

@@ -73,15 +73,15 @@ class AccountController extends Controller
         $account = Account::find($accountId);
 
         if (!$medicalRecord) {
-            return $this->notFound($medicalRecordId, "Medical record not found");
+            return $this->notFound($medicalRecordId, "السجل الطبي غير موجود.");
         }
 
         if ($medicalRecord->account_id != null) {
-            return $this->unprocessable($medicalRecord, "The medical record already has an account.");
+            return $this->unprocessable($medicalRecord, "هذا السجل الطبي يملك حساباً بالفعل.");
         }
 
         if (!$account) {
-            return $this->notFound($accountId, "Account not found");
+            return $this->notFound($accountId, "الحساب غير موجود.");
         }
 
         $medicalRecord->account()->associate($account);
@@ -95,7 +95,7 @@ class AccountController extends Controller
             'linked_records' => $linkedRecords,
         ];
 
-        return $this->success($responseData, "Account linked successfully!");
+        return $this->success($responseData, "تم ربط الحساب بالسجل بنجاح.");
     }
 
     public function login(Request $request)
@@ -115,7 +115,7 @@ class AccountController extends Controller
             return $this->notFound($user, 'User not found');
         }
         if (!Hash::check($request->input('password'), $user->password)) {
-            return $this->unauthorized($request->input('password'), 'Invalid password');
+            return $this->unauthorized($request->input('password'), 'كلمة سر غير صالحة.');
         }
 
         $token = $user->createToken('userToken');
@@ -142,7 +142,7 @@ class AccountController extends Controller
         $account = Account::find($accountId);
 
         if (!$account) {
-            return $this->notFound($accountId, "Account not found");
+            return $this->notFound($accountId, "الحساب غير موجود.");
         }
 
         $linkedRecords = $account->medicalRecords;
@@ -152,64 +152,52 @@ class AccountController extends Controller
                 'account_id' => $account->id,
                 'linked_records' => $linkedRecords,
             ];
-            return $this->success($responseData, 'Linked medical records retrieved successfully!');
+            return $this->success($responseData);
         } else {
-            return $this->notFound('No linked medical records found for the account');
+            return $this->notFound('لا يوجد سجلات طبية مرتبطة بهذا الحساب.');
         }
+    }
+
+        
+    public function showLinkedAdvices(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'account_id' => 'required|exists:accounts,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
         }
-        public function showLinkedAdvices(Request $request)
-        {
-            $validator = Validator::make($request->all(), [
-                'account_id' => 'required|exists:accounts,id',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->unprocessable($validator->errors());
+        $accountId = $request->input('account_id');
+        $account = Account::find($accountId);
+        if (!$account) {
+            return $this->notFound($accountId, "الحساب غير موجود.");
+        }
+        // Eager load linked medical records
+        $account->load(['medicalRecords']);
+        $linkedRecords = $account->medicalRecords;
+        if ($linkedRecords->isEmpty()) {
+            return $this->notFound('لا يوجد سجلات طبية مرتبطة بهذا السجل.');
+        }
+        $patientTypes = [];
+        $allAdvices = [];
+        foreach ($linkedRecords as $record) {
+            if (in_array($record->category, ['child', 'pregnant'])) {
+                $patientTypes[] = $record->category;
+                $filteredAdvices = Advice::where(function ($query) use ($record) {
+                    $query->where('target_group', 'like', "%$record->category%")
+                          ->orWhere('target_group', 'like', "%both%");
+                })->get();
+                $allAdvices = array_merge($allAdvices, $filteredAdvices->toArray());
             }
-
-            $accountId = $request->input('account_id');
-            $account = Account::find($accountId);
-
-            if (!$account) {
-                return $this->notFound($accountId, "Account not found");
-            }
-
-            // Eager load linked medical records
-            $account->load(['medicalRecords']);
-
-            $linkedRecords = $account->medicalRecords;
-
-            if ($linkedRecords->isEmpty()) {
-                return $this->notFound('No linked medical records found for the account');
-            }
-
-            $patientTypes = [];
-            $allAdvices = [];
-
-            foreach ($linkedRecords as $record) {
-
-                if (in_array($record->category, ['child', 'pregnant'])) {
-                    $patientTypes[] = $record->category;
-
-                    $filteredAdvices = Advice::where(function ($query) use ($record) {
-                        $query->where('target_group', 'like', "%$record->category%")
-                              ->orWhere('target_group', 'like', "%both%");
-                    })->get();
-
-                    $allAdvices = array_merge($allAdvices, $filteredAdvices->toArray());
-                }
-            }
-
-            $patientTypes = array_unique($patientTypes); // Remove duplicates
-
-            $responseData = [
-                'account_id' => $account->id,
-                'medical_records' => $linkedRecords->toArray(),
-                'patient_types' => $patientTypes,
-                'all_advices' => $allAdvices,
-            ];
-
-            return $this->success($responseData, 'Linked advices retrieved successfully!');
+        }
+        $patientTypes = array_unique($patientTypes); // Remove duplicates
+        $responseData = [
+            'account_id' => $account->id,
+            'medical_records' => $linkedRecords->toArray(),
+            'patient_types' => $patientTypes,
+            'all_advices' => $allAdvices,
+        ];
+        return $this->success($responseData);
         }
 
     }

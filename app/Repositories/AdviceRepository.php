@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use App\Models\Advice;
 use App\Models\Activity;
 use Illuminate\Http\Request;
 use App\Interfaces\AdviceRepositoryInterface;

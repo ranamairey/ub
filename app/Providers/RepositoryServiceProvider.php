@@ -4,13 +4,17 @@ namespace App\Providers;
 
 use App\Repositories\AccessRepository;
 use App\Repositories\AdviceRepository;
+use App\Repositories\AgencyRepository;
 use App\Repositories\AccountRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\ActivityRepository;
+use App\Repositories\AppointmentRepository;
 use App\Interfaces\AccessRepositoryInterface;
 use App\Interfaces\AdviceRepositoryInterface;
+use App\Interfaces\AgencyRepositoryInterface;
 use App\Interfaces\AccountRepositoryInterface;
 use App\Interfaces\ActivityRepositoryInterface;
+use App\Interfaces\AppointmentRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -25,6 +29,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AccountRepositoryInterface::class, AccountRepository::class);
         $this->app->bind(ActivityRepositoryInterface::class, ActivityRepository::class);
         $this->app->bind(AdviceRepositoryInterface::class,AdviceRepository::class);
+        $this->app->bind(AgencyRepositoryInterface::class,AgencyRepository::class);
+        $this->app->bind(AppointmentRepositoryInterface::class,AppointmentRepository::class);
+
     
     }
 

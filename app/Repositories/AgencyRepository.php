@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 use App\Models\Agency;
-use App\Interfaces\AgenciesRepositoryInterface;
+use App\Interfaces\AgencyRepositoryInterface;
 
-class AgenciesRepository implements AgenciesRepositoryInterface 
+
+class AgencyRepository implements AgencyRepositoryInterface 
 {
     public function getAllAgency() 
     {
