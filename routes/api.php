@@ -66,7 +66,7 @@ Route::get('/getDistrict' , [DistrictController::class ,  'index']);
 Route::get('/getSubdistrict' , [SubdistrictController::class ,  'index']);
 Route::post('/medicineInventory' , [MedicalCenterMedicineController::class ,  'medicineInventory']);
 Route::post('/loginUser', [AccountController::class, 'login']);
-Route::get('/showLinkedAdvices', [AccountController::class, 'showLinkedAdvices']);
+Route::post('/showLinkedAdvices', [AccountController::class, 'showLinkedAdvices']);
 Route::get('/getAccount/{id}' , [AccountController::class , 'show']);
 
 

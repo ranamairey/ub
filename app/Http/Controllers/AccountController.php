@@ -176,7 +176,7 @@ class AccountController extends Controller
         $account->load(['medicalRecords']);
         $linkedRecords = $account->medicalRecords;
         if ($linkedRecords->isEmpty()) {
-            return $this->notFound('لا يوجد سجلات طبية مرتبطة بهذا السجل.');
+            return $this->notFound('لا يوجد سجلات طبية مرتبطة بهذا الحساب.');
         }
         $patientTypes = [];
         $allAdvices = [];
