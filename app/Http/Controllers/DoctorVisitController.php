@@ -48,7 +48,7 @@ class DoctorVisitController extends Controller
             'medical_record_id' => $request->input('medical_record_id'),
             'medical_record_id' => $request->input('medical_record_id'),
             'result' => $request->input('result'),
-            'date' => now()->format('Y-m-d'),
+            'date' => $request->input('date'),
             'health_education' => $request->input('health_education'),
             'health_care' => $request->input('health_care'),
         ]);
