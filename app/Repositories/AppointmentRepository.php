@@ -17,7 +17,12 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             'employee_type' => $request->employee_type
         ]);
         return $appointment;
+    }
 
+    public function deleteAppointment ($id){
+        $appointment = Appointment::find($id);
+        $appointment->delete();
+        return;
     }
    
     

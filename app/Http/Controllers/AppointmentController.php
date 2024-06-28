@@ -96,7 +96,6 @@ class AppointmentController extends Controller
             return $this->notFound($employee , 'الموظف غير موجود');
         }
 
-
         $appointments = Appointment::where('employee_id' , $employee->id)->get();
 
         foreach ($appointments as $appointment) {
@@ -161,9 +160,9 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::find($id);
         if(! $appointment){
-            return $this->notFound($id);
+            return $this->notFound($id , "الموعد غير موجود.");
         }
-        $appointment->delete();
+        $this->appointmentRepository->deleteAppointment($id);
         return $this->success($appointment);
 
     }

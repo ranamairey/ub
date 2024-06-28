@@ -7,5 +7,6 @@ use Illuminate\Http\Request;
 interface AppointmentRepositoryInterface 
 {
     public function createAppointment(Request $request);
+    public function deleteAppointment ($id);
     
 }

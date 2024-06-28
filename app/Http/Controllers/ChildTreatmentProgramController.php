@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ChildTreatmentProgram;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
 use App\Models\MedicalRecord;
 use Illuminate\Validation\Rule;
+use App\Traits\ApiResponseTrait;
+use App\Models\ChildTreatmentProgram;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
+use App\Interfaces\ChildTreatmentProgramRepositoryInterface;
 
 
 
@@ -18,7 +19,12 @@ class ChildTreatmentProgramController extends Controller
 {
 
     use ApiResponseTrait;
+    private ChildTreatmentProgramRepositoryInterface $treatmentRepository;
 
+    public function __construct(ChildTreatmentProgramRepositoryInterface $treatmentRepository) 
+    {
+        $this->treatmentRepository = $treatmentRepository;
+    }
 
     public function createChildTreatmentProgram(Request $request)
     {
@@ -49,24 +55,12 @@ class ChildTreatmentProgramController extends Controller
         if (!MedicalRecord::where('id', $request->input('medical_record_id'))->exists()) {
             return $this->unprocessable($request->all(), 'The specified medical record does not exist.');
         }
+        $request->employeeChoise = $employee->employeeChoises()->first()->id;
+        $request->employee =$employee->id;
+        $request->date = Carbon::now()->format('Y-m-d');
 
-        $programData = [
-            'medical_record_id' => $request->input('medical_record_id'),
-            'employee_choise_id' => $employee->employeeChoises()->first()->id,
-            'employee_id' => $employee->id,
-            'program_type' => $request->input('program_type'),
-            'acceptance_reason' => $request->input('acceptance_reason'),
-            'acceptance_party' => $request->input('acceptance_party'),
-            'acceptance_type' => $request->input('acceptance_type'),
-            'target_weight' => $request->input('target_weight'),
-            'measles_vaccine_received' => $request->input('measles_vaccine_received'),
-            'measles_vaccine_date' => $request->input('measles_vaccine_date'),
-            'end_date' => $request->input('end_date'),
-            'end_cause' => $request->input('end_cause'),
-            'date' => Carbon::now()->format('Y-m-d'),
-        ];
 
-        $program = ChildTreatmentProgram::create($programData);
+        $program = $this->treatmentRepository->createTreatment($request);
 
         return $this->created($program);
     }
@@ -113,29 +107,28 @@ public function getChildTreatmentProgramByMedicalRecordId(Request $request, $med
 }
 
 
-public function graduateChildTreatmentProgram(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'end_cause' => 'required|string',
-    ]);
-
-    if ($validator->fails()) {
-        return $this->unprocessable($validator->errors());
+    public function graduateChildTreatmentProgram(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'end_cause' => 'required|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return $this->unprocessable($validator->errors());
+        }
+    
+    
+        $treatmentProgram = ChildTreatmentProgram::find($id);
+        if (!$treatmentProgram) {
+            return $this->notFound('No child treatment program found for the specified medical record ID.');
+        }
+        if($treatmentProgram->end_date != null || $treatmentProgram->end_cause != null){
+            return $this->notFound('هذا البرنامج منتهي بالفعل.');
+        }
+    
+        $treatmentProgram = $this->treatmentRepository->updateTreatment($request , $id);
+        return $this->success($treatmentProgram);
     }
-
-
-    $treatmentProgram = ChildTreatmentProgram::find($id);
-    if (!$treatmentProgram) {
-        return $this->notFound('No child treatment program found for the specified medical record ID.');
-    }
-
-    $treatmentProgram->update([
-        'end_date' =>  now()->format('Y-m-d'),
-        'end_cause' => $request->input('end_cause'),
-    ]);
-
-    return $this->success($treatmentProgram);
-}
 
 
 public function transsformChildTreatmentProgram(Request $request, $id)

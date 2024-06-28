@@ -15,6 +15,8 @@ use App\Interfaces\AgencyRepositoryInterface;
 use App\Interfaces\AccountRepositoryInterface;
 use App\Interfaces\ActivityRepositoryInterface;
 use App\Interfaces\AppointmentRepositoryInterface;
+use App\Repositories\ChildTreatmentProgramRepository;
+use App\Interfaces\ChildTreatmentProgramRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdviceRepositoryInterface::class,AdviceRepository::class);
         $this->app->bind(AgencyRepositoryInterface::class,AgencyRepository::class);
         $this->app->bind(AppointmentRepositoryInterface::class,AppointmentRepository::class);
+        $this->app->bind(ChildTreatmentProgramRepositoryInterface::class,ChildTreatmentProgramRepository::class);
+
 
     
     }
