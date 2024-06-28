@@ -8,11 +8,13 @@ use App\Interfaces\ChildTreatmentProgramRepositoryInterface;
 
 class ChildTreatmentProgramRepository implements ChildTreatmentProgramRepositoryInterface 
 {
+
+    
     public function createTreatment(Request $request){
         $programData = [
             'medical_record_id' => $request->input('medical_record_id'),
             'employee_choise_id' => $request->employeeChoise,
-            'employee_id' => $request->employee,
+            'employee_id' => $request->employee_id,
             'program_type' => $request->input('program_type'),
             'acceptance_reason' => $request->input('acceptance_reason'),
             'acceptance_party' => $request->input('acceptance_party'),

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ChildTreatmentProgram;
 use App\Models\MalnutritionChildVisit;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\MalnutritionChildVisitRepositoryInterface;
 
 
 
@@ -17,6 +18,13 @@ use Illuminate\Support\Facades\Validator;
 class MalnutritionChildVisitController extends Controller
 {
     use ApiResponseTrait;
+
+    private MalnutritionChildVisitRepositoryInterface $visitRepository;
+
+    public function __construct(MalnutritionChildVisitRepositoryInterface $visitRepository) 
+    {
+        $this->visitRepository = $visitRepository;
+    }
 
     public function index($programId)
     {
@@ -54,20 +62,10 @@ class MalnutritionChildVisitController extends Controller
         }
         $employee_id = auth('sanctum')->user()->id;
         $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id;
-        $visit = MalnutritionChildVisit::create([
-            'employee_id' => $employee_id,
-            'programs_id' => $request->programs_id,
-            'employee_choise_id' => $employee_choise_id,
-            'edema' => $request->edema,
-            'weight' => $request->weight,
-            'height' => $request->height,
-            'muac' => $request->muac,
-            'z_score' => $request->z_score,
-            'note' => $request->note,
-            'current_date' => now()->format('Y-m-d'),
-            'next_visit_date' => $request->next_visit_date,
 
-        ]);
+        $request->employee_id =  $employee_id;
+        $request->employee_choise_id = $employee_choise_id;
+        $visit = $this->visitRepository->createVisit($request);
         return $this->created($visit);
     }
 
