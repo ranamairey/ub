@@ -19,7 +19,7 @@ class ContractSeeder extends Seeder
      */
     public function run()
     {
-        
+
         // Get all employees and medical centers
         $employees = Employee::all();
         $medicalCenters = MedicalCenter::all();
@@ -30,7 +30,7 @@ class ContractSeeder extends Seeder
         }
 
         // Create contracts for each employee
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             // Randomly assign a medical center
             $medicalCenter = $medicalCenters->random();
             $employee = $employees->random();

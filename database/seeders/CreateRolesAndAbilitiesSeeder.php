@@ -58,7 +58,7 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
 
 
         foreach ($userData as $data) {
-        
+
 
             $employeeData = [
                 'name' => $data['name'],
@@ -69,12 +69,12 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
                 'is_logged' => false
             ];
 
-
+            $randomStreetIndex = rand(0, count($streetNames) - 1);
             $randomSubdistrictID = rand(1, 9);
             $employee = Employee::firstOrCreate($employeeData);
             $employee->assign($data['role']);
             $addressData = [
-                'name' => $data['name'] . ' Address',
+                'name' => $streetNames[$randomStreetIndex],
                 'subdistrict_id' => $randomSubdistrictID,
             ];
             $employee->addresses()->create($addressData);
