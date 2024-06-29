@@ -109,12 +109,14 @@ Route::get('/getEmployeesByLastChoiceMedicalCenter', [EmployeeController::class,
 Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
 Route::post('/createAdvice', [AdviceController::class , 'createAdvice']);
 Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
+Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']);
+Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentswomen' , [AppointmentController::class , 'show']);
   Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
-  Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
+
   Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
@@ -129,7 +131,6 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentschild' , [AppointmentController::class , 'show']);
   Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
-  Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']);
   Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
   Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
   Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
