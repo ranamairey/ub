@@ -10,10 +10,18 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MedicalCenterMedicine;
+use App\Interfaces\MedicalCenterMedicineRepositoryInterface;
 
 class MedicalCenterMedicineController extends Controller
 {
     use ApiResponseTrait;
+
+    private MedicalCenterMedicineRepositoryInterface $medicalCenterMedicinesRepository;
+
+    public function __construct(MedicalCenterMedicineRepositoryInterface $medicalCenterMedicinesRepository) 
+    {
+        $this->medicalCenterMedicinesRepository = $medicalCenterMedicinesRepository;
+    }
 
     public function updateMedicineStock(Request $request)
     {
@@ -124,21 +132,23 @@ class MedicalCenterMedicineController extends Controller
     }
 
     public function medicineInventory(Request $request){
-        $jsonData = $request->json()->all();
-        $newRecord = new Inventory;
+        // $jsonData = $request->json()->all();
+       
         // $newRecord->data = json_encode($jsonData, JSON_UNESCAPED_UNICODE);
         $inventoryData = MedicalCenterMedicine::join('medicines', 'medical_center_medicines.medicine_id', '=', 'medicines.id')
             ->select('medicines.name', 'medical_center_medicines.quantity')
             ->get()
             ->pluck('quantity', 'name')
             ->toArray();
+        
+        $request->inventory_data = $inventoryData;
         // $newRecord->old_data = json_encode($inventoryData, JSON_UNESCAPED_UNICODE);
-
-        $newRecord->create([
-            'data' => json_encode($jsonData, JSON_UNESCAPED_UNICODE),
-            'old_data' =>json_encode($inventoryData, JSON_UNESCAPED_UNICODE)
-        ]);
-        $newRecord->save();
+        $newRecord = $this->medicalCenterMedicinesRepository->createInventory($request);
+        
+        // new Inventory([
+        //     'data' => json_encode($jsonData, JSON_UNESCAPED_UNICODE),
+        //     'old_data' =>json_encode($inventoryData, JSON_UNESCAPED_UNICODE)
+        // ]);
         return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
     }
 

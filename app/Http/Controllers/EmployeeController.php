@@ -76,7 +76,7 @@ class EmployeeController extends Controller
         $roleName = $request->input('role');
         $bouncer = app(Bouncer::class);
         if ($roleName) {
-            $role = Bouncer::role()->where('name', $roleName)->first();
+            $role = $bouncer->role()->where('name', $roleName)->first();
             if ($role) {
                 $employee->assign($role);
             } else {

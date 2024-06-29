@@ -18,10 +18,12 @@ use App\Interfaces\ActivityRepositoryInterface;
 use App\Interfaces\AppointmentRepositoryInterface;
 use App\Interfaces\DoctorVisitRepositoryInterface;
 use App\Repositories\ChildTreatmentProgramRepository;
+use App\Repositories\MedicalCenterMedicineRepository;
 use App\Repositories\HealthEducationLectureRepository;
 use App\Repositories\MalnutritionChildVisitRepository;
 use App\Repositories\MalnutritionWomenVisitRepository;
 use App\Interfaces\ChildTreatmentProgramRepositoryInterface;
+use App\Interfaces\MedicalCenterMedicineRepositoryInterface;
 use App\Interfaces\HealthEducationLectureRepositoryInterface;
 use App\Interfaces\MalnutritionChildVisitRepositoryInterface;
 use App\Interfaces\MalnutritionWomenVisitRepositoryInterface;
@@ -46,7 +48,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(HealthEducationLectureRepositoryInterface::class,HealthEducationLectureRepository::class);
         $this->app->bind(MalnutritionChildVisitRepositoryInterface::class,MalnutritionChildVisitRepository::class);
         $this->app->bind(MalnutritionWomenVisitRepositoryInterface::class,MalnutritionWomenVisitRepository::class);
-
+        $this->app->bind(MedicalCenterMedicineRepositoryInterface::class,MedicalCenterMedicineRepository::class);
 
 
 
