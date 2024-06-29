@@ -392,6 +392,9 @@ public function getWomenNutritionists()
     }
     foreach ($womenNutritionists as $womenNutritionist) {
         $employee_choise = EmployeeChoise::where('employee_id', $womenNutritionist->id)->latest('created_at')->first();
+        if($employee_choise == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $womenNutritionist->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $womenNutritionist->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -404,6 +407,7 @@ public function getWomenNutritionists()
 
     return $this->success($womenNutritionists);
 }
+
 public function getWomenDoctors()
 {
     $womenDoctors = Employee::whereHas('roles', function ($query) {
@@ -415,6 +419,9 @@ public function getWomenDoctors()
     }
     foreach ($womenDoctors as $womenDoctor) {
         $employee_choise = EmployeeChoise::where('employee_id', $womenDoctor->id)->latest('created_at')->first();
+        if( $employee_choise== null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $womenDoctor->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $womenDoctor->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -427,6 +434,7 @@ public function getWomenDoctors()
 
     return $this->success($womenDoctors);
 }
+
 public function getChildDoctors()
 {
     $childDoctors = Employee::whereHas('roles', function ($query) {
@@ -438,6 +446,9 @@ public function getChildDoctors()
     }
     foreach ($childDoctors as $childDoctor) {
         $employee_choise = EmployeeChoise::where('employee_id', $childDoctor->id)->latest('created_at')->first();
+        if( $employee_choise == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $childDoctor->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $childDoctor->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -462,6 +473,9 @@ public function getReceptionists()
     }
     foreach ($receptionists as $receptionist) {
         $employee_choise = EmployeeChoise::where('employee_id', $receptionist->id)->latest('created_at')->first();
+        if($employee_choise== null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $receptionist->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $receptionist->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -474,6 +488,7 @@ public function getReceptionists()
 
     return $this->success($receptionists);
 }
+
 public function getPharmacists()
 {
     $pharmacists = Employee::whereHas('roles', function ($query) {
@@ -485,6 +500,9 @@ public function getPharmacists()
     }
     foreach ($pharmacists as $pharmacist) {
         $employee_choise = EmployeeChoise::where('employee_id', $pharmacist->id)->latest('created_at')->first();
+        if($employee_choise == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $pharmacist->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $pharmacist->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -497,6 +515,7 @@ public function getPharmacists()
 
     return $this->success($pharmacists);
 }
+
 public function getStatisticsEmployees()
 {
     $statisticsEmployees = Employee::whereHas('roles', function ($query) {
@@ -509,6 +528,9 @@ public function getStatisticsEmployees()
 
     foreach ($statisticsEmployees as $statisticsEmployee) {
         $employee_choise = EmployeeChoise::where('employee_id', $statisticsEmployee->id)->latest('created_at')->first();
+        if($employee_choise == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $statisticsEmployee->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $statisticsEmployee->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -522,6 +544,7 @@ public function getStatisticsEmployees()
 
     return $this->success($statisticsEmployees);
 }
+
 public function getHealthEducationEmployees()
 {
     $healthEducationEmployees = Employee::whereHas('roles', function ($query) {
@@ -533,6 +556,9 @@ public function getHealthEducationEmployees()
     }
     foreach ($healthEducationEmployees as $healthEducationEmployee) {
         $employee_choise = EmployeeChoise::where('employee_id', $healthEducationEmployee->id)->latest('created_at')->first();
+        if($employee_choise  == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $healthEducationEmployee->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $healthEducationEmployee->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
@@ -558,6 +584,9 @@ public function getChildNutritionists()
 
     foreach ($childNutritionists as $childNutritionist) {
         $employee_choise = EmployeeChoise::where('employee_id', $childNutritionist->id)->latest('created_at')->first();
+        if($employee_choise == null){
+            return "لا يوجد موظفين في هذا القسم";
+        }
         $childNutritionist->medical_center_name = $employee_choise->medicalCenter->name;
         $lastContract = Contract::where('employee_id', $childNutritionist->id)->latest('created_at')->first();
         $expirationDate = Carbon::parse($lastContract->expiration_date);
