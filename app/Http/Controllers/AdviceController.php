@@ -60,14 +60,15 @@ class AdviceController extends Controller
         $userInput = Str::lower($request->input('user_input'));
 
         if ($userInput === 'child') {
-            $advices = Advice::where('target_group', 'child')->get();
+            $advices = Advice::where('target_group', 'child')->distinct()->get();
         } else  if($userInput==='pregnant'){
 
-            $advices = Advice::whereIn('target_group', [$userInput, 'pregnant'])->get();
+            $advices = Advice::whereIn('target_group', [$userInput, 'pregnant'])->distinct()->get();
+            
         }
         else{
 
-            $advices = Advice::whereIn('target_group', [$userInput, 'both'])->get();
+            $advices = Advice::whereIn('target_group', [$userInput, 'both'])->distinct()->get();
         }
         if ($advices->isEmpty()) {
 
@@ -79,6 +80,8 @@ class AdviceController extends Controller
 
         return $this->success($advices);
     }
+
+
     public function adviceById (Request $request)
     {
         $input = $request->input('id');
