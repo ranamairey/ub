@@ -171,7 +171,7 @@ class EmployeeController extends Controller
 
 
         if (!Hash::check($request->input('password'), $employee->password)) {
-            return $this->unauthorized($request->input('password') , 'Invalid password');
+            return $this->unauthorized($request->input('password') , 'كلمة السر خاطئة.');
         }
 
         $employeeChoise = $employee->employeeChoises()->create([
@@ -657,7 +657,11 @@ public function getEmployeesByLastChoiceMedicalCenter()
 public function logout(Request $request)
 {
     $user = Auth::user();
+    $user->update([
+        'active' => false,
+    ]);
     $user->tokens()->delete();
+
     return response()->json(['message' => 'Successfully logged out!']);
 }
 
