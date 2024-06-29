@@ -29,10 +29,6 @@ class MedicalCenterMedicineController extends Controller
         $chosenMedicalCenterId =  $employee->employeeChoises()->latest('created_at')->first()->medical_center_id;
         echo $chosenMedicalCenterId;
 
-        // Retrieve medical center ID from employee choice
-
-
-
         try {
             DB::transaction(function () use ($chosenMedicalCenterId, $medicineQuantities) {
                 $updatedMedicines = [];
@@ -130,23 +126,20 @@ class MedicalCenterMedicineController extends Controller
     public function medicineInventory(Request $request){
         $jsonData = $request->json()->all();
         $newRecord = new Inventory;
-        $newRecord->data = json_encode($jsonData, JSON_UNESCAPED_UNICODE);
+        // $newRecord->data = json_encode($jsonData, JSON_UNESCAPED_UNICODE);
         $inventoryData = MedicalCenterMedicine::join('medicines', 'medical_center_medicines.medicine_id', '=', 'medicines.id')
             ->select('medicines.name', 'medical_center_medicines.quantity')
             ->get()
             ->pluck('quantity', 'name')
             ->toArray();
-        $newRecord->old_data = json_encode($inventoryData, JSON_UNESCAPED_UNICODE);
+        // $newRecord->old_data = json_encode($inventoryData, JSON_UNESCAPED_UNICODE);
+
+        $newRecord->create([
+            'data' => json_encode($jsonData, JSON_UNESCAPED_UNICODE),
+            'old_data' =>json_encode($inventoryData, JSON_UNESCAPED_UNICODE)
+        ]);
         $newRecord->save();
         return $this->success($newRecord , "تم حفظ نتيجة الجرد.");
-
-
-
-
-
-
-
-
     }
 
 }

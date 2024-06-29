@@ -72,11 +72,13 @@ class EmployeeController extends Controller
             'medical_center_id' => $request['contract']['medical_center_id'],
             'is_valid' => true
         ]);
+        
 
         $roleName = $request->input('role');
-
+        $bouncer = app(Bouncer::class);
         if ($roleName) {
-            $role = Bouncer::role()->where('name', $roleName)->first();
+            $role = $bouncer->getRoles()->first();
+            // Bouncer::role()->where('name', $roleName)->first();
             if ($role) {
                 $employee->assign($role);
             } else {
@@ -658,7 +660,7 @@ public function logout(Request $request)
 {
     $user = Auth::user();
     $user->update([
-        'active' => false,
+        'is_logged' => false,
     ]);
     $user->tokens()->delete();
 

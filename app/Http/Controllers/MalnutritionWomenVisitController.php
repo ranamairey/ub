@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EmployeeChoise;
+use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\WomenTreatmentProgram;
-use App\Traits\ApiResponseTrait;
 use App\Models\MalnutritionChildVisit;
 use App\Models\MalnutritionWomenVisit;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\MalnutritionWomenVisitRepositoryInterface;
 
 
 #[\App\Aspects\transaction]
@@ -18,11 +19,14 @@ class MalnutritionWomenVisitController extends Controller
 {
     use ApiResponseTrait;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+    private MalnutritionWomenVisitRepositoryInterface $visitRepository;
+
+    public function __construct(MalnutritionWomenVisitRepositoryInterface $visitRepository) 
+    {
+        $this->visitRepository = $visitRepository;
+    }
+
     public function index($programId)
     {
         $visits = MalnutritionWomenVisit::where('programs_id', $programId)->get();
@@ -54,61 +58,10 @@ class MalnutritionWomenVisitController extends Controller
         }
         $employee_id = auth('sanctum')->user()->id;
         $employee_choise_id = EmployeeChoise::where('employee_id', $employee_id)->latest('created_at')->first()->id;
-        $visit = MalnutritionWomenVisit::create([
-            'employee_id' => $employee_id,
-            'programs_id' => $request->programs_id,
-            'employee_choise_id' => $employee_choise_id,
-            'muac' => $request->muac,
-            'note' => $request->note,
-            'current_date' => now()->format('Y-m-d'),
-            'next_visit_date' => $request->next_visit_date,
-
-        ]);
+        $request->employee_id = $employee_id;
+        $request->employee_choise_id =  $employee_choise_id;
+        $visit = $this->visitRepository->createVisit($request);
         return $this->created($visit);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MalnutritionWomenVisit  $malnutritionWomenVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MalnutritionWomenVisit $malnutritionWomenVisit)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MalnutritionWomenVisit  $malnutritionWomenVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MalnutritionWomenVisit $malnutritionWomenVisit)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MalnutritionWomenVisit  $malnutritionWomenVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MalnutritionWomenVisit $malnutritionWomenVisit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MalnutritionWomenVisit  $malnutritionWomenVisit
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MalnutritionWomenVisit $malnutritionWomenVisit)
-    {
-        //
-    }
 }
