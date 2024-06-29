@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EmployeeChoiseSeeder::class);
         $this->call(WomenTreatmentProgramSeeder::class);
         $this->call(ChildTreatmentProgramSeeder::class);
-        $this->call(ContractSeeder::class);
+        //$this->call(ContractSeeder::class);
         $this->call(AddressSeeder::class);
         $this->call(MedicineSeeder::class);
         $this->call(MedicalCenterMedicineSeeder::class);
