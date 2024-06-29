@@ -72,13 +72,11 @@ class EmployeeController extends Controller
             'medical_center_id' => $request['contract']['medical_center_id'],
             'is_valid' => true
         ]);
-        
 
         $roleName = $request->input('role');
         $bouncer = app(Bouncer::class);
         if ($roleName) {
-            $role = $bouncer->getRoles()->first();
-            // Bouncer::role()->where('name', $roleName)->first();
+            $role = Bouncer::role()->where('name', $roleName)->first();
             if ($role) {
                 $employee->assign($role);
             } else {
