@@ -58,14 +58,14 @@ class CreateRolesAndAbilitiesSeeder extends Seeder
 
 
         foreach ($userData as $data) {
-            $isActive = rand(0, 1) === 1;
+        
 
             $employeeData = [
                 'name' => $data['name'],
                 'phone_number' => '1234567890',
                 'user_name' => $data['user_name'],
                 'password' => Hash::make('secret123'),
-                'active' => $isActive, // Set active randomly
+                'active' => 1,
                 'is_logged' => false
             ];
 
