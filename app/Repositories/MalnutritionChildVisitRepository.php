@@ -6,6 +6,7 @@ use App\Models\DoctorVisit;
 use Illuminate\Http\Request;
 use App\Models\MalnutritionChildVisit;
 use App\Interfaces\DoctorVisitRepositoryInterface;
+use App\Interfaces\MalnutritionChildVisitRepositoryInterface;
 
 
 
