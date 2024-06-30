@@ -112,6 +112,7 @@ Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedi
 Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']);
 Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
+Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
@@ -192,7 +193,7 @@ Route::middleware(['auth:sanctum', 'pharmacist'])->group(function () {
   Route::get('/acceptOrder/{id}', [MedicineOrderController::class , 'acceptOrder']);
   Route::get('/rejectOrder/{id}', [MedicineOrderController::class , 'rejectOrder']);
   Route::get('/getNotEmptyMedicalCenterMedicine', [MedicalCenterMedicineController::class , 'getNotEmptyMedicalCenterMedicine']);
-  Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
+  
 
 });
 
