@@ -113,7 +113,6 @@ Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']
 Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
 Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
-
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {

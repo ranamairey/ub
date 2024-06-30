@@ -86,6 +86,14 @@ class EmployeeController extends Controller
             }
         }
         $employee->role = $role->name;
+        $employeeChoise = $employee->employeeChoises()->create([
+            'medical_center_id' => $request['contract']['medical_center_id'],
+            'coverage_id' => 1,
+            'office_id' => 1,
+            'agency_id' => 1,
+            'access_id' => 1,
+            'partner_id' => 1
+        ]);
         return $this->created($employee);
 
     }

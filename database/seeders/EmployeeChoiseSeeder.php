@@ -18,7 +18,7 @@ class EmployeeChoiseSeeder extends Seeder
     {
         
         $employeeIds = DB::table('employees')->pluck('id');
-        $medicalCenterIds = DB::table('medical_centers')->pluck('id');
+        $medicalCenterIds = 1;
         $coverageIds = DB::table('coverages')->pluck('id');
         $officeIds = DB::table('offices')->pluck('id');
         $activityIds = DB::table('activities')->pluck('id');
@@ -29,7 +29,7 @@ class EmployeeChoiseSeeder extends Seeder
         for ($i = 0; $i < 20; $i++) {
             DB::table('employee_choises')->insert([
                 'employee_id' => $employeeIds[rand(0, count($employeeIds) - 1)],
-                'medical_center_id' => $medicalCenterIds[rand(0, count($medicalCenterIds) - 1)],
+                'medical_center_id' =>1,
                 'coverage_id' => $coverageIds[rand(0, count($coverageIds) - 1)],
                 'office_id' => $officeIds[rand(0, count($officeIds) - 1)],
                 'activity_id' => $activityIds[rand(0, count($activityIds) - 1)],
