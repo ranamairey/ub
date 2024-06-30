@@ -14,12 +14,12 @@ class ChildTreatmentProgramSeeder extends Seeder
     $medicalRecordIds = DB::table('medical_records')->where('category', 'child')->pluck('id');
 
     $acceptanceReasons = [
-      'تحسن الحالة الصحية للطفل (Child health improvement)',
-      'تحقيق وزن مستهدف سابقًا (Achievement of previous target weight)',
-      'إكمال برنامج علاج غذائي سابق (Completion of previous dietary treatment program)',
-      'تحويل من برنامج علاجي آخر (Referral from another treatment program)',
-      'رغبة الأهل في استمرار العلاج (Family desire to continue treatment)',
-      'اكتشاف سوء تغذية حاد (Identification of acute malnutrition)',
+      'تحسن الحالة الصحية للطفل ',
+      'تحقيق وزن مستهدف سابقًا ',
+      'إكمال برنامج علاج غذائي سابق ',
+      'تحويل من برنامج علاجي آخر ',
+      'رغبة الأهل في استمرار العلاج ',
+      'اكتشاف سوء تغذية حاد',
     ];
 
 

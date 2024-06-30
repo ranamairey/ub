@@ -19,12 +19,12 @@ class WomenTreatmentProgramSeeder extends Seeder
         $medicalRecordIds = DB::table('medical_records')->where('category', 'pregnant')->pluck('id');
 
         $acceptanceReasons = [
-            'بداية الحمل (Beginning of pregnancy)',
-            'ارتفاع ضغط الدم (High blood pressure)',
-            'سوء التغذية (Malnutrition)',
-            'فقر الدم (Anemia)',
-            'متابعة الحمل (Pregnancy monitoring)',
-            'إكمال برنامج علاجي سابق (Completion of previous treatment program)',
+            'بداية الحمل ',
+            'ارتفاع ضغط الدم ',
+            'سوء التغذية ',
+            'فقر الدم ',
+            'متابعة الحمل ',
+            'إكمال برنامج علاجي سابق ',
           ];
 
         for ($i = 0; $i < 10; $i++) {
@@ -42,6 +42,6 @@ class WomenTreatmentProgramSeeder extends Seeder
             ]);
         }
 
-      
+
     }
 }
