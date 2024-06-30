@@ -51,19 +51,43 @@ class MedicineController extends Controller
         return $this->created($medicine);
     }
 
-    public function getMedicineById($id){
+    public function getMedicineById($id)
+    {
         $medicine = Medicine::find($id);
+
+        if (!$medicine) {
+            // Handle case where medicine is not found (e.g., return error response)
+            return response()->json(['message' => 'Medicine not found'], 404);
+        }
+
         $employee = auth('sanctum')->user();
         $employee_choise = EmployeeChoise::where('employee_id', $employee->id)->latest('created_at')->first();
-        $medicalCenterId = $employee_choise->medical_center_id;
+
+        if (!$employee_choise) {
+            // Handle case where employee choice is not found (e.g., log error)
+            \Log::error('Employee choice not found for user ID: ' . $employee->id);
+            // Consider returning a generic response without medical center info
+        }
+
+        $medicalCenterId = $employee_choise ? $employee_choise->medical_center_id : null;
+
         $medicalCenterMedicine = MedicalCenterMedicine::where([
             ['medical_center_id', $medicalCenterId],
             ['medicine_id', $medicine->id]
         ])->first();
-        $medicine->quantity = $medicalCenterMedicine->quantity;
-        return $medicine;
 
+        if ($medicalCenterMedicine) {
+            $medicine->quantity = $medicalCenterMedicine->quantity;
+        } else {
+            // Handle case where medical center medicine association is not found
+            $medicine->quantity = 0; // Or set a default value based on your logic
+        }
+
+        return $medicine;
     }
+
+
+    
 
     public function getAllmedicines(){
 
