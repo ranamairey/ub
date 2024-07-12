@@ -51,6 +51,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/toto' , [Controller::class , 'toto']);
+
 Route::post('/login', [EmployeeController::class, 'login']);
 Route::post('/logout', [EmployeeController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);

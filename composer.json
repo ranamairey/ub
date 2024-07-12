@@ -13,6 +13,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
         "owen-it/laravel-auditing": "^13.6",
+        "rap2hpoutre/fast-excel": "^5.4",
         "silber/bouncer": "^1.0"
     },
     "require-dev": {
