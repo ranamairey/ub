@@ -43,5 +43,31 @@ class HealthEducationLecture extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+    public function activity()
+    {
+        return $this->belongsTo(activity::class , 'activity_id');
+    }
+    public function coverage()
+    {
+        return $this->belongsTo(Coverage::class , 'coverage_id');
+    }
+    public function office()
+    {
+        return $this->belongsTo(Office::class , 'office_id');
+    }
+
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class , 'agency_id');
+    }
+    public function access()
+    {
+        return $this->belongsTo(Access::class , 'access_id');
+    }
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class , 'partner_id');
+    }
+
 
    }
