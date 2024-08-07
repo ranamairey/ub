@@ -119,13 +119,16 @@ Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']
 Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
 Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
+Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
+Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
+
 });
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentswomen' , [AppointmentController::class , 'show']);
   Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
 
-  Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
+  
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateTreatmentProgram/{id}', [WomenTreatmentProgramController::class , 'graduateTreatmentProgram']);
@@ -139,7 +142,6 @@ Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
 Route::middleware(['auth:sanctum', 'child-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentschild' , [AppointmentController::class , 'show']);
   Route::post('/createChildVisit', [RoutineChildVisitController::class, 'createChildVisit']);
-  Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
   Route::post('/ChildTreatmentProgram', [ChildTreatmentProgramController::class, 'createChildTreatmentProgram']);
   Route::post('/createMalnutritionChildVisits', [MalnutritionChildVisitController::class , 'store']);
   Route::get('/getChildTreatmentProgramByMedicalRecordId/{id}', [ChildTreatmentProgramController::class , 'getChildTreatmentProgramByMedicalRecordId']);
