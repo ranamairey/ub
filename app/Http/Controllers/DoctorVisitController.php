@@ -95,4 +95,24 @@ class DoctorVisitController extends Controller
         return $this->success($visits);
         
     }
+
+    public function getVisitMedicine($id){
+        $doctorVisit = DoctorVisit::find($id);
+
+        if (!$doctorVisit){
+            return $this->notFound([],"The visit not found");
+        }
+
+        $medicineOrders = $doctorVisit->medicineOrders()
+        ->where('is_aprroved', true)
+        ->get();
+
+
+        if(empty($medicineOrders)){
+            return $this->success($medicineOrders , "This visit does not have medicine orders");
+        }
+
+        return $this->success($medicineOrders);
+
+    }
 }
