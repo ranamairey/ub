@@ -54,9 +54,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/toto' , [Controller::class , 'toto']);
 
-
-Route::post('/createHealthEducationReport' , [HealthEducationLectureController::class , 'createReport']);
-
 Route::post('/login', [EmployeeController::class, 'login']);
 Route::post('/logout', [EmployeeController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/getCoverages' , [CoverageController::class ,  'index']);
@@ -172,6 +169,7 @@ Route::middleware(['auth:sanctum', 'child-doctor'])->group(function () {
 
 
 Route::post('/statisticsLogin', [EmployeeController::class, 'statisticsLogin']);
+
 Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
   Route::get('/getEmployeeProfile/{id}', [EmployeeController::class, 'getEmployeeProfile']);
@@ -193,7 +191,14 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
   Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
   Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
+  
+
 });
+
+
+
+Route::post('/createHealthEducationReport' , [HealthEducationLectureController::class , 'createReport']);
+Route::post('/doctorVisitReport', [DoctorVisitController::class, 'doctorVisitReport']);
 
 
 
