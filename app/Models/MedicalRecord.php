@@ -11,6 +11,7 @@ class MedicalRecord extends Model
     use HasFactory;
 
     protected $fillable = [
+        'employee_id',
         'category',
         'name',
         'mother_name',
