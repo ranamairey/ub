@@ -200,6 +200,12 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
 Route::post('/createHealthEducationReport' , [HealthEducationLectureController::class , 'createReport']);
 Route::post('/doctorVisitReport', [DoctorVisitController::class, 'doctorVisitReport']);
 Route::post('/MalnutritionWomenVisitReport', [MalnutritionWomenVisitController::class, 'MalnutritionWomenVisitReport']);
+Route::post('/MalnutritionChildVisitReport', [MalnutritionChildVisitController::class, 'MalnutritionChildVisitReport']);
+Route::post('/RoutineWomenVisitReport', [RoutineWomenVisitController::class, 'RoutineWomenVisitReport']);
+Route::post('/RoutineChildVisitReport', [RoutineChildVisitController::class, 'RoutineChildVisitReport']);
+
+
+
 
 
 
