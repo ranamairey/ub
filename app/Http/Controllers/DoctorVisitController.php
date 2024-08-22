@@ -120,6 +120,7 @@ class DoctorVisitController extends Controller
         return $this->success($medicineOrders);
 
     }
+    
     public function doctorVisitReport(Request $request){
 
         $userYear = $request->input('year');

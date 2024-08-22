@@ -83,6 +83,45 @@ class MalnutritionChildVisitController extends Controller
     
     
         $filename = "MalnutritionChildReport.xlsx";
+
+ 
+
+$timestamp = Carbon::now()->format('dmHi');
+$uniqueFilename = Str::beforeLast($filename, '.') . '_' . $timestamp . '.' . Str::afterLast($filename, '.');
+
+$desktopPath = '';
+
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    $homeDrive = getenv('HOMEDRIVE');
+    $homePath = getenv('HOMEPATH');
+    if ($homeDrive && $homePath) {
+        $desktopPath = $homeDrive . $homePath . DIRECTORY_SEPARATOR . 'Desktop';
+    } else {
+        // Fallback to USERPROFILE if HOMEDRIVE and HOMEPATH are not set
+        $userProfile = getenv('USERPROFILE');
+        if ($userProfile) {
+            $desktopPath = $userProfile . DIRECTORY_SEPARATOR . 'Desktop';
+        } else {
+            // Handle the case where neither are set
+            return response()->json(['error' => 'Unable to determine desktop path'], 500);
+        }
+    }
+} else {
+    // Unix-like systems (Linux, macOS)
+    $home = getenv('HOME');
+    if ($home) {
+        $desktopPath = $home . DIRECTORY_SEPARATOR . 'Desktop';
+    } else {
+        return response()->json(['error' => 'Unable to determine desktop path'], 500);
+    }
+}
+
+// Combine the desktop path with the unique filename
+$filePath = $desktopPath . DIRECTORY_SEPARATOR . $uniqueFilename;
+
+// Use the full file path
+$writer->openToFile($filePath);
+
         
         // Ad
         $timestamp = Carbon::now()->format('dmHi');
