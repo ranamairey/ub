@@ -112,20 +112,21 @@ Route::get('/getEmployeesByLastChoiceMedicalCenter', [EmployeeController::class,
 Route::get('/getMalnutritionMedicalCenterMedicine',  [MedicalCenterMedicineController::class, 'getMalnutritionMedicalCenterMedicine']);
 Route::post('/createAdvice', [AdviceController::class , 'createAdvice']);
 Route::post('/doctorMedicineOrder', [MedicineOrderController::class, 'doctorMedicineOrder']);
-Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']);
-Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/getAllmedicines', [MedicineController::class , 'getAllmedicines']);
 Route::get('/getMedicineById/{id}' , [MedicineController::class ,  'getMedicineById']);
+
+});
+Route::get('/getChiledVisit/{id}', [RoutineChildVisitController::class, 'index']);
+Route::get('/getWomenVisit/{id}', [RoutineWomenVisitController::class, 'index']);
 Route::get('/allMalnutritionWomenVisits/{id}', [MalnutritionWomenVisitController::class , 'index']);
 Route::get('/allMalnutritionChildVisits/{id}', [MalnutritionChildVisitController::class , 'index']);
 
-});
 
 Route::middleware(['auth:sanctum', 'women-nutritionist'])->group(function () {
   Route::get('/getNutritionistAppointmentswomen' , [AppointmentController::class , 'show']);
   Route::post('/createWomenVisit', [RoutineWomenVisitController::class, 'createWomenVisit']);
 
-  
+
   Route::post('/createWomenTreatmentProgram', [WomenTreatmentProgramController::class, 'createWomenTreatmentProgram']);
   Route::get('/getWomenTreatmentProgramByMedicalRecordId/{id}', [WomenTreatmentProgramController::class , 'getWomenTreatmentProgramByMedicalRecordId']);
   Route::post('/graduateTreatmentProgram/{id}', [WomenTreatmentProgramController::class , 'graduateTreatmentProgram']);
@@ -191,7 +192,7 @@ Route::middleware(['auth:sanctum', 'statistics'])->group(function () {
   Route::get('/getAllRoles' , [EmployeeController::class ,  'getAllRoles']);
   Route::get('/getEmployeesInfo', [EmployeeController::class, 'getEmployeesInfo']);
   Route::post('/addMedicine', [MedicineController::class, 'addMedicine']);
-  
+
   Route::post('/createHealthEducationReport' , [HealthEducationLectureController::class , 'createReport']);
   Route::post('/doctorVisitReport', [DoctorVisitController::class, 'doctorVisitReport']);
   Route::post('/MalnutritionWomenVisitReport', [MalnutritionWomenVisitController::class, 'MalnutritionWomenVisitReport']);

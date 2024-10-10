@@ -21,8 +21,19 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 class RoutineChildVisitController extends Controller
 {
     use ApiResponseTrait;
-    
 
+
+  
+    public function index($record)
+    {
+        $visits = RoutineChildVisit::where('medical_record_id', $record)->get();
+
+        if (!$visits->count()) {
+            return $this->notFound('No visits found for Record ID: ' . $record);
+        }
+
+        return $this->success($visits);
+    }
     public function createChildVisit(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -84,12 +95,12 @@ class RoutineChildVisitController extends Controller
     public function RoutineChildVisitReport(Request $request){
         $userYear = $request->input('year');
         $userMonth= $request->input('month');
-        
+
         $userDate = Carbon::create($userYear, $userMonth, 1);
 
         $writer = WriterEntityFactory::createXLSXWriter();
-    
-    
+
+
         $filename = "RoutineChildVisitsReport.xlsx";
 
 $timestamp = Carbon::now()->format('dmHi');
@@ -128,7 +139,7 @@ $filePath = $desktopPath . DIRECTORY_SEPARATOR . $uniqueFilename;
 // Use the full file path
 $writer->openToFile($filePath);
 
-        
+
         $cells = [
             WriterEntityFactory::createCell('YearYOB السنة'),
             WriterEntityFactory::createCell('Agency المنظمة'),
@@ -160,11 +171,11 @@ $writer->openToFile($filePath);
             WriterEntityFactory::createCell('Districts'),
             WriterEntityFactory::createCell('Governorates'),
         ];
-        
+
         /** add a row at a time */
         $singleRow = WriterEntityFactory::createRow($cells);
         $writer->addRow($singleRow);
-    
+
         $results = DB::table('medicine_orders as mo')
         ->join('routine_child_visits as mwv', 'mwv.id', '=', 'mo.medicine_orderable_id')
         ->join('medical_records as mr', 'mr.id', '=', 'mwv.medical_record_id')
@@ -211,13 +222,13 @@ $writer->openToFile($filePath);
         ->where('mo.is_aprroved', true)
         ->where('mo.medicine_orderable_type', 'LIKE', '%RoutineChild%')
         ->get();
-        
-        
+
+
         foreach($results as $result){
             $child_male =0;
             $child_female =0 ;
             $pregnant =0;
-            
+
             if($result->category == "pregnant"){
                 $pregnant=1;
             }
@@ -264,8 +275,8 @@ $writer->openToFile($filePath);
             $singleRow = WriterEntityFactory::createRow($newCells);
         $writer->addRow($singleRow);
         }
-        
-        
+
+
         $writer->close();
     }
 }
